@@ -31,7 +31,7 @@ function RenderHUDSystem:draw()
 end
 
 function RenderHUDSystem:requires()
-	return {"GridShip", "Ship", "Health", "PositionPhysics", "PlayerController"}
+	return {"GridMaster", "Health", "PositionPhysics", "PlayerController"}
 end
 
 return RenderHUDSystem

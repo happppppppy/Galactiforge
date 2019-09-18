@@ -1,12 +1,12 @@
 local Factory, Weapon, Thruster, TileSetGrid, GridPhysics, GridItem, Health = Component.load({"Factory", "Weapon", "Thruster", "TileSetGrid", "GridPhysics", "GridItem", "Health"})
 local FieryDeath = Component.load({"FieryDeath"})
 
-local GridShipSystem = class("GridShipSystem", System)
+local GridMasterSystem = class("GridMasterSystem", System)
 
-function GridShipSystem:fireEvent(event)
-  local ship = event.parent:get("Ship")
+function GridMasterSystem:fireEvent(event)
+  local grid_master = event.parent:get("GridMaster")
   if event.add_grid then
-    if ship.grid_status[ship.ship_specs.allowed_grid.grid_origin.y - event.y_loc][ship.ship_specs.allowed_grid.grid_origin.x - event.x_loc] == 0 then
+    if grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] == 0 then
       local type = global_component_name_list[global_component_index]
       local direction = global_component_directions[global_component_direction_index]
       local new_grid_item = Entity(event.parent)
@@ -30,7 +30,7 @@ function GridShipSystem:fireEvent(event)
       end
       engine:addEntity(new_grid_item)
     end
-    ship.grid_status[ship.ship_specs.allowed_grid.grid_origin.y - event.y_loc][ship.ship_specs.allowed_grid.grid_origin.x - event.x_loc] = 1
+    grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] = 1
   else
     viable_grids = engine:getEntitiesWithComponent("GridItem")
     for i,v in pairs(viable_grids) do
@@ -45,12 +45,11 @@ function GridShipSystem:fireEvent(event)
   end
 end
 
-function GridShipSystem:onAddEntity(entity)
-  local gridship = entity:get("GridShip")
-  local ship = entity:get("Ship")
+function GridMasterSystem:onAddEntity(entity)
+  local grid_master = entity:get("GridMaster")
 
-  for i,grid_item in pairs(gridship.grid) do
-    if ship.ship_specs.allowed_grid.grid_map[ship.ship_specs.allowed_grid.grid_origin.y - grid_item.y][ship.ship_specs.allowed_grid.grid_origin.x - grid_item.x] == 1 then
+  for i,grid_item in pairs(grid_master.grid) do
+    if grid_master.grid_specs.allowed_grid.grid_map[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] == 1 then
 
       local new_grid_item = Entity(entity)
       new_grid_item:add(FieryDeath())
@@ -71,13 +70,13 @@ function GridShipSystem:onAddEntity(entity)
         new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, false, grid_item.direction))
       end
       engine:addEntity(new_grid_item)
-      ship.grid_status[ship.ship_specs.allowed_grid.grid_origin.y - grid_item.y][ship.ship_specs.allowed_grid.grid_origin.x - grid_item.x] = 1
+      grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] = 1
     end
   end
 end
 
-function GridShipSystem:requires()
-	return {"GridShip", "Ship"}
+function GridMasterSystem:requires()
+	return {"GridMaster"}
 end
 
-return GridShipSystem
+return GridMasterSystem

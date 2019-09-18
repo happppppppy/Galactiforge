@@ -31,9 +31,9 @@ end
 function GridItemSystem:onRemoveEntity(entity)
   local grid_item = entity:get("GridItem")
   local parent = entity:getParent()
-  local ship = parent:get("Ship")
+  local grid_master = parent:get("GridMaster")
 
-  ship.grid_status[ship.ship_specs.allowed_grid.grid_origin.y - grid_item.y][ship.ship_specs.allowed_grid.grid_origin.x - grid_item.x] = 0
+  grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] = 0
 
   updateNeighbours(entity)
 end

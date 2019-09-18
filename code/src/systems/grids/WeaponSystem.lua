@@ -10,7 +10,7 @@ function WeaponSystem:update(dt)
     local grid_item = value:get("GridItem")
     local parent = value:getParent()
     local physics = parent:get("PositionPhysics")
-    local collision = parent:get("CollisionPhysics")
+    local grid_master = parent:get("GridMaster")
     local tg = value:get("TileSetGrid")
 
     
@@ -79,7 +79,7 @@ function WeaponSystem:update(dt)
           bullet:add(TileSetGrid(tileset_small, nil, nil, 101, 101, 103, true, true, 0.1, false))
           bullet:add(PositionPhysics(world, x_render, y_render, grid_item.t_render, "dynamic"))
           bullet:add(DynamicPhysics(0, 0, 5000, 5000, 0, 0, 400, x_vel, y_vel))
-          bullet:add(CollisionPhysics("Circle",  1, nil, 1, collision.category, collision.mask))
+          bullet:add(CollisionPhysics("Circle",  1, nil, 1, grid_master.physics.category, grid_master.physics.mask))
           bullet:add(Bullet(5, weapon.base_damage))
           engine:addEntity(bullet)
 

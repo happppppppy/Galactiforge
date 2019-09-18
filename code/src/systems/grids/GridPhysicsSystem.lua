@@ -7,7 +7,8 @@ function GridPhysicsSystem:onAddEntity(entity)
   local tg = entity:get("TileSetGrid")
   local parent = entity:getParent()
   local physics = parent:get("PositionPhysics")
-  local collision = parent:get("CollisionPhysics")
+  local grid_master = parent:get("GridMaster")
+  -- local collision = parent:get("CollisionPhysics")
 
   local x_coord = grid_item.x*tg.tileset.tile_width/2
   local y_coord = grid_item.y*tg.tileset.tile_height/2
@@ -17,8 +18,8 @@ function GridPhysicsSystem:onAddEntity(entity)
 
   local shape = love.physics.newRectangleShape(x_coord, y_coord, width, height, angle)
   grid_item.fixture = love.physics.newFixture(physics.body, shape, 20)
-  grid_item.fixture:setCategory(collision.category)
-  grid_item.fixture:setMask(collision.mask)
+  grid_item.fixture:setCategory(grid_master.physics.category)
+  grid_item.fixture:setMask(grid_master.physics.mask)
   grid_item.fixture:setUserData(entity)
 end
 

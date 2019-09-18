@@ -3,9 +3,9 @@ local matrix = require("code/lib/matrix")
 
 local MainMouseSystem = class("MainMouseSystem", System)
 
-local function getPoint(x_pos, y_pos, x_offset, y_offset, ship, physics)
-  local offset_dist = math.sqrt((x_pos*ship.grid_size.width + x_offset)^2 + (y_pos*ship.grid_size.height + y_offset)^2)*ship.grid_scale
-  local offset_angle = math.atan2((y_pos*ship.grid_size.height + y_offset),(x_pos*ship.grid_size.width + x_offset))
+local function getPoint(x_pos, y_pos, x_offset, y_offset, grid_master, physics)
+  local offset_dist = math.sqrt((x_pos*grid_master.grid_size.width + x_offset)^2 + (y_pos*grid_master.grid_size.height + y_offset)^2)*grid_master.grid_scale
+  local offset_angle = math.atan2((y_pos*grid_master.grid_size.height + y_offset),(x_pos*grid_master.grid_size.width + x_offset))
   
   local t = physics.body:getAngle()
   local x = physics.body:getX()+offset_dist*math.cos(t + offset_angle)
@@ -56,22 +56,22 @@ end
 function MainMouseSystem:fireEvent(event)
   if event.button == 2 or event.button == 3 then
     local x,y = love.graphics.inverseTransformPoint( event.x, event.y )
-    local entities = engine:getEntitiesWithComponent("Ship")
+    local entities = engine:getEntitiesWithComponent("GridMaster")
     local mouse_in_grid = false
 
     for i,v in pairs(entities) do
-      ship = v:get("Ship")
+      grid_master = v:get("GridMaster")
       physics = v:get("PositionPhysics")
       
-      for row = 1, #ship.grid_status do
-        for col = 1, #ship.grid_status[row] do
-          local x_loc = ship.ship_specs.allowed_grid.grid_origin.x - col 
-          local y_loc = ship.ship_specs.allowed_grid.grid_origin.y - row
+      for row = 1, #grid_master.grid_status do
+        for col = 1, #grid_master.grid_status[row] do
+          local x_loc = grid_master.grid_specs.allowed_grid.grid_origin.x - col 
+          local y_loc = grid_master.grid_specs.allowed_grid.grid_origin.y - row
 
-          local xtl,ytl = getPoint(x_loc, y_loc, ship.grid_size.width/2, ship.grid_size.height/2, ship, physics)
-          local xtr,ytr = getPoint(x_loc, y_loc, ship.grid_size.width/2 - ship.grid_size.width, ship.grid_size.height/2, ship, physics)
-          local  xbl,ybl = getPoint(x_loc, y_loc, ship.grid_size.width/2, ship.grid_size.height/2 - ship.grid_size.height, ship, physics)
-          local  xbr,ybr = getPoint(x_loc, y_loc, ship.grid_size.width/2 - ship.grid_size.width, ship.grid_size.height/2 - ship.grid_size.height, ship, physics)
+          local xtl,ytl = getPoint(x_loc, y_loc, grid_master.grid_size.width/2, grid_master.grid_size.height/2, grid_master, physics)
+          local xtr,ytr = getPoint(x_loc, y_loc, grid_master.grid_size.width/2 - grid_master.grid_size.width, grid_master.grid_size.height/2, grid_master, physics)
+          local  xbl,ybl = getPoint(x_loc, y_loc, grid_master.grid_size.width/2, grid_master.grid_size.height/2 - grid_master.grid_size.height, grid_master, physics)
+          local  xbr,ybr = getPoint(x_loc, y_loc, grid_master.grid_size.width/2 - grid_master.grid_size.width, grid_master.grid_size.height/2 - grid_master.grid_size.height, grid_master, physics)
           
           local A = { xtl, ytl}
           local B = { xtr, ytr}

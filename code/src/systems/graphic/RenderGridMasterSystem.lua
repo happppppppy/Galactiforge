@@ -1,4 +1,4 @@
-local RenderGridShipSystem = class("RenderGridShipSystem", System)
+local RenderGridMasterSystem = class("RenderGridMasterSystem", System)
 
 local function UpdateRenders(tg, grid_item)
   local direction = 0
@@ -24,7 +24,7 @@ local function UpdateRenders(tg, grid_item)
   end
 end
 
-function RenderGridShipSystem:draw()
+function RenderGridMasterSystem:draw()
   for index, value in pairs(self.targets.pool1) do
     local grid_item = value:get("GridItem")
     local tg = value:get("TileSetGrid")
@@ -40,8 +40,8 @@ function RenderGridShipSystem:draw()
 
 end
 
-function RenderGridShipSystem:requires()
+function RenderGridMasterSystem:requires()
 	return {pool1 = {"GridItem", "TileSetGrid"}, pool2 = {"PositionPhysics", "TileSetGrid"}}
 end
 
-return RenderGridShipSystem
+return RenderGridMasterSystem
