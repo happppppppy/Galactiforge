@@ -1,0 +1,34 @@
+{
+  "cannon":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.3,
+    "resource_input": {
+      "shells": {
+        "count":0,
+        "max":10,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "waste_shells": {
+        "count": 0,
+        "max":99999999999
+      }
+    },
+    "damage_type": "explosive",
+    "base_damage": 1,
+    "aimed": true,
+    "activation": "space",
+    "image_ref": 81,
+    "image_ref_initial_frame": 81,
+    "image_ref_final_frame": 87,
+    "animated": true,
+    "animate_continuous": false,
+    "render_delay": 0.01,
+    "fire_rate": 0.5,
+    "health": 30
+  }
+}

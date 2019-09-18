@@ -1,0 +1,46 @@
+{
+  "intruder": {
+    "allowed_grid":{
+      "grid_map":[
+        [0,1,0,1,0],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [0,1,0,1,0],
+        [0,1,0,1,0],
+        [0,1,0,1,0],
+        [0,1,0,1,0],
+        [0,1,0,1,0],
+        [0,1,0,1,0],
+        [0,1,0,1,0],
+        [0,1,0,1,0],
+        [0,1,0,1,0],
+        [1,1,1,1,1],
+        [0,1,0,1,0],
+        [0,1,0,1,0]
+      ],
+      "grid_origin":{
+        "x": 3,
+        "y": 8
+      }
+    },
+    "sprite_path": "assets/images/galactiforge_tilesets/body_01.png",
+    "linear_damping": 0.2,
+    "angular_damping": 0.2
+  },
+  "station": {
+    "allowed_grid":{
+      "grid_map":[
+        [1,1,1],
+        [1,1,1],
+        [1,1,1]
+      ],
+      "grid_origin":{
+        "x": 2,
+        "y": 2
+      }
+    },
+    "sprite_path": "assets/images/galactiforge_tilesets/body_01.png",
+    "linear_damping": 0.2,
+    "angular_damping": 0.2
+  }
+}

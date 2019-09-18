@@ -1,0 +1,23 @@
+Space shooter with on-ship factories.
+
+Features
+- Ships with grids and factories
+- Procedural resource management
+- Conveyors and pipelines
+- Click to place factories/weapons etc
+- Weapon and ammo variety
+- Thruster fuel production and variety
+- Weapon, thruster, shields etc stats are determined by the ship factory capabilities
+
+
+
+Galactiforge story
+Protagonist is a space industry genius
+Protagonist pisses off an empire juggernaught and has to flee his company
+????
+Protagnist becomes powerful enough to over-power the juggernaught
+
+
+
+TO-DO
+GridItemSystem.lua - Figure out how to get the factory to evenly distribute resources.
