@@ -21,6 +21,10 @@ function GridPhysicsSystem:onAddEntity(entity)
   grid_item.fixture:setCategory(grid_master.physics.category)
   grid_item.fixture:setMask(grid_master.physics.mask)
   grid_item.fixture:setUserData(entity)
+
+  physics.body:setLinearDamping(grid_master.physics.linear_damping)
+  physics.body:setAngularDamping(grid_master.physics.angular_damping)
+
 end
 
 function GridPhysicsSystem:requires()

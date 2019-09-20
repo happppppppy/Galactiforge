@@ -109,6 +109,11 @@ function love.load()
 		v.category = "thruster"
 		datasets[i] = v
 	end
+	technology_data = helper_functions.openjson("code/src/configs/technologies.json")
+	for i,v in pairs(technology_data) do
+		v.category = "technology"
+		datasets[i] = v
+	end
 
 	global_component_name_list = {}
 	for i,v in pairs(datasets) do

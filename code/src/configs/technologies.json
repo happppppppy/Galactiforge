@@ -1,0 +1,20 @@
+{
+  "ship_core":{
+    "transfer_grid":[
+      [0,0,0],
+      [0,0,0],
+      [0,0,0]],
+    "process_delay": 0.01,
+    "resource_input":{
+    },
+    "resource_output":{
+    },
+    "image_ref": 121,
+    "image_ref_initial_frame": 11,
+    "image_ref_final_frame": 17,
+    "animated": false,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 100
+  }
+}

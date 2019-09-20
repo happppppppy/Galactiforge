@@ -48,6 +48,18 @@ end
 function GridMasterSystem:onAddEntity(entity)
   local grid_master = entity:get("GridMaster")
 
+  --Add the ship core
+  local new_grid_item = Entity(entity)
+  new_grid_item:add(FieryDeath())
+  new_grid_item:add(GridPhysics())
+  new_grid_item:add(TileSetGrid(tileset_small, "ship_core", datasets))
+  new_grid_item:add(Health(datasets["ship_core"].health))
+  new_grid_item:add(Factory())
+  new_grid_item:add(GridItem("ship_core", 0, 0, "technology", true, 0))
+  engine:addEntity(new_grid_item)
+  grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - 0][grid_master.grid_specs.allowed_grid.grid_origin.x - 0] = 1
+
+  --Add components from the given grid
   for i,grid_item in pairs(grid_master.grid) do
     if grid_master.grid_specs.allowed_grid.grid_map[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] == 1 then
 
@@ -71,6 +83,7 @@ function GridMasterSystem:onAddEntity(entity)
       end
       engine:addEntity(new_grid_item)
       grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] = 1
+    
     end
   end
 end

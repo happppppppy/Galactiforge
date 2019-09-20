@@ -25,8 +25,6 @@ function RenderHUDSystem:draw()
     love.graphics.print(string.format("Ship Mass: %.2f ", physics.body:getMass()), x_loc, y_loc-20*1/global_zoom_level, 0, 1/global_zoom_level, 1/global_zoom_level)
     love.graphics.print(string.format("Ship Health: %d ", health.health), x_loc, y_loc, 0, 1/global_zoom_level, 1/global_zoom_level)
 
-
-
   end
 end
 

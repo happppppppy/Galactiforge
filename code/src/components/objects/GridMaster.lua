@@ -12,7 +12,9 @@ function GridMaster:initialize(grid, grid_specs, grid_scale, grid_width, grid_he
   self.grid_status = {}
   self.physics = {
     category = category,
-    mask = mask
+    mask = mask,
+    linear_damping= 0.3,
+    angular_damping = 0.5
   }
   for row = 1, #self.grid_specs.allowed_grid.grid_map do
     self.grid_status[row] = {}
