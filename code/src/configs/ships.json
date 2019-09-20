@@ -2,21 +2,21 @@
   "intruder": {
     "allowed_grid":{
       "grid_map":[
-        [0,1,0,1,0],
         [1,1,1,1,1],
         [1,1,1,1,1],
-        [0,1,0,1,0],
-        [0,1,0,1,0],
-        [0,1,0,1,0],
-        [0,1,0,1,0],
-        [0,1,0,1,0],
-        [0,1,0,1,0],
-        [0,1,0,1,0],
-        [0,1,0,1,0],
-        [0,1,0,1,0],
         [1,1,1,1,1],
-        [0,1,0,1,0],
-        [0,1,0,1,0]
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1],
+        [1,1,1,1,1]
       ],
       "grid_origin":{
         "x": 3,
@@ -25,7 +25,82 @@
     },
     "sprite_path": "assets/images/galactiforge_tilesets/body_01.png",
     "linear_damping": 0.2,
-    "angular_damping": 0.2
+    "angular_damping": 0.2,
+    "starter_grid": [
+      {"category":"factory", "type":"ore_hopper","x":-1,"y":1},
+      {"category":"factory", "type":"ore_crusher","x":-1,"y":0},
+      {"category":"factory", "type":"ore_separator","x":-1,"y":-1},
+      {"category":"factory", "type":"arc_furnace","x":-1,"y":-2},
+      {"category":"factory", "type":"casting_line","x":-1,"y":-3}, 
+      {"category":"factory", "type":"machining_centre","x":-1,"y":-4}, 
+      {"category":"factory", "type":"assembly_centre","x":-1,"y":-5},
+      {"category":"factory", "type":"ore_hopper","x":1,"y":1},
+      {"category":"factory", "type":"ore_crusher","x":1,"y":0},
+      {"category":"factory", "type":"ore_separator","x":1,"y":-1},
+      {"category":"factory", "type":"arc_furnace","x":1,"y":-2},
+      {"category":"factory", "type":"casting_line","x":1,"y":-3}, 
+      {"category":"factory", "type":"machining_centre","x":1,"y":-4}, 
+      {"category":"factory", "type":"assembly_centre","x":1,"y":-5},
+      {"category":"weapon", "type":"cannon", "x":1, "y":-6},
+      {"category":"weapon", "type":"cannon", "x":2, "y":-5},
+      {"category":"weapon", "type":"cannon", "x":-1, "y":-6},
+      {"category":"weapon", "type":"cannon", "x":-2, "y":-5},
+      {"category":"thruster", "type":"large_thruster", "x":-1, "y":7, "direction" : 0},
+      {"category":"thruster", "type":"large_thruster", "x":1, "y":7, "direction" : 0},
+      {"category":"thruster", "type":"mini_thruster", "x":-2, "y":6, "direction" : 90},
+      {"category":"thruster", "type":"mini_thruster", "x":2, "y":6, "direction" : 270},
+      {"category":"thruster", "type":"mini_thruster", "x":-2, "y":5, "direction" : 90},
+      {"category":"thruster", "type":"mini_thruster", "x":2, "y":5, "direction" : 270},
+      {"category":"thruster", "type":"large_thruster", "x":0, "y":-6, "direction" : 180},
+      {"category":"factory", "type":"fuel_generator", "x":0, "y":-5},		
+      {"category":"factory", "type":"fuel_generator","x":1,"y":6}, 
+      {"category":"factory", "type":"fuel_generator","x":-1,"y":6}, 
+      {"category":"factory", "type":"fuel_generator","x":1,"y":5},
+      {"category":"factory", "type":"fuel_generator","x":-1,"y":5},
+
+      {"category":"armor", "type":"armor_half","x":-2,"y":0, "direction" : 270},
+      {"category":"armor", "type":"armor_half","x":-2,"y":1, "direction" : 270},
+      {"category":"armor", "type":"armor_half","x":-2,"y":2, "direction" : 270},
+      {"category":"armor", "type":"armor_half","x":-2,"y":3, "direction" : 270},
+      {"category":"armor", "type":"armor_corner","x":-2,"y":4, "direction" : 0},
+      {"category":"armor", "type":"armor_half","x":-2,"y":-1, "direction" : 270},
+      {"category":"armor", "type":"armor_half","x":-2,"y":-2, "direction" : 270},
+      {"category":"armor", "type":"armor_half","x":-2,"y":-3, "direction" : 270},
+      {"category":"armor", "type":"armor_corner","x":-2,"y":-4, "direction" : 270},
+
+      {"category":"armor", "type":"armor_half","x":2,"y":0, "direction" : 90},
+      {"category":"armor", "type":"armor_half","x":2,"y":1, "direction" : 90},
+      {"category":"armor", "type":"armor_half","x":2,"y":2, "direction" : 90},
+      {"category":"armor", "type":"armor_half","x":2,"y":3, "direction" : 90},
+      {"category":"armor", "type":"armor_corner","x":2,"y":4, "direction" : 90},
+      {"category":"armor", "type":"armor_half","x":2,"y":-1, "direction" : 90},
+      {"category":"armor", "type":"armor_half","x":2,"y":-2, "direction" : 90},
+      {"category":"armor", "type":"armor_half","x":2,"y":-3, "direction" : 90},
+      {"category":"armor", "type":"armor_corner","x":2,"y":-4, "direction" : 180},
+
+      {"category":"armor", "type":"armor_corner","x":-2,"y":-6, "direction" : 0},
+      {"category":"armor", "type":"armor_corner","x":2,"y":-6, "direction" : 90},
+
+      {"category":"armor", "type":"armor_full","x":0,"y":7, "direction" : 0},
+
+      {"category":"armor", "type":"floor","x":0,"y":1, "direction" : 0},
+      {"category":"armor", "type":"floor","x":0,"y":2, "direction" : 0},
+      {"category":"armor", "type":"floor","x":0,"y":3, "direction" : 0},
+      {"category":"armor", "type":"floor","x":0,"y":4, "direction" : 0},
+      {"category":"armor", "type":"floor","x":0,"y":5, "direction" : 0},
+      {"category":"armor", "type":"floor","x":0,"y":6, "direction" : 0},
+      {"category":"armor", "type":"floor","x":0,"y":-1, "direction" : 0},
+      {"category":"armor", "type":"floor","x":0,"y":-2, "direction" : 0},
+      {"category":"armor", "type":"floor","x":0,"y":-3, "direction" : 0},
+      {"category":"armor", "type":"floor","x":0,"y":-4, "direction" : 0}
+      ,
+      {"category":"armor", "type":"floor","x":1,"y":2, "direction" : 0},
+      {"category":"armor", "type":"floor","x":1,"y":3, "direction" : 0},
+      {"category":"armor", "type":"floor","x":1,"y":4, "direction" : 0},
+      {"category":"armor", "type":"floor","x":-1,"y":2, "direction" : 0},
+      {"category":"armor", "type":"floor","x":-1,"y":3, "direction" : 0},
+      {"category":"armor", "type":"floor","x":-1,"y":4, "direction" : 0}
+    ]
   },
   "station": {
     "allowed_grid":{
@@ -41,6 +116,16 @@
     },
     "sprite_path": "assets/images/galactiforge_tilesets/body_01.png",
     "linear_damping": 0.2,
-    "angular_damping": 0.2
+    "angular_damping": 0.2,
+    "starter_grid":[
+      {"category":"factory", "type":"ore_hopper","x":-1,"y":-1},
+      {"category":"factory", "type":"ore_crusher","x":0,"y":-1},
+      {"category":"factory", "type":"ore_separator","x":1,"y":-1},
+      {"category":"factory", "type":"arc_furnace","x":1,"y":0},
+      {"category":"factory", "type":"casting_line","x":1,"y":1}, 
+      {"category":"factory", "type":"machining_centre","x":0,"y":1}, 
+      {"category":"factory", "type":"assembly_centre","x":-1,"y":1},
+      {"category":"weapon", "type":"cannon", "x":-1, "y":0}
+    ]
   }
 }

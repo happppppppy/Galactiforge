@@ -1,7 +1,7 @@
 local Thruster = Component.create("Thruster")
 function Thruster:initialize(type, x, y, direction)
 
-  self.base_thrust = thruster_data[type].base_thrust
+  self.base_thrust = datasets[type].base_thrust
 
   --Thruster physics
   self.direction = direction
@@ -17,14 +17,14 @@ function Thruster:initialize(type, x, y, direction)
   end
 
   --Particle system
-  self.image = love.graphics.newImage(thruster_data[type].particle.imagePath)
+  self.image = love.graphics.newImage(datasets[type].particle.imagePath)
   self.pSystem = love.graphics.newParticleSystem(self.image, 1000)
-  self.pSystem:setParticleLifetime(thruster_data[type].particle.lifemin, thruster_data[type].particle.lifemax)
+  self.pSystem:setParticleLifetime(datasets[type].particle.lifemin, datasets[type].particle.lifemax)
   self.pSystem:setEmissionRate(0)
   self.pSystem:setSizeVariation(1)
   self.pSystem:setSizes(0.6, 0.6, 1.0, 1.0)
-  self.pSystem:setRotation(thruster_data[type].particle.rmin,thruster_data[type].particle.rmax)
-  self.emitspeed = thruster_data[type].particle.emitspeed
+  self.pSystem:setRotation(datasets[type].particle.rmin,datasets[type].particle.rmax)
+  self.emitspeed = datasets[type].particle.emitspeed
   self.particles_active = false
 
   self.burn_time = 0

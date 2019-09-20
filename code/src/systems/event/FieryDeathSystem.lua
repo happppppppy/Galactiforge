@@ -51,6 +51,14 @@ function FieryDeathSystem:update(dt)
         stats.elapsed_time = 0
       end
       if stats.count >= stats.max_count then
+        --NOTE, performance risk!
+        for i,v in pairs(global_target_list) do
+          for j,k in pairs(v) do
+            if k.grid == grid_item then
+              table.remove(v,j)
+            end
+          end
+        end
         engine:removeEntity(value, true)
       end
     end

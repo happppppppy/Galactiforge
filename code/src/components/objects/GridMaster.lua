@@ -22,5 +22,5 @@ function GridMaster:initialize(grid, grid_specs, grid_scale, grid_width, grid_he
       self.grid_status[row][col] = 0 
     end
   end
-
+  self.grids = {}
 end

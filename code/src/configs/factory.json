@@ -18,6 +18,7 @@
         "max":100
       }
     },
+    "auto_increment": true,
     "image_ref": 11,
     "image_ref_initial_frame": 11,
     "image_ref_final_frame": 17,
@@ -45,6 +46,7 @@
         "max":100
       }
     },
+    "auto_increment": true,
     "image_ref": 21,
     "image_ref_initial_frame": 21,
     "image_ref_final_frame": 27,
@@ -72,6 +74,7 @@
         "max":100
       }
     },
+    "auto_increment": true,
     "image_ref": 31,
     "image_ref_initial_frame": 31,
     "image_ref_final_frame": 37,
@@ -99,6 +102,7 @@
         "max":100
       }
     },
+    "auto_increment": true,
     "image_ref": 41,
     "image_ref_initial_frame": 41,
     "image_ref_final_frame": 47,
@@ -126,6 +130,7 @@
         "max":100
       }
     },
+    "auto_increment": true,
     "image_ref": 51,
     "image_ref_initial_frame": 51,
     "image_ref_final_frame": 57,
@@ -153,6 +158,7 @@
         "max":100
       }
     },
+    "auto_increment": true,
     "image_ref": 61,
     "image_ref_initial_frame": 61,
     "image_ref_final_frame": 67,
@@ -180,6 +186,7 @@
         "max":100
       }
     },
+    "auto_increment": true,
     "image_ref": 71,
     "image_ref_initial_frame": 71,
     "image_ref_final_frame": 77,
@@ -202,15 +209,12 @@
       }
     },
     "resource_output":{
-      "liquid_oxygen": {
-        "count":0,
-        "max":100
-      },
-      "kerosene": {
+      "fuel": {
         "count":0,
         "max":100
       }
     },
+    "auto_increment": true,
     "image_ref": 71,
     "image_ref_initial_frame": 71,
     "image_ref_final_frame": 77,

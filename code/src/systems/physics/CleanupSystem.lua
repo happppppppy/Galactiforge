@@ -6,10 +6,10 @@ function CleanupSystem:onRemoveEntity(entity, group)
     physics.fixture:destroy()
   end
   if physics.shape ~= nil then
-    physics.shape:release()
+    -- physics.shape:release()
   end
   if physics.body ~= nil then
-    physics.body:release()
+    -- physics.body:release()
   end
 end
 

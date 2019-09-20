@@ -6,6 +6,7 @@ function ThrusterSystem:update(dt)
   for index, value in pairs(self.targets) do
     local thruster = value:get("Thruster")
     local grid_item = value:get("GridItem")
+    local grid_inventory = value:get("GridInventory")
     local parent = value:getParent()
     local physics = parent:get("PositionPhysics")
     local tileset = value:get("TileSetGrid")
@@ -22,7 +23,7 @@ function ThrusterSystem:update(dt)
     --Thruster updates
     local fire = false
 
-    if love.keyboard.isDown(thruster.activation) and grid_item.resources_available and parent:get("PlayerController") ~= nil then
+    if love.keyboard.isDown(thruster.activation) and grid_inventory.resources_available and parent:get("PlayerController") ~= nil then
       thruster.particles_active = true
       fire = true
 
@@ -38,8 +39,8 @@ function ThrusterSystem:update(dt)
     end
     thruster.burn_time = thruster.burn_time + dt
     if fire == true then 
-      if thruster.burn_time > thruster.burn_rate and grid_item.resources_available then
-        grid_item.resources_used_count = grid_item.resources_used_count + 1
+      if thruster.burn_time > thruster.burn_rate and grid_inventory.resources_available then
+        grid_inventory.resources_used_count = grid_inventory.resources_used_count + 1
         thruster.burn_time = 0
       end
     end

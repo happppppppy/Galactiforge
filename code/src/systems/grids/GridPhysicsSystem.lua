@@ -8,7 +8,6 @@ function GridPhysicsSystem:onAddEntity(entity)
   local parent = entity:getParent()
   local physics = parent:get("PositionPhysics")
   local grid_master = parent:get("GridMaster")
-  -- local collision = parent:get("CollisionPhysics")
 
   local x_coord = grid_item.x*tg.tileset.tile_width/2
   local y_coord = grid_item.y*tg.tileset.tile_height/2

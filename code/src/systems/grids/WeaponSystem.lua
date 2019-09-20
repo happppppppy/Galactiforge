@@ -8,6 +8,7 @@ function WeaponSystem:update(dt)
   for index, value in pairs(self.targets) do
     local weapon = value:get("Weapon")
     local grid_item = value:get("GridItem")
+    local grid_inventory = value:get("GridInventory")
     local parent = value:getParent()
     local physics = parent:get("PositionPhysics")
     local grid_master = parent:get("GridMaster")
@@ -15,7 +16,7 @@ function WeaponSystem:update(dt)
 
     
     local fire = false
-    local resources_available = grid_functions:getResourceAvailable(grid_item)
+    local resources_available = grid_functions:getResourceAvailable(grid_inventory)
     if parent:get("PlayerController") ~= nil then
       --Render updates
       if weapon.aimed then
@@ -35,19 +36,13 @@ function WeaponSystem:update(dt)
     elseif parent:get("AIController") ~= nil then
       local AIController = parent:get("AIController")
       local AIFaction = parent:get("Faction")
-      local targetable_grids = engine:getEntitiesWithComponent("GridItem")
 
-      for i,v in pairs(targetable_grids) do
-        --Get angle to target
-        if v:getParent() ~= parent then
-          local target_grid = v:get("GridItem")
-          local parent = v:getParent()
-          local faction = parent:get("Faction")
-          
-          if faction.faction ~= AIFaction.faction then
-            grid_item.t_render = math.atan2(target_grid.y_render - grid_item.y_render, target_grid.x_render - grid_item.x_render) + math.rad(90)
+      for i,v in pairs(global_target_list) do
+        if i ~= AIFaction.faction then
+          for j,k in pairs(v) do
+            grid_item.t_render = math.atan2(k.grid.y_render - grid_item.y_render, k.grid.x_render - grid_item.x_render) + 1.5708
             AIController.target_direction = grid_item.t_render
-            AIController.target_range = math.sqrt((target_grid.y_render - grid_item.y_render)^2 + (target_grid.x_render - grid_item.x_render)^2) 
+            AIController.target_range = math.sqrt((k.grid.y_render - grid_item.y_render)^2 + (k.grid.x_render - grid_item.x_render)^2) 
             
             if AIController.target_range < AIController.range then 
               fire = true
@@ -57,8 +52,29 @@ function WeaponSystem:update(dt)
         end
       end
 
-      --See if target is in range and set fire to true
-      
+
+      -- local targetable_grids = engine:getEntitiesWithComponent("GridItem")
+
+      -- for i,v in pairs(targetable_grids) do
+
+      --   --Get angle to target
+      --   if v:getParent() ~= parent then
+      --     local target_grid = v:get("GridItem")
+      --     local parent = v:getParent()
+      --     local faction = parent:get("Faction")
+          
+      --     if faction.faction ~= AIFaction.faction then
+      --       grid_item.t_render = math.atan2(target_grid.y_render - grid_item.y_render, target_grid.x_render - grid_item.x_render) + 1.5708
+      --       AIController.target_direction = grid_item.t_render
+      --       AIController.target_range = math.sqrt((target_grid.y_render - grid_item.y_render)^2 + (target_grid.x_render - grid_item.x_render)^2) 
+            
+      --       if AIController.target_range < AIController.range then 
+      --         fire = true
+      --         break
+      --       end
+      --     end
+      --   end
+      -- end
     end
 
       if not (weapon.fire_time > weapon.fire_rate) then weapon.fire_time = weapon.fire_time + dt end
@@ -69,7 +85,7 @@ function WeaponSystem:update(dt)
             tg.animation_complete = false
           end
 
-          grid_item.resources_used_count = grid_item.resources_used_count + 1
+          grid_inventory.resources_used_count = grid_inventory.resources_used_count + 1
 
           local x_vel, y_vel = physics.body:getLinearVelocity()
           

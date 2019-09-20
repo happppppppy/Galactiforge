@@ -1,23 +1,14 @@
 local RenderGridMasterSystem = class("RenderGridMasterSystem", System)
 
-local function UpdateRenders(tg, grid_item)
-  local direction = 0
-  
+local function UpdateRenders(tg, grid_item, grid_inventory)
+  love.graphics.draw(tg.tileset.image, tg.active_frame, grid_item.x_render, grid_item.y_render, grid_item.t_render+grid_item.direction_rad, grid_item.grid_scale, grid_item.grid_scale,  tg.tileset.tile_width/2, tg.tileset.tile_height/2)
 
-  if grid_item.direction ~= nil then 
-    direction = math.rad(grid_item.direction) 
-  else 
-    direction = 0 
-  end
-
-  love.graphics.draw(tg.tileset.image, tg.active_frame, grid_item.x_render, grid_item.y_render, grid_item.t_render+direction, grid_item.grid_scale, grid_item.grid_scale,  tg.tileset.tile_width/2, tg.tileset.tile_height/2)
-
-  if global_show_resource_count then   
-    for i,v in pairs(grid_item.resource_output) do
+  if global_show_resource_count and grid_inventory ~= nil then   
+    for i,v in pairs(grid_inventory.resource_output) do
       love.graphics.print(v.count, grid_item.x_render, grid_item.y_render, grid_item.t_render, grid_item.grid_scale, grid_item.grid_scale,tileset.tile_width/2, tileset.tile_height/2)
     end
     y_offset = 10
-    for i,v in pairs(grid_item.resource_input) do
+    for i,v in pairs(grid_inventory.resource_input) do
       love.graphics.print(v.count, grid_item.x_render, grid_item.y_render, grid_item.t_render, grid_item.grid_scale, grid_item.grid_scale,tileset.tile_width/2, tileset.tile_height/2-y_offset)
       y_offset = y_offset + 10
     end
@@ -27,9 +18,10 @@ end
 function RenderGridMasterSystem:draw()
   for index, value in pairs(self.targets.pool1) do
     local grid_item = value:get("GridItem")
+    local grid_inventory = value:get("GridInventory")
     local tg = value:get("TileSetGrid")
 
-    UpdateRenders(tg, grid_item)
+    UpdateRenders(tg, grid_item, grid_inventory)
   end
 
   for index, value in pairs(self.targets.pool2) do

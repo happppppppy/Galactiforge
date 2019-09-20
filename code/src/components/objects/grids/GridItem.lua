@@ -1,49 +1,20 @@
 local GridItem = Component.create("GridItem")
-function GridItem:initialize(type, x, y, category, auto_increment, direction)
+function GridItem:initialize(type, x, y, category, direction)
 
   self.category = category or nil
   self.type = type
-  self.transfer_grid = {}
-  for i,v in pairs(datasets[type].transfer_grid) do
-      table.insert(self.transfer_grid, v)
-  end
 
-  self.process_delay = datasets[type].process_delay or nil
-
-  self.resource_input = {}
-  for i,v in pairs(datasets[type].resource_input) do
-    self.resource_input[i] = {}
-    self.resource_input[i].count = v.count
-    self.resource_input[i].max = v.max
-    self.resource_input[i].use_rate = v.use_rate
-  end
-
-  self.resource_output = {}
-  for i,v in pairs(datasets[type].resource_output) do
-    self.resource_output[i] = {}
-    self.resource_output[i].count = v.count
-    self.resource_output[i].max = v.max
-    self.resource_output[i].resource_channel = {}
-    self.resource_output[i].next_output = 1
-  end
-  
   self.image_ref = datasets[type].image_ref or nil
   self.grid_scale = 0.5
   self.process_time = 0
   self.x = x
   self.y = y
-  
-  self.is_next = false
-  self.next_neighbour = 1
-  self.neighbours = {}
-  self.neighbour_grid = {}
-  self.grids = {}
 
   self.x_render = 0
   self.y_render = 0
   self.t_render = 0
 
-  self.direction = nil or direction
+  self.direction = direction or 0
 
   if self.direction == 0 then
     self.activation = "up"
@@ -53,13 +24,13 @@ function GridItem:initialize(type, x, y, category, auto_increment, direction)
     self.activation = "down"
   elseif self.direction == 270 then
     self.activation = "right"
+  else
+    self.direction = 0
   end
 
-  self.auto_increment = auto_increment
-  self.use_instantaneously = datasets[type].use_instantaneously or false
-  self.resources_used_count = 0
-
-  self.resources_available = false
+  self.direction_rad = math.rad(self.direction)
 
   self.fixture = nil
+
+
 end

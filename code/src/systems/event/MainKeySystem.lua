@@ -2,7 +2,7 @@ local MainKeySystem = class("MainKeySystem", System)
 
 function MainKeySystem:fireEvent(event)
   if event.key == "escape" then
-    print("OK")
+    love.quit()
   end
 
   if event.key == "kp+" then

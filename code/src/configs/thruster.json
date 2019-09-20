@@ -6,15 +6,10 @@
       [0,1,0]],
     "process_delay": 0.1,
     "resource_input": {
-      "liquid_oxygen":{
+      "fuel":{
         "count": 0,
         "max": 4000,
-        "use_rate": 3
-      },
-      "kerosene":{
-        "count": 0,
-        "max": 4000,
-        "use_rate": 2
+        "use_rate": 1
       }
     },
     "resource_output":{},
@@ -46,12 +41,7 @@
       [0,1,0]],
     "process_delay": 0.1,
     "resource_input": {
-      "liquid_oxygen":{
-        "count": 0,
-        "max": 4000,
-        "use_rate": 2
-      },
-      "kerosene":{
+      "fuel":{
         "count": 0,
         "max": 4000,
         "use_rate": 1
