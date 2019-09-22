@@ -11,29 +11,19 @@ function GridTransferSystem:update(dt)
     
     local x_org = grid_master.grid_specs.allowed_grid.grid_origin.x
     local y_org = grid_master.grid_specs.allowed_grid.grid_origin.y
-
-
-    --This could be optimised.
+    
     grid_transfer.adjacent_grids = {}
-    local adjacent_grid_right = grid_master.grid_items[y_org - grid_item.y][x_org - grid_item.x+1]
-    local adjacent_grid_down = grid_master.grid_items[y_org - grid_item.y-1][x_org - grid_item.x]
-    local adjacent_grid_left = grid_master.grid_items[y_org - grid_item.y][x_org - grid_item.x-1]
-    local adjacent_grid_up = grid_master.grid_items[y_org - grid_item.y+1][x_org - grid_item.x]
-
-    if adjacent_grid_right~= 0 and adjacent_grid_right:get("GridInventory") ~= nil then
-      table.insert(grid_transfer.adjacent_grids, adjacent_grid_right:get("GridInventory"))
-    end
-
-    if adjacent_grid_down~= 0 and adjacent_grid_down:get("GridInventory") ~= nil then
-      table.insert(grid_transfer.adjacent_grids, adjacent_grid_down:get("GridInventory"))
-    end
-
-    if adjacent_grid_left~= 0 and adjacent_grid_left:get("GridInventory") ~= nil then
-      table.insert(grid_transfer.adjacent_grids, adjacent_grid_left:get("GridInventory"))
-    end
-
-    if adjacent_grid_up~= 0 and adjacent_grid_up:get("GridInventory") ~= nil then
-      table.insert(grid_transfer.adjacent_grids, adjacent_grid_up:get("GridInventory"))
+    for row=1,#grid_transfer.transfer_grid,1 do
+      for col=1,#grid_transfer.transfer_grid[row],1 do
+        if grid_transfer.transfer_grid[row][col] ~= 0 then
+          if grid_master.grid_items[y_org - grid_item.y + row-2] ~= nil and grid_master.grid_items[y_org - grid_item.y + row-2][x_org - grid_item.x + col-2] ~= nil and grid_master.grid_items[y_org - grid_item.y + row-2][x_org - grid_item.x + col-2] ~= 0 then
+            local entity = grid_master.grid_items[y_org - grid_item.y + row-2][x_org - grid_item.x + col-2]
+            if grid_master.grid_items[y_org - grid_item.y + row-2][x_org - grid_item.x + col-2]:get("GridInventory") ~= nil then
+              table.insert(grid_transfer.adjacent_grids, grid_master.grid_items[y_org - grid_item.y + row-2][x_org - grid_item.x + col-2]:get("GridInventory"))
+            end
+          end
+        end
+      end
     end
 
     grid_transfer.timer = grid_transfer.timer + dt

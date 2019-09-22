@@ -4,4 +4,5 @@ function GridTransfer:initialize(type)
   self.timer = 0
   self.adjacent_grids = {}
   self.next_grid = 1
+  self.transfer_grid = datasets[type].transfer_grid or nil
 end

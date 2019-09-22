@@ -12,12 +12,7 @@
         "use_rate": 1
       }
     },
-    "resource_output":{
-      "waste_shells": {
-        "count": 0,
-        "max":99999999999
-      }
-    },
+    "resource_output":{},
     "ammo_type": "bullet",
     "base_damage": 1,
     "aimed": true,

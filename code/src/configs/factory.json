@@ -30,7 +30,7 @@
   "ore_crusher":{
     "transfer_grid":[
       [0,1,0],
-      [1,0,1],
+      [0,0,0],
       [0,1,0]],
     "process_delay": 0.1,
     "resource_input": {

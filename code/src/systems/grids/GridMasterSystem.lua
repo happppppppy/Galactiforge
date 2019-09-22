@@ -5,6 +5,7 @@ local GridMasterSystem = class("GridMasterSystem", System)
 
 function GridMasterSystem:fireEvent(event)
   local grid_master = event.parent:get("GridMaster")
+  local faction = event.parent:get("Faction")
   if event.add_grid then
     if grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] == 0 then
       local type = global_component_name_list[global_component_index]
@@ -18,30 +19,36 @@ function GridMasterSystem:fireEvent(event)
 
       if datasets[type].category == "factory" then 
         new_grid_item:add(Factory())
-        new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, 0))
+        new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, 0, grid_master.grid_scale))
         new_grid_item:add(GridInventory(type))
         new_grid_item:add(GridTransfer(type))
         new_grid_item:add(GridProcessor(type))
 
       elseif datasets[type].category == "weapon" then 
         new_grid_item:add(Weapon(type, event.x_loc, event.y_loc))
-        new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, 0))
+        new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, 0, grid_master.grid_scale))
         new_grid_item:add(GridInventory(type))
         new_grid_item:add(GridConsumer("input"))
 
       elseif datasets[type].category == "thruster" then
         new_grid_item:add(Thruster(type, event.x_loc, event.y_loc, direction))
-        new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, direction))
+        new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, direction, grid_master.grid_scale))
         new_grid_item:add(GridInventory(type))
         new_grid_item:add(GridConsumer("input"))
 
       elseif datasets[type].category == "armor" then
-        new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, direction))
+        new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, direction, grid_master.grid_scale))
       end
-      engine:addEntity(new_grid_item)
 
+      if global_target_list[faction.faction] == nil then
+        global_target_list[faction.faction] = {}
+      end
+      global_target_list[faction.faction][#global_target_list[faction.faction]+1] = {["faction"] = faction.faction, ["grid"] = new_grid_item:get("GridItem")}
+    
       grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] = new_grid_item
       grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] = 1
+
+      engine:addEntity(new_grid_item)
     end
   else
     viable_grids = engine:getEntitiesWithComponent("GridItem")
@@ -68,7 +75,7 @@ function GridMasterSystem:onAddEntity(entity)
   new_grid_item:add(TileSetGrid(tileset_small, "ship_core", datasets))
   new_grid_item:add(Health(datasets["ship_core"].health))
   new_grid_item:add(Factory())
-  new_grid_item:add(GridItem("ship_core", 0, 0, "technology", 0))
+  new_grid_item:add(GridItem("ship_core", 0, 0, "technology", 0, grid_master.grid_scale))
   engine:addEntity(new_grid_item)
   grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - 0][grid_master.grid_specs.allowed_grid.grid_origin.x - 0] = 1
 
@@ -84,27 +91,28 @@ function GridMasterSystem:onAddEntity(entity)
 
       if grid_item.category == "factory" then 
         new_grid_item:add(Factory())
-        new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, 0))
+        new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, 0, grid_master.grid_scale))
         new_grid_item:add(GridInventory(grid_item.type))
         new_grid_item:add(GridTransfer(grid_item.type))
         new_grid_item:add(GridProcessor(grid_item.type))
 
       elseif grid_item.category == "weapon" then 
         new_grid_item:add(Weapon(grid_item.type, grid_item.x, grid_item.y))
-        new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, 0))
+        new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, 0, grid_master.grid_scale))
         new_grid_item:add(GridInventory(grid_item.type))
         new_grid_item:add(GridConsumer("input"))
 
       elseif grid_item.category == "thruster" then
         new_grid_item:add(Thruster(grid_item.type, grid_item.x, grid_item.y, grid_item.direction))
-        new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, grid_item.direction))
+        new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, grid_item.direction, grid_master.grid_scale))
         new_grid_item:add(GridInventory(grid_item.type))
         new_grid_item:add(GridConsumer("input"))
 
       elseif grid_item.category == "armor" then
-        new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, grid_item.direction))
+        new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, grid_item.direction, grid_master.grid_scale))
       end
-      engine:addEntity(new_grid_item)
+    
+      grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] = new_grid_item
       grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] = 1
       
       if global_target_list[faction.faction] == nil then
@@ -112,7 +120,7 @@ function GridMasterSystem:onAddEntity(entity)
       end
       global_target_list[faction.faction][#global_target_list[faction.faction]+1] = {["faction"] = faction.faction, ["grid"] = new_grid_item:get("GridItem")}
       
-      grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] = new_grid_item
+      engine:addEntity(new_grid_item)     
     end
   end
 end

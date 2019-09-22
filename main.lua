@@ -183,7 +183,7 @@ function love.load()
 	playerShip:add(Faction("Terran"))
 	engine:addEntity(playerShip)
 
-	for i=1, 3, 1 do
+	for i=1, 10, 1 do
 		opponentShip_type = "intruder"
 		opponentShip = Entity()
 		opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))

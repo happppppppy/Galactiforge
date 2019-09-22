@@ -30,8 +30,8 @@ function ThrusterSystem:update(dt)
       thruster.particles_active = true
       fire = true
 
-      local magnitude_x = math.sin(physics.body:getAngle()+math.rad(grid_item.direction))
-      local magnitude_y = math.cos(physics.body:getAngle()+math.rad(grid_item.direction))*-1
+      local magnitude_x = math.sin(physics.body:getAngle()+grid_item.direction_rad)
+      local magnitude_y = math.cos(physics.body:getAngle()+grid_item.direction_rad)*-1
       
       local velocity = math.sqrt(velocity_x^2+velocity_y^2)
 
