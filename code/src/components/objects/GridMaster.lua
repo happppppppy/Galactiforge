@@ -16,11 +16,15 @@ function GridMaster:initialize(grid, grid_specs, grid_scale, grid_width, grid_he
     linear_damping= 0.3,
     angular_damping = 0.5
   }
+  self.grid_items = {}
   for row = 1, #self.grid_specs.allowed_grid.grid_map do
     self.grid_status[row] = {}
+    self.grid_items[row] = {}
     for col = 1, #self.grid_specs.allowed_grid.grid_map[row] do
       self.grid_status[row][col] = 0 
+      self.grid_items[row][col] = 0
     end
   end
   self.grids = {}
+  
 end

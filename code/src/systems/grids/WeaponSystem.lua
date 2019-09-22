@@ -9,12 +9,14 @@ function WeaponSystem:update(dt)
     local weapon = value:get("Weapon")
     local grid_item = value:get("GridItem")
     local grid_inventory = value:get("GridInventory")
+    local tg = value:get("TileSetGrid")
+    local grid_consumer = value:get("GridConsumer")
+
     local parent = value:getParent()
     local physics = parent:get("PositionPhysics")
     local grid_master = parent:get("GridMaster")
-    local tg = value:get("TileSetGrid")
 
-    
+
     local fire = false
     local resources_available = grid_functions:getResourceAvailable(grid_inventory)
     if parent:get("PlayerController") ~= nil then
@@ -51,30 +53,6 @@ function WeaponSystem:update(dt)
           end
         end
       end
-
-
-      -- local targetable_grids = engine:getEntitiesWithComponent("GridItem")
-
-      -- for i,v in pairs(targetable_grids) do
-
-      --   --Get angle to target
-      --   if v:getParent() ~= parent then
-      --     local target_grid = v:get("GridItem")
-      --     local parent = v:getParent()
-      --     local faction = parent:get("Faction")
-          
-      --     if faction.faction ~= AIFaction.faction then
-      --       grid_item.t_render = math.atan2(target_grid.y_render - grid_item.y_render, target_grid.x_render - grid_item.x_render) + 1.5708
-      --       AIController.target_direction = grid_item.t_render
-      --       AIController.target_range = math.sqrt((target_grid.y_render - grid_item.y_render)^2 + (target_grid.x_render - grid_item.x_render)^2) 
-            
-      --       if AIController.target_range < AIController.range then 
-      --         fire = true
-      --         break
-      --       end
-      --     end
-      --   end
-      -- end
     end
 
       if not (weapon.fire_time > weapon.fire_rate) then weapon.fire_time = weapon.fire_time + dt end
@@ -85,8 +63,7 @@ function WeaponSystem:update(dt)
             tg.animation_complete = false
           end
 
-          grid_inventory.resources_used_count = grid_inventory.resources_used_count + 1
-
+          grid_consumer.count_used = grid_consumer.count_used + 1
           local x_vel, y_vel = physics.body:getLinearVelocity()
           
           _, x_render, y_render = grid_functions:getRenderPositions(grid_item.x, grid_item.y, grid_item.grid_scale, tg, physics, 0, 0)
@@ -108,7 +85,7 @@ function WeaponSystem:update(dt)
 end
 
 function WeaponSystem:requires()
-	return {"Weapon"}
+	return {"Weapon", "GridItem", "GridInventory", "TileSetGrid", "GridConsumer"}
 end
 
 return WeaponSystem

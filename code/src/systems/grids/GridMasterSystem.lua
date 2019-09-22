@@ -1,4 +1,4 @@
-local Factory, Weapon, Thruster, TileSetGrid, GridPhysics, GridItem, GridInventory, Health = Component.load({"Factory", "Weapon", "Thruster", "TileSetGrid", "GridPhysics", "GridItem", "GridInventory", "Health"})
+local Factory, Weapon, Thruster, TileSetGrid, GridPhysics, GridItem, GridInventory, GridTransfer, GridProcessor, GridConsumer, Health = Component.load({"Factory", "Weapon", "Thruster", "TileSetGrid", "GridPhysics", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridConsumer", "Health"})
 local FieryDeath = Component.load({"FieryDeath"})
 
 local GridMasterSystem = class("GridMasterSystem", System)
@@ -20,23 +20,29 @@ function GridMasterSystem:fireEvent(event)
         new_grid_item:add(Factory())
         new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, 0))
         new_grid_item:add(GridInventory(type))
+        new_grid_item:add(GridTransfer(type))
+        new_grid_item:add(GridProcessor(type))
 
       elseif datasets[type].category == "weapon" then 
         new_grid_item:add(Weapon(type, event.x_loc, event.y_loc))
         new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, 0))
         new_grid_item:add(GridInventory(type))
+        new_grid_item:add(GridConsumer("input"))
 
       elseif datasets[type].category == "thruster" then
         new_grid_item:add(Thruster(type, event.x_loc, event.y_loc, direction))
         new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, direction))
         new_grid_item:add(GridInventory(type))
+        new_grid_item:add(GridConsumer("input"))
 
       elseif datasets[type].category == "armor" then
         new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, direction))
       end
       engine:addEntity(new_grid_item)
+
+      grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] = new_grid_item
+      grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] = 1
     end
-    grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] = 1
   else
     viable_grids = engine:getEntitiesWithComponent("GridItem")
     for i,v in pairs(viable_grids) do
@@ -45,6 +51,7 @@ function GridMasterSystem:fireEvent(event)
       if parent == event.parent then
         if grid.x == event.x_loc and grid.y == event.y_loc then
           grid.flag_for_removal = true
+          grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] = 0
          end
       end
     end
@@ -79,16 +86,20 @@ function GridMasterSystem:onAddEntity(entity)
         new_grid_item:add(Factory())
         new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, 0))
         new_grid_item:add(GridInventory(grid_item.type))
+        new_grid_item:add(GridTransfer(grid_item.type))
+        new_grid_item:add(GridProcessor(grid_item.type))
 
       elseif grid_item.category == "weapon" then 
         new_grid_item:add(Weapon(grid_item.type, grid_item.x, grid_item.y))
         new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, 0))
         new_grid_item:add(GridInventory(grid_item.type))
+        new_grid_item:add(GridConsumer("input"))
 
       elseif grid_item.category == "thruster" then
         new_grid_item:add(Thruster(grid_item.type, grid_item.x, grid_item.y, grid_item.direction))
         new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, grid_item.direction))
         new_grid_item:add(GridInventory(grid_item.type))
+        new_grid_item:add(GridConsumer("input"))
 
       elseif grid_item.category == "armor" then
         new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, grid_item.direction))
@@ -101,7 +112,7 @@ function GridMasterSystem:onAddEntity(entity)
       end
       global_target_list[faction.faction][#global_target_list[faction.faction]+1] = {["faction"] = faction.faction, ["grid"] = new_grid_item:get("GridItem")}
       
-      grid_master.grids[#grid_master.grids+1] = {["grid_item"] = new_grid_item:get("GridItem"), ["grid_inventory"] = new_grid_item:get("GridInventory")}
+      grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] = new_grid_item
     end
   end
 end

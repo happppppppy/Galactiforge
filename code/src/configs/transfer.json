@@ -1,0 +1,16 @@
+{
+  "conveyor":{
+    "transfer_grid":[
+      [0,1,0],
+      [0,0,0],
+      [0,2,0]],
+    "transfer_delay": 0.01,
+    "image_ref": 131,
+    "image_ref_initial_frame": 131,
+    "image_ref_final_frame": 136,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 15
+  }
+}

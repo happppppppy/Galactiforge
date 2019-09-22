@@ -50,19 +50,23 @@ local PlayerController, AIController  = Component.load({"PlayerController", "AIC
 --Grid components
 require("code/src/components/objects/grids/GridItem")
 require("code/src/components/objects/grids/GridInventory")
+require("code/src/components/objects/grids/GridTransfer")
+require("code/src/components/objects/grids/GridProcessor")
+require("code/src/components/objects/grids/GridConsumer")
 require("code/src/components/objects/grids/Factory")
 require("code/src/components/objects/grids/Weapon")
 require("code/src/components/objects/grids/Thruster")
-local Factory, Weapon, Thruster, GridItem, GridInventory = Component.load({"Factory", "Weapon", "Thruster", "GridItem", "GridInventory"})
+local Factory, Weapon, Thruster, GridItem, GridInventory, GridTransfer, GridProcessor, GridConsumer = Component.load({"Factory", "Weapon", "Thruster", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridConsumer"})
 
 --Grid systems
 WeaponSystem = require("code/src/systems/grids/WeaponSystem")
 ThrusterSystem = require("code/src/systems/grids/ThrusterSystem")
 GridPhysicsSystem = require("code/src/systems/grids/GridPhysicsSystem")
 GridItemSystem = require("code/src/systems/grids/GridItemSystem")
-
---Controller systems
-GridMasterSystem = require("code/src/systems/controllers/GridMasterSystem")
+GridTransferSystem = require("code/src/systems/grids/GridTransferSystem")
+GridProcessorSystem = require("code/src/systems/grids/GridProcessorSystem")
+GridConsumerSystem = require("code/src/systems/grids/GridConsumerSystem")
+GridMasterSystem = require("code/src/systems/grids/GridMasterSystem")
 
 --Graphic systems
 RenderHUDSystem = require("code/src/systems/graphic/RenderHUDSystem")
@@ -164,6 +168,10 @@ function love.load()
 	engine:addSystem(ThrusterSystem())
 	engine:addSystem(TileSetGridAnimatorSystem())
 	engine:addSystem(CleanupSystem())
+
+	engine:addSystem(GridProcessorSystem())
+	engine:addSystem(GridTransferSystem())
+	engine:addSystem(GridConsumerSystem())
 
 	playerShip_type = "intruder"
 	playerShip = Entity()

@@ -18,7 +18,7 @@
         "max":99999999999
       }
     },
-    "damage_type": "explosive",
+    "ammo_type": "bullet",
     "base_damage": 1,
     "aimed": true,
     "activation": "space",

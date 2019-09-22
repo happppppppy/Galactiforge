@@ -7,10 +7,13 @@ function ThrusterSystem:update(dt)
     local thruster = value:get("Thruster")
     local grid_item = value:get("GridItem")
     local grid_inventory = value:get("GridInventory")
-    local parent = value:getParent()
-    local physics = parent:get("PositionPhysics")
+    local grid_consumer = value:get("GridConsumer")
     local tileset = value:get("TileSetGrid")
 
+    local parent = value:getParent()
+    local physics = parent:get("PositionPhysics")
+
+    local resources_available = grid_functions:getResourceAvailable(grid_inventory)
     local velocity_x, velocity_y = physics.body:getLinearVelocity()
 
     --Render updates
@@ -23,7 +26,7 @@ function ThrusterSystem:update(dt)
     --Thruster updates
     local fire = false
 
-    if love.keyboard.isDown(thruster.activation) and grid_inventory.resources_available and parent:get("PlayerController") ~= nil then
+    if love.keyboard.isDown(thruster.activation) and resources_available and parent:get("PlayerController") ~= nil then
       thruster.particles_active = true
       fire = true
 
@@ -39,18 +42,16 @@ function ThrusterSystem:update(dt)
     end
     thruster.burn_time = thruster.burn_time + dt
     if fire == true then 
-      if thruster.burn_time > thruster.burn_rate and grid_inventory.resources_available then
-        grid_inventory.resources_used_count = grid_inventory.resources_used_count + 1
+      if thruster.burn_time > thruster.burn_rate and resources_available then
+        grid_consumer.count_used = grid_consumer.count_used + 1
         thruster.burn_time = 0
       end
     end
-
-
   end
 end
 
 function ThrusterSystem:requires()
-	return {"Thruster"}
+	return {"Thruster", "GridItem", "GridInventory", "GridConsumer", "TileSetGrid"}
 end
 
 return ThrusterSystem

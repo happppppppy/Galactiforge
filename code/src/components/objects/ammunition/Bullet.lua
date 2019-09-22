@@ -5,5 +5,4 @@ function Bullet:initialize(lifespan, damage)
   self.lifetime = 0
   self.impact = false
   self.damage = damage
-
 end

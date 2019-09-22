@@ -5,8 +5,6 @@ function GridItem:initialize(type, x, y, category, direction)
   self.type = type
 
   self.image_ref = datasets[type].image_ref or nil
-  self.grid_scale = 0.5
-  self.process_time = 0
   self.x = x
   self.y = y
 

@@ -1,0 +1,12 @@
+{
+  "raw_ore":{},
+  "stored_ore":{},
+  "crushed_ore":{},
+  "refined_ore":{},
+  "molten_metal":{},
+  "metal_billet":{},
+  "ammo_blanks":{},
+  "shells":{},
+  "water":{},
+  "fuel":{}
+}
