@@ -1,4 +1,5 @@
-local Factory, Weapon, Thruster, TileSetGrid, GridPhysics, GridItem, GridInventory, GridTransfer, GridProcessor, GridConsumer, Health = Component.load({"Factory", "Weapon", "Thruster", "TileSetGrid", "GridPhysics", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridConsumer", "Health"})
+local TileSetGrid, GridPhysics, GridItem, GridInventory, GridTransfer, GridProcessor, GridConsumer, GridBaseGraphic = Component.load({"TileSetGrid", "GridPhysics", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridConsumer", "GridBaseGraphic"})
+local Factory, Weapon, Thruster, Health = Component.load({"Factory", "Weapon", "Thruster", "Health"})
 local FieryDeath = Component.load({"FieryDeath"})
 
 local GridMasterSystem = class("GridMasterSystem", System)
@@ -29,6 +30,7 @@ function GridMasterSystem:fireEvent(event)
         new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, 0, grid_master.grid_scale))
         new_grid_item:add(GridInventory(type))
         new_grid_item:add(GridConsumer("input"))
+        new_grid_item:add(GridBaseGraphic())
 
       elseif datasets[type].category == "thruster" then
         new_grid_item:add(Thruster(type, event.x_loc, event.y_loc, direction))
@@ -101,6 +103,7 @@ function GridMasterSystem:onAddEntity(entity)
         new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, 0, grid_master.grid_scale))
         new_grid_item:add(GridInventory(grid_item.type))
         new_grid_item:add(GridConsumer("input"))
+        new_grid_item:add(GridBaseGraphic())
 
       elseif grid_item.category == "thruster" then
         new_grid_item:add(Thruster(grid_item.type, grid_item.x, grid_item.y, grid_item.direction))
