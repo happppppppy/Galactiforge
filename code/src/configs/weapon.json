@@ -15,7 +15,7 @@
     "resource_output":{},
     "ammo_type": "bullet",
     "base_damage": 1,
-    "aimed": true,
+    "aimed": false,
     "activation": "space",
     "image_ref": 81,
     "image_ref_initial_frame": 81,

@@ -180,7 +180,16 @@ function love.load()
 	engine:addSystem(GridTransferSystem())
 	engine:addSystem(GridConsumerSystem())
 
-	playerShip_type = "intruder"
+	-- playerShip_type = "intruder"
+	-- playerShip = Entity()
+	-- playerShip:add(GridMaster(ship_data[playerShip_type].starter_grid, ship_data[playerShip_type], 0.5, 32, 32, 1, 1))
+	-- playerShip:add(PositionPhysics(world,500,600,math.rad(180),"dynamic"))
+	-- playerShip:add(PlayerController())
+	-- playerShip:add(Health(100))
+	-- playerShip:add(Faction("Terran"))
+	-- engine:addEntity(playerShip)
+
+	playerShip_type = "micro_bandit"
 	playerShip = Entity()
 	playerShip:add(GridMaster(ship_data[playerShip_type].starter_grid, ship_data[playerShip_type], 0.5, 32, 32, 1, 1))
 	playerShip:add(PositionPhysics(world,500,600,math.rad(180),"dynamic"))
@@ -224,17 +233,22 @@ function love.draw()
 	love.graphics.draw(backgroundImage, backgroundQuad, 0, 0)
 	love.graphics.scale(global_zoom_level)
 
-	if lock_view_to_ship then
+	if global_build_mode then
+
 		local x_loc = playerShipLoc.body:getX()*-1+width*(1/global_zoom_level)/2
 		local y_loc = playerShipLoc.body:getY()*-1+height*(1/global_zoom_level)/2
 		
-		if global_build_mode then
-			love.graphics.translate(width*(1/global_zoom_level)/2, height*(1/global_zoom_level)/2)
-			love.graphics.rotate(playerShipLoc.body:getAngle()*-1)
-			love.graphics.translate(-width*(1/global_zoom_level)/2, -height*(1/global_zoom_level)/2)
-		end
-
+		love.graphics.translate(width*(1/global_zoom_level)/2, height*(1/global_zoom_level)/2)
+		love.graphics.rotate(playerShipLoc.body:getAngle()*-1)
+		love.graphics.translate(-width*(1/global_zoom_level)/2, -height*(1/global_zoom_level)/2)
 		love.graphics.translate(x_loc,y_loc)
+
+	elseif lock_view_to_ship then
+
+			local x_loc = playerShipLoc.body:getX()*-1+width*(1/global_zoom_level)/2
+			local y_loc = playerShipLoc.body:getY()*-1+height*(1/global_zoom_level)/2
+	
+			love.graphics.translate(x_loc,y_loc)
 	end
 
 	engine:draw()

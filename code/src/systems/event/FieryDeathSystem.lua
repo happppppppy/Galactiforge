@@ -41,15 +41,18 @@ function FieryDeathSystem:update(dt)
     local height = tg.tileset.tile_height
 
     if health.health <= 0 then
+
+
       stats.elapsed_time = stats.elapsed_time + dt
       if stats.elapsed_time > stats.animation_delay and stats.count < stats.max_count then
         stats.count = stats.count + 1
         explosion = Entity()
         explosion:add(TileSetGrid(tileset_small, nil, nil, 91, 91, 97, true, false, 0.1, true))
-        explosion:add(PositionPhysics(physics.world, grid_item.x_render + math.random (width/2*-1, width/2), grid_item.y_render + math.random (height/2*-1, height/2), grid_item.t_render + math.random (), "static"))
+        explosion:add(PositionPhysics(physics.world, grid_item.x_pos_grid_physics + math.random (width/2*-1, width/2), grid_item.y_pos_grid_physics + math.random (height/2*-1, height/2), grid_item.t_pos_grid_physics + math.random (), "static"))
         engine:addEntity(explosion)
         stats.elapsed_time = 0
       end
+      
       if stats.count >= stats.max_count then
         --NOTE, performance risk!
         for i,v in pairs(global_target_list) do
@@ -59,7 +62,7 @@ function FieryDeathSystem:update(dt)
             end
           end
         end
-        engine:removeEntity(value, true)
+      engine:removeEntity(value, true)
       end
     end
   end

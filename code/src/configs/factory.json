@@ -18,7 +18,6 @@
         "max":100
       }
     },
-    "auto_increment": true,
     "image_ref": 11,
     "image_ref_initial_frame": 11,
     "image_ref_final_frame": 17,
@@ -46,7 +45,6 @@
         "max":100
       }
     },
-    "auto_increment": true,
     "image_ref": 21,
     "image_ref_initial_frame": 21,
     "image_ref_final_frame": 27,
@@ -74,7 +72,6 @@
         "max":100
       }
     },
-    "auto_increment": true,
     "image_ref": 31,
     "image_ref_initial_frame": 31,
     "image_ref_final_frame": 37,
@@ -102,7 +99,6 @@
         "max":100
       }
     },
-    "auto_increment": true,
     "image_ref": 41,
     "image_ref_initial_frame": 41,
     "image_ref_final_frame": 47,
@@ -130,7 +126,6 @@
         "max":100
       }
     },
-    "auto_increment": true,
     "image_ref": 51,
     "image_ref_initial_frame": 51,
     "image_ref_final_frame": 57,
@@ -158,7 +153,6 @@
         "max":100
       }
     },
-    "auto_increment": true,
     "image_ref": 61,
     "image_ref_initial_frame": 61,
     "image_ref_final_frame": 67,
@@ -186,10 +180,36 @@
         "max":100
       }
     },
-    "auto_increment": true,
     "image_ref": 71,
     "image_ref_initial_frame": 71,
     "image_ref_final_frame": 77,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "shell_crate":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.02,
+    "resource_input": {
+      "shells": {
+        "count":0,
+        "max":10000,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "shells": {
+        "count":10000,
+        "max":10000
+      }
+    },
+    "image_ref": 141,
+    "image_ref_initial_frame": 141,
+    "image_ref_final_frame": 141,
     "animated": true,
     "animate_continuous": true,
     "render_delay": 0.1,
@@ -214,7 +234,6 @@
         "max":100
       }
     },
-    "auto_increment": true,
     "image_ref": 71,
     "image_ref_initial_frame": 71,
     "image_ref_final_frame": 77,
@@ -241,7 +260,6 @@
         "max":100
       }
     },
-    "auto_increment": true,
     "image_ref": 131,
     "image_ref_initial_frame": 131,
     "image_ref_final_frame": 136,

@@ -1,4 +1,33 @@
 {
+  "micro_bandit": {
+    "allowed_grid":{
+      "grid_map":[
+        [1,1,1],
+        [1,1,1],
+        [1,1,1],
+        [1,1,1],
+        [1,1,1],
+        [1,1,1]
+      ],
+      "grid_origin":{
+        "x": 2,
+        "y": 3
+      }
+    },
+    "linear_damping": 0.2,
+    "angular_damping": 0.2,
+    "starter_grid": [
+      {"category":"thruster", "type":"large_thruster", "x":0, "y":-3, "direction" : 180},
+      {"category":"factory", "type":"fuel_generator", "x":0, "y":-2},		
+      {"category":"factory", "type":"fuel_generator","x":0,"y":1}, 
+      {"category":"thruster", "type":"mini_thruster", "x":-1, "y":1, "direction" : 90},
+      {"category":"thruster", "type":"mini_thruster", "x":1, "y":1, "direction" : 270},
+      {"category":"thruster", "type":"large_thruster", "x":0, "y":2, "direction" : 0},
+      {"category":"weapon", "type":"cannon", "x":-1, "y":-1},
+      {"category":"weapon", "type":"cannon", "x":1, "y":-1},
+      {"category":"factory", "type":"shell_crate", "x":0, "y":-1}
+    ]
+  },
   "intruder": {
     "allowed_grid":{
       "grid_map":[
