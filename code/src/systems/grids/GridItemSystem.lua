@@ -21,7 +21,7 @@ function GridItemSystem:update(dt)
     local grid_base = value:get("GridBaseGraphic")
 
     if grid_base ~= nil then
-      grid_base.render_angle = physics.body:getAngle()
+      grid_base.render_angle = 0
     end
 
     grid_item.t_render = 0

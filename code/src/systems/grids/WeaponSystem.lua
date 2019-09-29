@@ -23,7 +23,8 @@ function WeaponSystem:update(dt)
       --Render updates
       if weapon.aimed then
         mouse_x, mouse_y = love.graphics.inverseTransformPoint( love.mouse.getPosition() )
-        grid_item.t_render = math.atan2(mouse_y - grid_item.y_render, mouse_x - grid_item.x_render) + math.rad(90)
+        grid_item.t_pos_grid_physics = math.atan2(mouse_y - grid_item.y_pos_grid_physics, mouse_x - grid_item.x_pos_grid_physics) + math.rad(90)
+        grid_item.t_render = grid_item.t_pos_grid_physics --Not correct :(
       end
 
       --Fire control updates      
@@ -42,9 +43,10 @@ function WeaponSystem:update(dt)
       for i,v in pairs(global_target_list) do
         if i ~= AIFaction.faction then
           for j,k in pairs(v) do
-            grid_item.t_render = math.atan2(k.grid.y_render - grid_item.y_render, k.grid.x_render - grid_item.x_render) + 1.5708
-            AIController.target_direction = grid_item.t_render
-            AIController.target_range = math.sqrt((k.grid.y_render - grid_item.y_render)^2 + (k.grid.x_render - grid_item.x_render)^2) 
+            grid_item.t_pos_grid_physics = math.atan2(k.grid.y_pos_grid_physics - grid_item.y_pos_grid_physics, k.grid.x_pos_grid_physics - grid_item.x_pos_grid_physics) + 1.5708
+            grid_item.t_render = grid_item.t_pos_grid_physics + math.rad(180) --Not correct :(
+            AIController.target_direction = grid_item.t_pos_grid_physics
+            AIController.target_range = math.sqrt((k.grid.y_pos_grid_physics - grid_item.y_pos_grid_physics)^2 + (k.grid.x_pos_grid_physics - grid_item.x_pos_grid_physics)^2) 
             
             if AIController.target_range < AIController.range then 
               fire = true
@@ -65,12 +67,10 @@ function WeaponSystem:update(dt)
 
           grid_consumer.count_used = grid_consumer.count_used + 1
           local x_vel, y_vel = physics.body:getLinearVelocity()
-          
-          _, x_render, y_render = grid_functions:getRenderPositions(grid_item.x, grid_item.y, grid_item.grid_scale, tg, physics, 0, 0)
-          
+       
           bullet = Entity()
           bullet:add(TileSetGrid(tileset_small, nil, nil, 101, 101, 103, true, true, 0.1, false))
-          bullet:add(PositionPhysics(world, x_render, y_render, grid_item.t_render, "dynamic"))
+          bullet:add(PositionPhysics(world, grid_item.x_pos_grid_physics, grid_item.y_pos_grid_physics, grid_item.t_pos_grid_physics, "dynamic"))
           bullet:add(DynamicPhysics(0, 0, 5000, 5000, 0, 0, 400, x_vel, y_vel))
           bullet:add(CollisionPhysics("Circle",  1, nil, 1, grid_master.physics.category, grid_master.physics.mask))
           bullet:add(Bullet(5, weapon.base_damage))
