@@ -60,9 +60,9 @@
       "lifemax":0.5,
       "emitspeed": 100
     },
-    "image_ref": 1,
-    "image_ref_initial_frame": 1,
-    "image_ref_final_frame": 1,
+    "image_ref": 2,
+    "image_ref_initial_frame": 2,
+    "image_ref_final_frame": 2,
     "animated": false,
     "animate_continuous": false,
     "render_delay": 0.1,

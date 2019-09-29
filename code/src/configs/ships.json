@@ -25,7 +25,15 @@
       {"category":"thruster", "type":"large_thruster", "x":0, "y":2, "direction" : 0},
       {"category":"weapon", "type":"cannon", "x":-1, "y":-1},
       {"category":"weapon", "type":"cannon", "x":1, "y":-1},
-      {"category":"factory", "type":"shell_crate", "x":0, "y":-1}
+      {"category":"factory", "type":"shell_crate", "x":0, "y":-1},
+      {"category":"armor", "type":"armor_corner","x":1,"y":-3, "direction" : 90},
+      {"category":"armor", "type":"armor_corner","x":-1,"y":-3, "direction" : 0},
+      {"category":"armor", "type":"armor_corner","x":1,"y":2, "direction" : 180},
+      {"category":"armor", "type":"armor_corner","x":-1,"y":2, "direction" : 270},
+      {"category":"armor", "type":"armor_full","x":1,"y":-2, "direction" : 0},
+      {"category":"armor", "type":"armor_full","x":-1,"y":-2, "direction" : 0},
+      {"category":"armor", "type":"armor_full","x":1,"y":0, "direction" : 0},
+      {"category":"armor", "type":"armor_full","x":-1,"y":0, "direction" : 0}
     ]
   },
   "intruder": {
