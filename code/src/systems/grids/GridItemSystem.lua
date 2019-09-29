@@ -30,7 +30,6 @@ function GridItemSystem:update(dt)
     if grid_item.flag_for_removal then
       engine:removeEntity(value)
     end
-
   end
 end
 

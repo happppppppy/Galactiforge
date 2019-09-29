@@ -13,6 +13,10 @@ function GridItem:initialize(type, x, y, category, direction, grid_scale)
   self.y_render = 0
   self.t_render = 0
 
+  self.t_pos_grid_physics = 0
+  self.x_pos_grid_physics = 0
+  self.y_pos_grid_physics = 0
+
   self.direction = direction or 0
 
   if self.direction == 0 then

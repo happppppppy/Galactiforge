@@ -1,18 +1,5 @@
 local grid_functions = {}
 
-function grid_functions:getRenderPositions(x_pos, y_pos, grid_scale, tg, physics)
-
-  local offset_dist = math.sqrt((x_pos*tg.tileset.tile_width)^2 + (y_pos*tg.tileset.tile_height)^2)*grid_scale
-  local offset_angle = math.atan2((y_pos*tg.tileset.tile_height),(x_pos*tg.tileset.tile_width))
-  
-  t_render = physics.body:getAngle()
-  x_pos_render = physics.body:getX()+offset_dist*math.cos(t_render + offset_angle)
-  y_pos_render = physics.body:getY()+offset_dist*math.sin(t_render + offset_angle)
-
-  return t_render,x_pos_render,y_pos_render
-
-end
-
 function grid_functions:getGridPosition(x_pos, y_pos, grid_scale, tg, physics)
   local offset_dist = math.sqrt((x_pos*tg.tileset.tile_width)^2 + (y_pos*tg.tileset.tile_height)^2)*grid_scale
   local offset_angle = math.atan2((y_pos*tg.tileset.tile_height),(x_pos*tg.tileset.tile_width))

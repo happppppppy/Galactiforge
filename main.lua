@@ -89,6 +89,10 @@ DamageSystem = require("code/src/systems/event/DamageSystem")
 BulletSystem = require("code/src/systems/event/BulletSystem")
 FieryDeathSystem = require("code/src/systems/event/FieryDeathSystem")
 
+--Controller systems
+AIControllerSystem = require("code/src/systems/controllers/AIControllerSystem")
+PlayerControllerSystem = require("code/src/systems/controllers/PlayerControllerSystem")
+
 --Events
 require("code/src/events/KeyPressed")
 require("code/src/events/MousePressed")
@@ -113,7 +117,9 @@ function love.load()
 
 	global_component_name_list = {}
 	for i,v in pairs(datasets) do
-		global_component_name_list[#global_component_name_list + 1] = i
+		if v.category == "armor" or v.category == "factory"or v.category == "technology" or v.category == "thruster" or v.category == "weapon" then 
+			global_component_name_list[#global_component_name_list + 1] = i
+		end
 	end
 
 	ship_data = helper_functions.openjson("code/src/configs/ships.json") 
@@ -131,6 +137,8 @@ function love.load()
 	global_component_directions = {0,90,180,270}
 	global_component_direction_index = 1
 	global_target_list = {}
+	global_ai_active = false
+	global_build_mode = false
 
 	--Canvases
 	backgroundImage = love.graphics.newImage("assets/images/space_breaker_asset/Background/stars_texture.png")
@@ -165,6 +173,8 @@ function love.load()
 	engine:addSystem(ThrusterSystem())
 	engine:addSystem(TileSetGridAnimatorSystem())
 	engine:addSystem(CleanupSystem())
+
+	engine:addSystem(AIControllerSystem())
 
 	engine:addSystem(GridProcessorSystem())
 	engine:addSystem(GridTransferSystem())
@@ -217,6 +227,13 @@ function love.draw()
 	if lock_view_to_ship then
 		local x_loc = playerShipLoc.body:getX()*-1+width*(1/global_zoom_level)/2
 		local y_loc = playerShipLoc.body:getY()*-1+height*(1/global_zoom_level)/2
+		
+		if global_build_mode then
+			love.graphics.translate(width*(1/global_zoom_level)/2, height*(1/global_zoom_level)/2)
+			love.graphics.rotate(playerShipLoc.body:getAngle()*-1)
+			love.graphics.translate(-width*(1/global_zoom_level)/2, -height*(1/global_zoom_level)/2)
+		end
+
 		love.graphics.translate(x_loc,y_loc)
 	end
 
@@ -233,6 +250,10 @@ end
 
 function love.mousepressed(x, y, button)
 	eventmanager:fireEvent(MousePressed(x, y, button))
+end
+
+function love.wheelmoved( dx, dy )
+	global_zoom_level = global_zoom_level + dy * 0.1
 end
 
 function beginContact(a, b, coll)

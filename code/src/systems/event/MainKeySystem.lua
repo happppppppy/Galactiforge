@@ -49,6 +49,15 @@ function MainKeySystem:fireEvent(event)
     end
   end
 
+  if event.key == "b" then
+    global_build_mode = not global_build_mode
+    if global_build_mode then
+      global_zoom_level = 2
+    else
+      global_zoom_level = 1
+    end
+  end
+
 end
 
 

@@ -7,7 +7,8 @@ Features
 - Click to place factories/weapons etc
 - Weapon and ammo variety
 - Thruster fuel production and variety
-- Weapon, thruster, shields etc stats are determined by the ship factory capabilities
+
+*** KEY FEATURE *** - Weapon, thruster, shields etc stats are determined by the ship factory capabilities
 
 
 
