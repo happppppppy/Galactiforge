@@ -1,6 +1,10 @@
 local RenderGridMasterSystem = class("RenderGridMasterSystem", System)
 
-local function UpdateRenders(tg, grid_item, grid_inventory, grid_base)
+local function UpdateRenders(tg, grid_item, grid_inventory, grid_base, physics)
+  love.graphics.push()
+  love.graphics.translate(physics.body:getX(),physics.body:getY())
+  love.graphics.rotate(physics.body:getAngle())
+  
   if grid_base ~= nil then
     love.graphics.draw(tg.tileset.image, tg.tileset.tiles[114], grid_item.x_render, grid_item.y_render, grid_base.render_angle, grid_item.grid_scale, grid_item.grid_scale,  tg.tileset.tile_width/2, tg.tileset.tile_height/2)
   end
@@ -17,6 +21,8 @@ local function UpdateRenders(tg, grid_item, grid_inventory, grid_base)
       y_offset = y_offset + 10
     end
   end
+
+  love.graphics.pop()
 end
 
 function RenderGridMasterSystem:draw()
@@ -25,8 +31,10 @@ function RenderGridMasterSystem:draw()
     local grid_inventory = value:get("GridInventory")
     local tg = value:get("TileSetGrid")
     local grid_base = value:get("GridBaseGraphic")
+    local parent = value:getParent()
+    local physics = parent:get("PositionPhysics")
 
-    UpdateRenders(tg, grid_item, grid_inventory, grid_base)
+    UpdateRenders(tg, grid_item, grid_inventory, grid_base, physics)
   end
 
   for index, value in pairs(self.targets.pool2) do

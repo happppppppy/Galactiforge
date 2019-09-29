@@ -24,8 +24,9 @@ function GridItemSystem:update(dt)
       grid_base.render_angle = physics.body:getAngle()
     end
 
-    grid_item.t_render, grid_item.x_render, grid_item.y_render = grid_functions:getRenderPositions(grid_item.x, grid_item.y, grid_item.grid_scale, tileset, physics, 0, 0)
-
+    grid_item.t_render = 0
+    grid_item.x_render, grid_item.y_render, grid_item.t_pos_grid_physics, grid_item.x_pos_grid_physics, grid_item.y_pos_grid_physics = grid_functions:getGridPosition(grid_item.x, grid_item.y, grid_item.grid_scale, tileset, physics)
+   
     if grid_item.flag_for_removal then
       engine:removeEntity(value)
     end

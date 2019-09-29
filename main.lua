@@ -126,15 +126,11 @@ function love.load()
 
 	--Global variables
 	global_show_resource_count = false
-	lock_view_to_ship = true
+	lock_view_to_ship = false
 	global_component_index = 1
 	global_component_directions = {0,90,180,270}
 	global_component_direction_index = 1
 	global_target_list = {}
-
-
-
-	--AIThread (DONT KNOW HOW TO DO THIS YET...)
 
 	--Canvases
 	backgroundImage = love.graphics.newImage("assets/images/space_breaker_asset/Background/stars_texture.png")
@@ -183,7 +179,7 @@ function love.load()
 	playerShip:add(Faction("Terran"))
 	engine:addEntity(playerShip)
 
-	for i=1, 10, 1 do
+	for i=1, 5, 1 do
 		opponentShip_type = "intruder"
 		opponentShip = Entity()
 		opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))
@@ -195,7 +191,7 @@ function love.load()
 		print(i)
 	end
 
-	
+	lines = {}
 end
 
 local elapsedTime = 0
@@ -225,6 +221,10 @@ function love.draw()
 	end
 
 	engine:draw()
+
+	for _,v in pairs(lines) do
+		love.graphics.line(0,0,v[1],v[2])
+	end
 end
 
 function love.keypressed(key, isrepeat)
