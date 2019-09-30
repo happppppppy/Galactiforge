@@ -10,6 +10,18 @@ Features
 
 *** KEY FEATURE *** - Weapon, thruster, shields etc stats are determined by the ship factory capabilities
 
+Physical ammo stats are created by the factories that produce them. i.e. shells can be packed with more powder or different explosives.
+
+Energy weapon stats are created by the power systems that supply them. i.e. lasers can be cooled by water, cryoliquid etc, pumping pressures can be
+  increased, energy storage and supply can be more advanced.
+
+Thrusters can be cooled by water, cryoliquid to make them faster. Fuel and coolant pumping pressure can ramp up. 
+
+Your ship is like a mini RTS / Factorio clone.
+
+Ships are strong and don't go down easy.
+
+There must be at least one ship core.
 
 
 Galactiforge story
