@@ -1,4 +1,4 @@
-local TileSetGrid, GridPhysics, GridItem, GridInventory, GridTransfer, GridProcessor, GridConsumer, GridBaseGraphic = Component.load({"TileSetGrid", "GridPhysics", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridConsumer", "GridBaseGraphic"})
+local TileSetGrid, GridPhysics, GridItem, GridInventory, GridTransfer, GridProcessor, GridConsumer, GridBaseGraphic, GridHeat = Component.load({"TileSetGrid", "GridPhysics", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridConsumer", "GridBaseGraphic", "GridHeat"})
 local Factory, Weapon, Thruster, Health = Component.load({"Factory", "Weapon", "Thruster", "Health"})
 local FieryDeath = Component.load({"FieryDeath"})
 
@@ -30,6 +30,7 @@ function GridMasterSystem:fireEvent(event)
         new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, 0, grid_master.grid_scale))
         new_grid_item:add(GridInventory(type))
         new_grid_item:add(GridConsumer("input"))
+        new_grid_item:add(GridHeat())
         new_grid_item:add(GridBaseGraphic())
 
       elseif datasets[type].category == "thruster" then

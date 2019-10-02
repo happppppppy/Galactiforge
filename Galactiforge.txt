@@ -17,11 +17,18 @@ Energy weapon stats are created by the power systems that supply them. i.e. lase
 
 Thrusters can be cooled by water, cryoliquid to make them faster. Fuel and coolant pumping pressure can ramp up. 
 
+Active grids heat up: 
+ Cannons - Fire rate is slowed. --Implemented in a basic form.
+ Lasers - Range and damage reduced.
+ Thrusters - Thrust is reduced.
+
+
+
 Your ship is like a mini RTS / Factorio clone.
 
 Ships are strong and don't go down easy.
 
-There must be at least one ship core.
+There must be at least one ship core otherwise big kaboom!!.
 
 
 Galactiforge story

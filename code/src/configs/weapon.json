@@ -7,7 +7,7 @@
     "process_delay": 0.3,
     "resource_input": {
       "shells": {
-        "count":0,
+        "count":100,
         "max":10,
         "use_rate": 1
       }
@@ -15,7 +15,9 @@
     "resource_output":{},
     "ammo_type": "bullet",
     "base_damage": 1,
-    "aimed": false,
+    "heat": 0,
+    "projectile_velocity": 200,
+    "aimed": true,
     "activation": "space",
     "image_ref": 81,
     "image_ref_initial_frame": 81,

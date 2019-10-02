@@ -164,5 +164,17 @@
       {"category":"factory", "type":"assembly_centre","x":-1,"y":1},
       {"category":"weapon", "type":"cannon", "x":-1, "y":0}
     ]
+  },
+  "blank_canvas": {
+    "allowed_grid":{
+      "grid_map":[],
+      "grid_origin":{
+        "x": 20,
+        "y": 20
+      }
+    },
+    "linear_damping": 0.2,
+    "angular_damping": 0.2,
+    "starter_grid": []
   }
 }

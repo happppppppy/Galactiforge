@@ -11,6 +11,7 @@ function WeaponSystem:update(dt)
     local grid_inventory = value:get("GridInventory")
     local tg = value:get("TileSetGrid")
     local grid_consumer = value:get("GridConsumer")
+    local grid_heat = value:get("GridHeat")
 
     local parent = value:getParent()
     local physics = parent:get("PositionPhysics")
@@ -57,30 +58,34 @@ function WeaponSystem:update(dt)
       end
     end
 
-      if not (weapon.fire_time > weapon.fire_rate) then weapon.fire_time = weapon.fire_time + dt end
+    local modified_fire_rate = weapon.fire_rate / ((grid_heat.max_heat - grid_heat.heat)/grid_heat.max_heat)
+    if not (weapon.fire_time > modified_fire_rate) then weapon.fire_time = weapon.fire_time + dt end
+    
+    if grid_heat.heat > 0 then  grid_heat.heat = grid_heat.heat - grid_heat.natural_cool_rate * dt end
+    print(grid_heat.heat)
+    if fire then 
 
-      if fire then 
-        if weapon.fire_time > weapon.fire_rate and resources_available then
-          if tg.animated then
-            tg.animation_complete = false
-          end
+      if weapon.fire_time > modified_fire_rate and resources_available then
+        if grid_heat.heat < (grid_heat.max_heat - grid_heat.heat_rate) then grid_heat.heat = grid_heat.heat + grid_heat.heat_rate end
 
-          grid_consumer.count_used = grid_consumer.count_used + 1
-          local x_vel, y_vel = physics.body:getLinearVelocity()
-       
-          bullet = Entity()
-          bullet:add(TileSetGrid(tileset_small, nil, nil, 101, 101, 103, true, true, 0.1, false))
-          bullet:add(PositionPhysics(world, grid_item.x_pos_grid_physics, grid_item.y_pos_grid_physics, grid_item.t_pos_grid_physics, "dynamic"))
-          bullet:add(DynamicPhysics(0, 0, 5000, 5000, 0, 0, 400, x_vel, y_vel))
-          bullet:add(CollisionPhysics("Circle",  1, nil, 1, grid_master.physics.category, grid_master.physics.mask))
-          bullet:add(Bullet(5, weapon.base_damage))
-          engine:addEntity(bullet)
-
-          weapon.fire_time = 0
+        if tg.animated then
+          tg.animation_complete = false
         end
+
+        grid_consumer.count_used = grid_consumer.count_used + 1
+        local x_vel, y_vel = physics.body:getLinearVelocity()
+      
+        bullet = Entity()
+        bullet:add(TileSetGrid(tileset_small, nil, nil, 101, 101, 103, true, true, 0.1, false))
+        bullet:add(PositionPhysics(world, grid_item.x_pos_grid_physics, grid_item.y_pos_grid_physics, grid_item.t_pos_grid_physics, "dynamic"))
+        bullet:add(DynamicPhysics(0, 0, 5000, 5000, 0, 0, 400, x_vel, y_vel))
+        bullet:add(CollisionPhysics("Circle",  1, nil, 1, grid_master.physics.category, grid_master.physics.mask))
+        bullet:add(Bullet(5, weapon.base_damage))
+        engine:addEntity(bullet)
+
+        weapon.fire_time = 0
       end
-
-
+    end
   end
 end
 

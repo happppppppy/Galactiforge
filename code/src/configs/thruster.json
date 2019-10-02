@@ -7,7 +7,7 @@
     "process_delay": 0.1,
     "resource_input": {
       "fuel":{
-        "count": 0,
+        "count": 4000,
         "max": 4000,
         "use_rate": 1
       }

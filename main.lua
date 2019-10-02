@@ -54,10 +54,11 @@ require("code/src/components/objects/grids/GridTransfer")
 require("code/src/components/objects/grids/GridProcessor")
 require("code/src/components/objects/grids/GridConsumer")
 require("code/src/components/objects/grids/GridBaseGraphic")
+require("code/src/components/objects/grids/GridHeat")
 require("code/src/components/objects/grids/Factory")
 require("code/src/components/objects/grids/Weapon")
 require("code/src/components/objects/grids/Thruster")
-local Factory, Weapon, Thruster, GridItem, GridInventory, GridTransfer, GridProcessor, GridConsumer, GridBaseGraphic = Component.load({"Factory", "Weapon", "Thruster", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridConsumer", "GridBaseGraphic"})
+local Factory, Weapon, Thruster, GridItem, GridInventory, GridTransfer, GridProcessor, GridConsumer, GridBaseGraphic, GridHeat = Component.load({"Factory", "Weapon", "Thruster", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridConsumer", "GridBaseGraphic", "GridHeat"})
 
 --Grid systems
 WeaponSystem = require("code/src/systems/grids/WeaponSystem")
@@ -189,7 +190,16 @@ function love.load()
 	-- playerShip:add(Faction("Terran"))
 	-- engine:addEntity(playerShip)
 
-	playerShip_type = "micro_bandit"
+	-- playerShip_type = "micro_bandit"
+	-- playerShip = Entity()
+	-- playerShip:add(GridMaster(ship_data[playerShip_type].starter_grid, ship_data[playerShip_type], 0.5, 32, 32, 1, 1))
+	-- playerShip:add(PositionPhysics(world,500,600,math.rad(180),"dynamic"))
+	-- playerShip:add(PlayerController())
+	-- playerShip:add(Health(100))
+	-- playerShip:add(Faction("Terran"))
+	-- engine:addEntity(playerShip)
+
+	playerShip_type = "blank_canvas"
 	playerShip = Entity()
 	playerShip:add(GridMaster(ship_data[playerShip_type].starter_grid, ship_data[playerShip_type], 0.5, 32, 32, 1, 1))
 	playerShip:add(PositionPhysics(world,500,600,math.rad(180),"dynamic"))
@@ -199,33 +209,34 @@ function love.load()
 	engine:addEntity(playerShip)
 
 
-		opponentShip_type = "intruder"
-		opponentShip = Entity()
-		opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))
-		opponentShip:add(PositionPhysics(world,800,900,0,"dynamic"))
-		opponentShip:add(AIController())
-		opponentShip:add(Health(100))
-		opponentShip:add(Faction("Splorg"))
-		engine:addEntity(opponentShip)
 
-		opponentShip_type = "micro_bandit"
-		opponentShip = Entity()
-		opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))
-		opponentShip:add(PositionPhysics(world,700,800,0,"dynamic"))
-		opponentShip:add(AIController())
-		opponentShip:add(Health(100))
-		opponentShip:add(Faction("Splorg"))
-		engine:addEntity(opponentShip)
+	opponentShip_type = "blank_canvas"
+	opponentShip = Entity()
+	opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))
+	opponentShip:add(PositionPhysics(world,2000,1900,0,"dynamic"))
+	-- opponentShip:add(AIController())
+	opponentShip:add(Health(100))
+	opponentShip:add(Faction("Splorg"))
+	engine:addEntity(opponentShip)
+
+		-- opponentShip_type = "micro_bandit"
+		-- opponentShip = Entity()
+		-- opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))
+		-- opponentShip:add(PositionPhysics(world,700,800,0,"dynamic"))
+		-- opponentShip:add(AIController())
+		-- opponentShip:add(Health(100))
+		-- opponentShip:add(Faction("Splorg"))
+		-- engine:addEntity(opponentShip)
 
 		
-		opponentShip_type = "micro_bandit"
-		opponentShip = Entity()
-		opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))
-		opponentShip:add(PositionPhysics(world,900,800,0,"dynamic"))
-		opponentShip:add(AIController())
-		opponentShip:add(Health(100))
-		opponentShip:add(Faction("Splorg"))
-		engine:addEntity(opponentShip)
+		-- opponentShip_type = "micro_bandit"
+		-- opponentShip = Entity()
+		-- opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))
+		-- opponentShip:add(PositionPhysics(world,900,800,0,"dynamic"))
+		-- opponentShip:add(AIController())
+		-- opponentShip:add(Health(100))
+		-- opponentShip:add(Faction("Splorg"))
+		-- engine:addEntity(opponentShip)
 
 
 	lines = {}
