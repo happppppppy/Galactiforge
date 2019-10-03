@@ -22,7 +22,11 @@ function Thruster:initialize(type, x, y, direction)
   self.pSystem:setParticleLifetime(datasets[type].particle.lifemin, datasets[type].particle.lifemax)
   self.pSystem:setEmissionRate(0)
   self.pSystem:setSizeVariation(1)
-  self.pSystem:setSizes(0.6, 0.6, 1.0, 1.0)
+  self.pSystem:setSizes(
+    0.6 * datasets[type].exhaust_scale, 
+    0.6 * datasets[type].exhaust_scale, 
+    1.0 * datasets[type].exhaust_scale, 
+    1.0 * datasets[type].exhaust_scale)
   self.pSystem:setRotation(datasets[type].particle.rmin,datasets[type].particle.rmax)
   self.emitspeed = datasets[type].particle.emitspeed
   self.particles_active = false

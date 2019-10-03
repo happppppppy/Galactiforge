@@ -4,6 +4,8 @@ function GridMaster:initialize(grid, grid_specs, grid_scale, grid_width, grid_he
   self.grid_specs = grid_specs
   self.grid = grid or {}
 
+  self.health = 0
+
   self.grid_scale = grid_scale
   self.grid_size = {
     width = grid_width,

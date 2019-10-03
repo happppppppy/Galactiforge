@@ -32,7 +32,8 @@
     "animate_continuous": false,
     "render_delay": 0.25,
     "use_instantaneously": true,
-    "health": 30
+    "health": 30,
+    "exhaust_scale": 1
   },
   "mini_thruster":{
     "transfer_grid":[
@@ -67,6 +68,7 @@
     "animate_continuous": false,
     "render_delay": 0.1,
     "use_instantaneously": true,
-    "health": 30
+    "health": 30,
+    "exhaust_scale": 0.5
   }
 }

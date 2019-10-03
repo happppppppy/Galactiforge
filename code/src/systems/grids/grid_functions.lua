@@ -14,15 +14,20 @@ function grid_functions:getGridPosition(x_pos, y_pos, grid_scale, tg, physics)
   return x_pos_grid, y_pos_grid, t_pos_grid_physics, x_pos_grid_physics, y_pos_grid_physics
 end
 
-function grid_functions:getResourceAvailable(grid_item)
-  local resources_available = true
+function grid_functions:getResourceAvailable(grid_item, category)
+  local resources_found = {}
+  local resources_available = false
+
   for res_in_index,res_in_value in pairs(grid_item.resource_input) do
-    if grid_item.resource_input[res_in_index].count <= 0 then
-      resources_available = false
+    if grid_item.resource_input[res_in_index].category == category then
+      if grid_item.resource_input[res_in_index].count > 0 then
+        table.insert(resources_found, res_in_index)
+      end
     end
   end
+  if #resources_found > 0 then resources_available = true end
 
-  return resources_available
+  return resources_found, resources_available
 end
 
 return grid_functions

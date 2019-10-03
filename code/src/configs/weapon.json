@@ -9,7 +9,15 @@
       "shells": {
         "count":100,
         "max":10,
-        "use_rate": 1
+        "use_rate": 1,
+        "category": "Ammunition"
+      },
+      "cryofluid": {
+        "count":100,
+        "max":1000,
+        "use_rate": 10,
+        "efficiency":10,
+        "category": "Coolant"
       }
     },
     "resource_output":{},

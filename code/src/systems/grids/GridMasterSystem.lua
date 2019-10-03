@@ -81,6 +81,8 @@ function GridMasterSystem:onAddEntity(entity)
   new_grid_item:add(GridItem("ship_core", 0, 0, "technology", 0, grid_master.grid_scale))
   engine:addEntity(new_grid_item)
   grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - 0][grid_master.grid_specs.allowed_grid.grid_origin.x - 0] = 1
+  local health = new_grid_item:get("Health")
+  grid_master.health = health.health
 
   --Add components from the given grid
   for i,grid_item in pairs(grid_master.grid) do
@@ -104,6 +106,7 @@ function GridMasterSystem:onAddEntity(entity)
         new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, 0, grid_master.grid_scale))
         new_grid_item:add(GridInventory(grid_item.type))
         new_grid_item:add(GridConsumer("input"))
+        new_grid_item:add(GridHeat())
         new_grid_item:add(GridBaseGraphic())
 
       elseif grid_item.category == "thruster" then

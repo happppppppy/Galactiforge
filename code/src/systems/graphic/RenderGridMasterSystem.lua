@@ -13,11 +13,11 @@ local function UpdateRenders(tg, grid_item, grid_inventory, grid_base, physics)
   
   if global_show_resource_count and grid_inventory ~= nil then   
     for i,v in pairs(grid_inventory.resource_output) do
-      love.graphics.print(v.count, grid_item.x_render, grid_item.y_render, grid_item.t_render, grid_item.grid_scale, grid_item.grid_scale,tileset.tile_width/2, tileset.tile_height/2)
+      love.graphics.print(string.format("%02.0f", v.count), grid_item.x_render, grid_item.y_render, grid_item.t_render, grid_item.grid_scale, grid_item.grid_scale,tileset.tile_width/2, tileset.tile_height/2)
     end
     y_offset = 10
     for i,v in pairs(grid_inventory.resource_input) do
-      love.graphics.print(v.count, grid_item.x_render, grid_item.y_render, grid_item.t_render, grid_item.grid_scale, grid_item.grid_scale,tileset.tile_width/2, tileset.tile_height/2-y_offset)
+      love.graphics.print(string.format("%02.0f", v.count), grid_item.x_render, grid_item.y_render, grid_item.t_render, grid_item.grid_scale, grid_item.grid_scale,tileset.tile_width/2, tileset.tile_height/2-y_offset)
       y_offset = y_offset + 10
     end
   end

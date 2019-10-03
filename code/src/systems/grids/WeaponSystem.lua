@@ -17,9 +17,9 @@ function WeaponSystem:update(dt)
     local physics = parent:get("PositionPhysics")
     local grid_master = parent:get("GridMaster")
 
-
     local fire = false
-    local resources_available = grid_functions:getResourceAvailable(grid_inventory)
+    local resources_found, resources_available = grid_functions:getResourceAvailable(grid_inventory, "Ammunition")
+
     if parent:get("PlayerController") ~= nil then
       --Render updates
       if weapon.aimed then
@@ -60,11 +60,8 @@ function WeaponSystem:update(dt)
 
     local modified_fire_rate = weapon.fire_rate / ((grid_heat.max_heat - grid_heat.heat)/grid_heat.max_heat)
     if not (weapon.fire_time > modified_fire_rate) then weapon.fire_time = weapon.fire_time + dt end
-    
-    if grid_heat.heat > 0 then  grid_heat.heat = grid_heat.heat - grid_heat.natural_cool_rate * dt end
-    print(grid_heat.heat)
-    if fire then 
 
+    if fire then 
       if weapon.fire_time > modified_fire_rate and resources_available then
         if grid_heat.heat < (grid_heat.max_heat - grid_heat.heat_rate) then grid_heat.heat = grid_heat.heat + grid_heat.heat_rate end
 
@@ -72,7 +69,10 @@ function WeaponSystem:update(dt)
           tg.animation_complete = false
         end
 
-        grid_consumer.count_used = grid_consumer.count_used + 1
+        for _,v in pairs(resources_found) do
+          grid_inventory.resource_input[v].consumed = grid_inventory.resource_input[v].consumed + 1
+        end 
+
         local x_vel, y_vel = physics.body:getLinearVelocity()
       
         bullet = Entity()

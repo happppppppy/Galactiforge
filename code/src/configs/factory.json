@@ -215,6 +215,33 @@
     "render_delay": 0.1,
     "health": 30
   },
+  "cryofluid_crate":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.01,
+    "resource_input": {
+      "cryofluid": {
+        "count":0,
+        "max":10000,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "cryofluid": {
+        "count":10000,
+        "max":10000
+      }
+    },
+    "image_ref": 142,
+    "image_ref_initial_frame": 142,
+    "image_ref_final_frame": 142,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
   "fuel_generator":{
     "transfer_grid":[
       [0,1,0],
@@ -249,16 +276,8 @@
       [0,1,0]],
     "process_delay": 0.01,
     "resource_input":{
-      "fuel": {
-        "count":0,
-        "max":100
-      }
     },
     "resource_output":{
-      "fuel": {
-        "count":0,
-        "max":100
-      }
     },
     "image_ref": 131,
     "image_ref_initial_frame": 131,
