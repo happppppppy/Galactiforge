@@ -1,24 +1,24 @@
 local GridInventory = Component.create("GridInventory")
 function GridInventory:initialize(type)
-  self.resource_input = {}
-  for i,v in pairs(datasets[type].resource_input) do
-    self.resource_input[i] = {}
-    self.resource_input[i].count = v.count or 0
-    self.resource_input[i].max = v.max or 0
-    self.resource_input[i].category = v.category or nil
-    self.resource_input[i].use_rate = v.use_rate or 1
-    self.resource_input[i].consumed = 0
-    self.resource_input[i].efficiency = v.efficiency or 1
+
+  self.resources = {}
+  for _,output in pairs(datasets[type].resource_produced) do
+      self.resources[output] = {}
+      self.resources[output].count = 0
+      self.resources[output].type = "output"
+
+    for _,input in pairs(datasets[output].requires) do
+      self.resources[input] = {}
+      self.resources[input].count = 10
+      self.resources[input].type = "input"
+    end
   end
 
-  self.resource_output = {}
-  for i,v in pairs(datasets[type].resource_output) do
-    self.resource_output[i] = {}
-    self.resource_output[i].count = v.count or 0
-    self.resource_output[i].max = v.max or 0
-    self.resource_output[i].use_rate = v.use_rate or 1
-    self.resource_output[i].consumed = 0
+  for _,consumed in pairs(datasets[type].resource_consumed) do
+    self.resources[consumed] = {}
+    self.resources[consumed].count = 10
+    self.resources[consumed].type = "stored"
   end
-
+  
   self.process_delay = datasets[type].process_delay or nil
 end

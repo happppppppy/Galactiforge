@@ -28,15 +28,12 @@ function GridTransferSystem:update(dt)
 
     grid_transfer.timer = grid_transfer.timer + dt
     if grid_transfer.timer > grid_transfer.transfer_delay  and grid_transfer.adjacent_grids[grid_transfer.next_grid] ~= nil then
-        for a,b in pairs(grid_transfer.adjacent_grids[grid_transfer.next_grid].resource_input) do
-          if grid_inventory.resource_output[a] then
-            if  b.count < b.max and grid_inventory.resource_output[a].count > 0 then
-              b.count = b.count + 1
-              grid_inventory.resource_output[a].count = grid_inventory.resource_output[a].count - 1
-            end
-          end
+      for resource_name, resource_details in pairs(grid_transfer.adjacent_grids[grid_transfer.next_grid].resources) do
+        if grid_inventory.resources[resource_name] ~= nil and grid_inventory.resources[resource_name].count > 0 and (resource_details.type == "input" or resource_details.type == "stored") then
+          resource_details.count = resource_details.count + 1
+          grid_inventory.resources[resource_name].count = grid_inventory.resources[resource_name].count - 1 
         end
-      -- end
+      end
       if grid_transfer.next_grid < #grid_transfer.adjacent_grids then
         grid_transfer.next_grid = grid_transfer.next_grid + 1
       else

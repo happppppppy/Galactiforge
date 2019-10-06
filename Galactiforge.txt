@@ -40,3 +40,4 @@ Protagnist becomes powerful enough to over-power the juggernaught
 
 
 TO-DO
+Optimisation - AI targetting, look for grid master in range first and then look through the sub-grid.

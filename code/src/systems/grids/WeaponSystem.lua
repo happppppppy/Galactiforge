@@ -18,7 +18,7 @@ function WeaponSystem:update(dt)
     local grid_master = parent:get("GridMaster")
 
     local fire = false
-    local resources_found, resources_available = grid_functions:getResourceAvailable(grid_inventory, "Ammunition")
+    local resources_found, resources_available = grid_functions:getResourceAvailable(grid_inventory)
 
     if parent:get("PlayerController") ~= nil then
       --Render updates
@@ -70,7 +70,7 @@ function WeaponSystem:update(dt)
         end
 
         for _,v in pairs(resources_found) do
-          grid_inventory.resource_input[v].consumed = grid_inventory.resource_input[v].consumed + 1
+          grid_inventory.resources[v].count =  grid_inventory.resources[v].count - 1
         end 
 
         local x_vel, y_vel = physics.body:getLinearVelocity()

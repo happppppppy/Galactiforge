@@ -7,24 +7,23 @@ function GridProcessorSystem:update(dt)
 
     grid_processor.timer = grid_processor.timer + dt
     if grid_processor.timer > grid_processor.process_delay then
-      local resources_available = true
-      for a,b in pairs(grid_inventory.resource_input) do
-        if b.count <= 0 then
-          resources_available = false
+      for _,output in pairs(grid_processor.resource_produced) do
+        local inputs_available = true
+        for _,input in pairs(datasets[output].requires) do
+          if grid_inventory.resources[input].count == 0 then
+            inputs_available = false
+          end
         end
-      end
-      if resources_available then
-        for a,b in pairs(grid_inventory.resource_input) do
-          b.count = b.count -1
-        end
-        for a,b in pairs(grid_inventory.resource_output) do
-          b.count = b.count + 1
+
+        if inputs_available then
+          grid_inventory.resources[output].count = grid_inventory.resources[output].count + 1
+          for _,input in pairs(datasets[output].requires) do
+            grid_inventory.resources[input].count = grid_inventory.resources[input].count - 1
+          end
         end
       end
       grid_processor.timer = 0
     end
-
-
   end
 end
 

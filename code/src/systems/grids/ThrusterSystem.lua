@@ -13,7 +13,7 @@ function ThrusterSystem:update(dt)
     local physics = parent:get("PositionPhysics")
 
 
-    local resources_available = grid_functions:getResourceAvailable(grid_inventory)
+    local resources_found, resources_available = grid_functions:getResourceAvailable(grid_inventory)
 
     --Render updates
     thruster.pSystem:setDirection(grid_item.t_render+math.rad(grid_item.direction+90))
@@ -40,7 +40,9 @@ function ThrusterSystem:update(dt)
     thruster.burn_time = thruster.burn_time + dt
     if fire == true then 
       if thruster.burn_time > thruster.burn_rate and resources_available then
-        grid_consumer.count_used = grid_consumer.count_used + 1
+        for _,v in pairs(resources_found) do
+          grid_inventory.resources[v].count =  grid_inventory.resources[v].count - 1
+        end 
         thruster.burn_time = 0
       end
     end

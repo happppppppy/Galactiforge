@@ -5,14 +5,8 @@
       [1,0,1],
       [0,1,0]],
     "process_delay": 0.1,
-    "resource_input": {
-      "fuel":{
-        "count": 4000,
-        "max": 4000,
-        "use_rate": 1
-      }
-    },
-    "resource_output":{},
+    "resource_produced":[],
+    "resource_consumed":["fuel"],
     "activation": "up",
     "direction":0,
     "base_thrust": 10000,
@@ -39,16 +33,11 @@
     "transfer_grid":[
       [0,1,0],
       [1,0,1],
-      [0,1,0]],
+      [0,1,0]
+    ],
     "process_delay": 0.1,
-    "resource_input": {
-      "fuel":{
-        "count": 0,
-        "max": 4000,
-        "use_rate": 1
-      }
-    },
-    "resource_output":{},
+    "resource_produced":[],
+    "resource_consumed":["fuel"],
     "activation": "left",
     "direction":90,
     "base_thrust": 4000,

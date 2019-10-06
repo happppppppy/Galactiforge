@@ -1,0 +1,312 @@
+{
+  "ore_hopper":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.1,
+    "resource_input": {
+      "raw_ore": {
+        "count":400,
+        "max":10000,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "stored_ore": {
+        "count":0,
+        "max":100
+      }
+    },
+    "image_ref": 11,
+    "image_ref_initial_frame": 11,
+    "image_ref_final_frame": 17,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "ore_crusher":{
+    "transfer_grid":[
+      [0,1,0],
+      [0,0,0],
+      [0,1,0]],
+    "process_delay": 0.1,
+    "resource_input": {
+      "stored_ore": {
+        "count":0,
+        "max":100,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "crushed_ore": {
+        "count":0,
+        "max":100
+      }
+    },
+    "image_ref": 21,
+    "image_ref_initial_frame": 21,
+    "image_ref_final_frame": 27,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "ore_separator":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.15,
+    "resource_input": {
+      "crushed_ore": {
+        "count":0,
+        "max":100,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "refined_ore": {
+        "count":0,
+        "max":100
+      }
+    },
+    "image_ref": 31,
+    "image_ref_initial_frame": 31,
+    "image_ref_final_frame": 37,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "arc_furnace":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.25,
+    "resource_input": {
+      "refined_ore": {
+        "count":0,
+        "max":100,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "molten_metal": {
+        "count":0,
+        "max":100
+      }
+    },
+    "image_ref": 41,
+    "image_ref_initial_frame": 41,
+    "image_ref_final_frame": 47,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "casting_line":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.2,
+    "resource_input":{
+      "molten_metal": {
+        "count":0,
+        "max":100,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "metal_billet": {
+        "count":0,
+        "max":100
+      }
+    },
+    "image_ref": 51,
+    "image_ref_initial_frame": 51,
+    "image_ref_final_frame": 57,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "machining_centre":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.1,
+    "resource_input":{
+      "metal_billet": {
+        "count":50,
+        "max":100,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "ammo_blanks": {
+        "count":50,
+        "max":100
+      }
+    },
+    "image_ref": 61,
+    "image_ref_initial_frame": 61,
+    "image_ref_final_frame": 67,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "assembly_centre":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.1,
+    "resource_input":{
+      "ammo_blanks": {
+        "count":0,
+        "max":100,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "shells": {
+        "count":0,
+        "max":100
+      }
+    },
+    "image_ref": 71,
+    "image_ref_initial_frame": 71,
+    "image_ref_final_frame": 77,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "shell_crate":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.02,
+    "resource_input": {
+      "shells": {
+        "count":0,
+        "max":10000,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "shells": {
+        "count":10000,
+        "max":10000
+      }
+    },
+    "image_ref": 141,
+    "image_ref_initial_frame": 141,
+    "image_ref_final_frame": 141,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "cryofluid_crate":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.1,
+    "resource_input": {
+      "cryofluid": {
+        "count":0,
+        "max":10000,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "cryofluid": {
+        "count":10000,
+        "max":10000
+      }
+    },
+    "image_ref": 142,
+    "image_ref_initial_frame": 142,
+    "image_ref_final_frame": 142,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "fuel_generator":{
+    "transfer_grid":[
+      [0,1,0],
+      [1,0,1],
+      [0,1,0]],
+    "process_delay": 0.01,
+    "resource_input":{
+      "water": {
+        "count":100000,
+        "max":100,
+        "use_rate": 1
+      }
+    },
+    "resource_output":{
+      "fuel": {
+        "count":0,
+        "max":100
+      }
+    },
+    "image_ref": 71,
+    "image_ref_initial_frame": 71,
+    "image_ref_final_frame": 77,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  },
+  "conveyor":{
+    "transfer_grid":[
+      [0,1,0],
+      [0,0,0],
+      [0,1,0]],
+    "process_delay": 0.01,
+    "resource_input":{
+      "water":{},
+      "fuel":{},
+      "cryofluid":{},
+      "shells": {},
+      "ammo_blanks": {},
+      "metal_billet": {},
+      "molten_metal": {},
+      "refined_ore": {},
+      "raw_ore": {},
+      "stored_ore": {},
+      "crushed_ore": {}
+    },
+    "resource_output":{
+      "water":{},
+      "fuel":{},
+      "cryofluid":{},
+      "shells": {},
+      "ammo_blanks": {},
+      "metal_billet": {},
+      "molten_metal": {},
+      "refined_ore": {},
+      "raw_ore": {},
+      "stored_ore": {},
+      "crushed_ore": {}
+    },
+    "image_ref": 131,
+    "image_ref_initial_frame": 131,
+    "image_ref_final_frame": 136,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 30
+  }
+}

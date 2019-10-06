@@ -8,28 +8,19 @@ function GridHeatSystem:update(dt)
     local grid_inventory = value:get("GridInventory")
 
     if grid_heat.heat > 0 then
-      local resources_found, resources_available = grid_functions:getResourceAvailable(grid_inventory, "Coolant")
+      local resources_found, resources_available = grid_functions:getResourceAvailable(grid_inventory)
 
       if resources_available then
         for _,v in pairs(resources_found) do
-          if grid_inventory.resource_input[v].count > 0 then
-            grid_inventory.resource_input[v].consumed = grid_inventory.resource_input[v].consumed + grid_inventory.resource_input[v].use_rate * dt
-            grid_heat.heat = grid_heat.heat - grid_heat.natural_cool_rate * dt - grid_inventory.resource_input[v].use_rate * grid_inventory.resource_input[v].efficiency * dt
-          end
+          -- if grid_inventory.resource_input[v].count > 0 then
+          --   grid_inventory.resource_input[v].consumed = grid_inventory.resource_input[v].consumed + grid_inventory.resource_input[v].use_rate * dt
+          --   grid_heat.heat = grid_heat.heat - grid_heat.natural_cool_rate * dt - grid_inventory.resource_input[v].efficiency * dt
+          -- end
+
         end
       else
         grid_heat.heat = grid_heat.heat - grid_heat.natural_cool_rate * dt 
       end
-
-        -- for res_in_index,res_in_value in pairs(grid_inventory.resource_input) do
-        --   if grid_inventory.resource_input[res_in_index].category == "Coolant" then
-        --     if grid_inventory.resource_input[res_in_index].count > 0 then
-        --       grid_inventory.resource_input[res_in_index].count = grid_inventory.resource_input[res_in_index].count - grid_inventory.resource_input[res_in_index].use_rate * dt
-        --       grid_heat.heat = grid_heat.heat - grid_heat.natural_cool_rate * dt - grid_inventory.resource_input[res_in_index].use_rate * dt
-        --     end
-        --   end
-        -- end
-      
     end
   end
 end

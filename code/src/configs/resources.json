@@ -1,0 +1,49 @@
+{
+  "ore":{},
+  "ice":{},
+  "plutonium":{
+    "requires":["ore"]
+  },
+  "titanstone":{
+    "requires":["ore"]
+  },
+  "titanium_ore":{
+    "requires":["titanstone"]
+  },
+  "molten_titanium":{
+    "requires":["titanum_ore"]
+  },
+  "casings":{
+    "requires":["molten_titanium"]
+  },
+  "oilstone":{
+    "requires":["ore"]
+  },
+  "powder":{
+    "requires":["oilstone"]
+  },
+  "shells":{
+    "requires":["powder", "casings"]
+  },
+  "fuel_oil":{
+    "requires":["oilstone"]
+  },
+  "fuel":{
+    "requires":["fuel_oil", "hydrogen"]
+  },
+  "water":{
+    "requires":["ice"]
+  },
+  "hydrogen":{
+    "requires":["water"]
+  },
+  "oxygen":{
+    "requires":["water"]
+  },
+  "glycerol":{
+    "requires":["fuel_oil", "hydrogen"]
+  },
+  "coolant":{
+    "requires":["water", "glycerol"]
+  }
+}

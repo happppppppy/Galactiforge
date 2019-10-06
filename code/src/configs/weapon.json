@@ -5,22 +5,8 @@
       [1,0,1],
       [0,1,0]],
     "process_delay": 0.3,
-    "resource_input": {
-      "shells": {
-        "count":100,
-        "max":10,
-        "use_rate": 1,
-        "category": "Ammunition"
-      },
-      "cryofluid": {
-        "count":100,
-        "max":1000,
-        "use_rate": 10,
-        "efficiency":10,
-        "category": "Coolant"
-      }
-    },
-    "resource_output":{},
+    "resource_produced":[],
+    "resource_consumed":["shells"],
     "ammo_type": "bullet",
     "base_damage": 1,
     "heat": 0,
