@@ -62,19 +62,6 @@ function MainMouseSystem:fireEvent(event)
     for i,v in pairs(entities) do
       grid_master = v:get("GridMaster")
       physics = v:get("PositionPhysics")
-      
-      -- for _,child in  pairs(v.children) do
-      --   grid_item = child:get("GridItem")
-      --   if grid_item.fixture:testPoint(x,y) then
-      --     print(grid_item.type)
-      --     if event.button == 2 then
-      --       eventmanager:fireEvent(GridSelected(v, grid_item.x, grid_item.y, true))
-      --     elseif event.button == 3 then
-      --       eventmanager:fireEvent(GridSelected(v, grid_item.x, grid_item.y, false))
-      --     end
-      --     break
-      --   end
-      -- end
 
 
       for row = 1, #grid_master.grid_status do

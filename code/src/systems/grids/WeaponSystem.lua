@@ -10,7 +10,6 @@ function WeaponSystem:update(dt)
     local grid_item = value:get("GridItem")
     local grid_inventory = value:get("GridInventory")
     local tg = value:get("TileSetGrid")
-    local grid_consumer = value:get("GridConsumer")
     local grid_heat = value:get("GridHeat")
 
     local parent = value:getParent()
@@ -23,9 +22,11 @@ function WeaponSystem:update(dt)
     if parent:get("PlayerController") ~= nil then
       --Render updates
       if weapon.aimed then
+
         mouse_x, mouse_y = love.graphics.inverseTransformPoint( love.mouse.getPosition() )
         grid_item.t_pos_grid_physics = math.atan2(mouse_y - grid_item.y_pos_grid_physics, mouse_x - grid_item.x_pos_grid_physics) + math.rad(90)
-        grid_item.t_render = grid_item.t_pos_grid_physics --Not correct :(
+        grid_item.t_render = grid_item.t_pos_grid_physics - physics.body:getAngle()
+
       end
 
       --Fire control updates      
@@ -62,16 +63,14 @@ function WeaponSystem:update(dt)
     if not (weapon.fire_time > modified_fire_rate) then weapon.fire_time = weapon.fire_time + dt end
 
     if fire then 
-      if weapon.fire_time > modified_fire_rate and resources_available then
+      if weapon.fire_time > modified_fire_rate and grid_inventory.resources["shells"].count > 0 then
         if grid_heat.heat < (grid_heat.max_heat - grid_heat.heat_rate) then grid_heat.heat = grid_heat.heat + grid_heat.heat_rate end
 
         if tg.animated then
           tg.animation_complete = false
         end
 
-        for _,v in pairs(resources_found) do
-          grid_inventory.resources[v].count =  grid_inventory.resources[v].count - 1
-        end 
+        grid_inventory.resources["shells"].count =  grid_inventory.resources["shells"].count - grid_inventory.resources["shells"].use_rate
 
         local x_vel, y_vel = physics.body:getLinearVelocity()
       
@@ -90,7 +89,7 @@ function WeaponSystem:update(dt)
 end
 
 function WeaponSystem:requires()
-	return {"Weapon", "GridItem", "GridInventory", "TileSetGrid", "GridConsumer"}
+	return {"Weapon", "GridItem", "GridInventory", "TileSetGrid"}
 end
 
 return WeaponSystem

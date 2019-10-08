@@ -7,18 +7,22 @@ function GridProcessorSystem:update(dt)
 
     grid_processor.timer = grid_processor.timer + dt
     if grid_processor.timer > grid_processor.process_delay then
-      for _,output in pairs(grid_processor.resource_produced) do
+      for output_name,output_data in pairs(grid_processor.resource_produced) do
         local inputs_available = true
-        for _,input in pairs(datasets[output].requires) do
-          if grid_inventory.resources[input].count == 0 then
-            inputs_available = false
+        if datasets[output_name].requires ~= nil then
+          for input_name,input_data in pairs(datasets[output_name].requires) do
+            if grid_inventory.resources[input_name].count == 0 then
+              inputs_available = false
+            end
           end
-        end
 
-        if inputs_available then
-          grid_inventory.resources[output].count = grid_inventory.resources[output].count + 1
-          for _,input in pairs(datasets[output].requires) do
-            grid_inventory.resources[input].count = grid_inventory.resources[input].count - 1
+          if inputs_available then
+            if grid_inventory.resources[output_name].count < grid_inventory.resource_max_storage then
+              grid_inventory.resources[output_name].count = grid_inventory.resources[output_name].count + 1
+              for input_name,input_data in pairs(datasets[output_name].requires) do
+                grid_inventory.resources[input_name].count = grid_inventory.resources[input_name].count - 1
+              end
+            end
           end
         end
       end

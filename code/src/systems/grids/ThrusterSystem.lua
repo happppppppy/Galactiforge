@@ -7,7 +7,6 @@ function ThrusterSystem:update(dt)
     local thruster = value:get("Thruster")
     local grid_item = value:get("GridItem")
     local grid_inventory = value:get("GridInventory")
-    local grid_consumer = value:get("GridConsumer")
 
     local parent = value:getParent()
     local physics = parent:get("PositionPhysics")
@@ -50,7 +49,7 @@ function ThrusterSystem:update(dt)
 end
 
 function ThrusterSystem:requires()
-	return {"Thruster", "GridItem", "GridInventory", "GridConsumer"}
+	return {"Thruster", "GridItem", "GridInventory"}
 end
 
 return ThrusterSystem
