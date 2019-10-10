@@ -6,7 +6,6 @@ function AIControllerSystem:update(dt)
       AIPhysics = value:get("PositionPhysics")
       AIController = value:get("AIController")
       
-
       --AI target seeking (Could do more to prioritise targets here)
       master_grids = engine:getEntitiesWithComponent("GridMaster")
       for _,target in pairs(master_grids) do

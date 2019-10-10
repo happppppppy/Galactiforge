@@ -1,6 +1,5 @@
 local TileSetGrid, Bullet = Component.load({"TileSetGrid", "Bullet"})
 local PositionPhysics, DynamicPhysics, CollisionPhysics = Component.load({"PositionPhysics", "DynamicPhysics", "CollisionPhysics"})
-local grid_functions = require("code/src/systems/grids/grid_functions")
 
 local WeaponSystem = class("WeaponSystem", System)
 

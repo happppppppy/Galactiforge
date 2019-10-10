@@ -19,10 +19,20 @@ function PlayerControllerSystem:update(dt)
 			eventmanager:fireEvent(FireEvent(value, dt))
 		end
 	end
+
+	for index, value in pairs(self.targets.pool2) do
+		thruster = value:get("Thruster")
+		if love.keyboard.isDown(thruster.activation) then
+			thruster.particles_active = true
+			eventmanager:fireEvent(ThrusterEvent(value, dt))
+		else	
+			thruster.particles_active = false
+		end
+	end
 end
 
 function PlayerControllerSystem:requires()
-	return {pool1 = {"PlayerController", "Weapon"}}
+	return {pool1 = {"PlayerController", "Weapon"}, pool2 = {"PlayerController", "Thruster"}}
 end
 
 return PlayerControllerSystem
