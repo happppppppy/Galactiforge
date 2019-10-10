@@ -10,7 +10,6 @@ function GridItemSystem:onRemoveEntity(entity)
   grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] = 0
 
 
-
 end
 
 function GridItemSystem:update(dt)

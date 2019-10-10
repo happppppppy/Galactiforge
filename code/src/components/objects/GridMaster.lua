@@ -1,6 +1,8 @@
 local GridMaster = Component.create("GridMaster")
 
-function GridMaster:initialize(grid, grid_specs, grid_scale, grid_width, grid_height, category, mask)
+function GridMaster:initialize(grid, grid_specs, grid_scale, grid_width, grid_height, category, mask, player)
+  self.player = player or false
+
   self.grid_specs = grid_specs
   self.grid = grid or {}
 

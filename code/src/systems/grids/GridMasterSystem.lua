@@ -1,4 +1,5 @@
 local TileSetGrid, GridPhysics, GridItem, GridInventory, GridTransfer, GridProcessor, GridBaseGraphic, GridHeat = Component.load({"TileSetGrid", "GridPhysics", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridBaseGraphic", "GridHeat"})
+local PlayerController = Component.load({"PlayerController"})
 local Factory, Weapon, Thruster, Health = Component.load({"Factory", "Weapon", "Thruster", "Health"})
 local FieryDeath = Component.load({"FieryDeath"})
 
@@ -31,11 +32,17 @@ function GridMasterSystem:fireEvent(event)
         new_grid_item:add(GridInventory(type))
         new_grid_item:add(GridHeat())
         new_grid_item:add(GridBaseGraphic())
+        if grid_master.player then
+          new_grid_item:add(PlayerController())
+        end
 
       elseif datasets[type].category == "thruster" then
         new_grid_item:add(Thruster(type, event.x_loc, event.y_loc, direction))
         new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, direction, grid_master.grid_scale))
         new_grid_item:add(GridInventory(type))
+        if grid_master.player then
+          new_grid_item:add(PlayerController())
+        end
 
       elseif datasets[type].category == "armor" then
         new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, direction, grid_master.grid_scale))
@@ -85,7 +92,6 @@ function GridMasterSystem:onAddEntity(entity)
   --Add components from the given grid
   for i,grid_item in pairs(grid_master.grid) do
     if grid_master.grid_specs.allowed_grid.grid_map[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] == 1 then
-
       local new_grid_item = Entity(entity)
       new_grid_item:add(FieryDeath())
       new_grid_item:add(GridPhysics())
@@ -105,11 +111,17 @@ function GridMasterSystem:onAddEntity(entity)
         new_grid_item:add(GridInventory(grid_item.type))
         new_grid_item:add(GridHeat())
         new_grid_item:add(GridBaseGraphic())
+        if grid_master.player then
+          new_grid_item:add(PlayerController())
+        end
 
       elseif grid_item.category == "thruster" then
         new_grid_item:add(Thruster(grid_item.type, grid_item.x, grid_item.y, grid_item.direction))
         new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, grid_item.direction, grid_master.grid_scale))
         new_grid_item:add(GridInventory(grid_item.type))
+        if grid_master.player then
+          new_grid_item:add(PlayerController())
+        end
 
       elseif grid_item.category == "armor" then
         new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, grid_item.direction, grid_master.grid_scale))

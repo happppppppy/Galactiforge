@@ -98,7 +98,7 @@ require("code/src/events/KeyPressed")
 require("code/src/events/MousePressed")
 require("code/src/events/DamageOccured")
 require("code/src/events/GridSelected")
-
+require("code/src/events/FireEvent")
 
 function love.load()
 
@@ -156,6 +156,8 @@ function love.load()
 	eventmanager:addListener("MousePressed", MainMouseSystem(), MainMouseSystem().fireEvent )
 	eventmanager:addListener("DamageOccured", DamageSystem(), DamageSystem().fireEvent)
 	eventmanager:addListener("GridSelected", GridMasterSystem(), GridMasterSystem().fireEvent)
+	eventmanager:addListener("FireEvent", WeaponSystem(), WeaponSystem().fireCannon)
+
 
 	engine:addSystem(RenderParticleSystem())
 	engine:addSystem(RenderSpriteSystem())
@@ -176,6 +178,7 @@ function love.load()
 	engine:addSystem(CleanupSystem())
 
 	engine:addSystem(AIControllerSystem())
+	engine:addSystem(PlayerControllerSystem())
 
 	engine:addSystem(GridProcessorSystem())
 	engine:addSystem(GridTransferSystem())
@@ -191,9 +194,9 @@ function love.load()
 
 	playerShip_type = "micro_bandit"
 	playerShip = Entity()
-	playerShip:add(GridMaster(ship_data[playerShip_type].starter_grid, ship_data[playerShip_type], 0.5, 32, 32, 1, 1))
+	playerShip:add(GridMaster(ship_data[playerShip_type].starter_grid, ship_data[playerShip_type], 0.5, 32, 32, 1, 1, true))
 	playerShip:add(PositionPhysics(world,500,600,math.rad(180),"dynamic"))
-	playerShip:add(PlayerController())
+	-- playerShip:add(PlayerController())
 	playerShip:add(Health(100))
 	playerShip:add(Faction("Terran"))
 	engine:addEntity(playerShip)
@@ -221,7 +224,7 @@ function love.load()
 		opponentShip_type = "micro_bandit"
 		opponentShip = Entity()
 		opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))
-		opponentShip:add(PositionPhysics(world,7000,8000,0,"dynamic"))
+		opponentShip:add(PositionPhysics(world,2000,2000,0,"dynamic"))
 		opponentShip:add(AIController())
 		opponentShip:add(Health(100))
 		opponentShip:add(Faction("Splorg"))
