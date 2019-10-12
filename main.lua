@@ -9,6 +9,7 @@ Gamestate = require("code/lib/hump/gamestate")
 
 SplashState = require("code/src/states/SplashState")
 MainState = require("code/src/states/MainState")
+MenuState = require("code/src/states/MenuState")
 
 function love.load()
 	Gamestate.registerEvents()

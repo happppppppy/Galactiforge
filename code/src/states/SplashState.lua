@@ -4,7 +4,7 @@ local SplashState = {}
 
 function SplashState:init()
   splashy.addSplash(love.graphics.newImage("assets/images/SplashScreen.png"))
-  splashy.onComplete(function() Gamestate.switch(MainState) end)
+  splashy.onComplete(function() Gamestate.switch(MenuState) end)
 
 end
 

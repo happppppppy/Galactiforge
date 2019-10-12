@@ -9,7 +9,7 @@ function RenderHUDSystem:draw()
 
     local x_vel, y_vel = physics.body:getLinearVelocity( )
     local ship_velocity = math.sqrt(x_vel^2 + y_vel^2)
-    love.graphics.setFont( font_hud )
+    love.graphics.setFont( game_font )
 
     love.graphics.push()
     love.graphics.origin()

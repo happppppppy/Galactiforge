@@ -116,14 +116,13 @@ function MainState:init()
 		end
 	end
 
+  game_font = love.graphics.newFont("assets/fonts/GiantRobotArmy-Medium.ttf")
+  
 	ship_data = helper_functions.openjson("code/src/configs/ships.json") 
 
 	--Tilesets
-	tileset_small = helper_functions.createTileset("assets/images/galactiforge_tilesets/factory_devices.png", 32, 32)
-
-	--Fonts
-	font_hud = love.graphics.newFont("assets/fonts/GiantRobotArmy-Medium.ttf")
-
+  tileset_small = helper_functions.createTileset("assets/images/galactiforge_tilesets/factory_devices.png", 32, 32)
+  
 	--Global variables
 	global_show_resource_count = false
 	lock_view_to_ship = false
@@ -243,6 +242,7 @@ function MainState:draw()
 end
 
 function MainState:keypressed(key, isrepeat)
+  if key == "escape" then Gamestate.switch(MenuState) end
 	eventmanager:fireEvent(KeyPressed(key, isrepeat))
 end
 
