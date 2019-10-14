@@ -2,6 +2,8 @@ local MenuState = {}
 
 function MenuState:init()
   loveframes = require("code/lib/loveframes")
+  loveframes.SetActiveSkin("Blue")
+
   height = love.graphics.getHeight()
   local newgame_button = loveframes.Create("button")
   newgame_button:SetWidth(200)
@@ -31,6 +33,7 @@ function MenuState:init()
   end
 
   menu_font = love.graphics.newFont("assets/fonts/GiantRobotArmy-Medium.ttf", 80)
+  backgroundImage = love.graphics.newImage("assets/images/space_breaker_asset/Background/stars_texture.png")
 
 end
 
@@ -39,10 +42,12 @@ function MenuState:update(dt)
 end
 
 function MenuState:draw()
-  
+  love.graphics.draw(backgroundImage)
   love.graphics.setFont( menu_font )
-
-  love.graphics.print("Galactiforge", 90, 20, math.rad(90), 1, 1)
+  love.graphics.setColor(0,0.275,0.416)
+  love.graphics.rectangle('fill',0,0,150,height)
+  love.graphics.setColor(1,1,1)
+  love.graphics.print("Galactiforge", 110, 20, math.rad(90), 1, 1)
   loveframes.draw()
 end
 

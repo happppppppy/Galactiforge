@@ -1,5 +1,6 @@
 -- Importing helper functions
 local helper_functions = require("code/src/helper_functions")
+local new_game = require("code/src/storycode/new_game")
 
 global_zoom_level = 1
 
@@ -96,7 +97,7 @@ require("code/src/events/ThrusterEvent")
 local MainState = {}
 
 function MainState:init()
-  	--Game data
+	--Game data
 	datasets = {}
 	files = love.filesystem.getDirectoryItems( "code/src/configs/" )
 	for i,v in pairs(files) do
@@ -111,7 +112,7 @@ function MainState:init()
 
 	global_component_name_list = {}
 	for i,v in pairs(datasets) do
-		if v.category == "armor" or v.category == "factory"or v.category == "technology" or v.category == "thruster" or v.category == "weapon" then 
+		if v.category == "armor" or v.category == "factory" or v.category == "technology" or v.category == "thruster" or v.category == "weapon" then 
 			global_component_name_list[#global_component_name_list + 1] = i
 		end
 	end
@@ -120,12 +121,11 @@ function MainState:init()
   
 	ship_data = helper_functions.openjson("code/src/configs/ships.json") 
 
-	--Tilesets
   tileset_small = helper_functions.createTileset("assets/images/galactiforge_tilesets/factory_devices.png", 32, 32)
   
 	--Global variables
 	global_show_resource_count = false
-	lock_view_to_ship = false
+	lock_view_to_ship = true
 	global_component_index = 1
 	global_component_directions = {0,90,180,270}
 	global_component_direction_index = 1
@@ -133,11 +133,6 @@ function MainState:init()
 	global_ai_active = true
 	global_build_mode = false
 
-	--Canvases
-	backgroundImage = love.graphics.newImage("assets/images/space_breaker_asset/Background/stars_texture.png")
-	backgroundQuad = love.graphics.newQuad(0,0,backgroundImage:getWidth()*1.1,backgroundImage:getHeight()*1.1,backgroundImage:getWidth(),backgroundImage:getWidth())
-	backgroundImage:setWrap("repeat", "repeat")
-	
 	love.physics.setMeter(32) --the height of a meter our worlds will be 32px
 	world = love.physics.newWorld(0, 0, true) --create a world for the bodies to exist in with horizontal gravity of 0 and vertical gravity of 0
 
@@ -174,34 +169,16 @@ function MainState:init()
 	engine:addSystem(GridProcessorSystem())
 	engine:addSystem(GridTransferSystem())
 
+	new_game.create_ships() 
 
-	playerShip_type = "micro_bandit"
-	playerShip = Entity()
-	playerShip:add(GridMaster(ship_data[playerShip_type].starter_grid, ship_data[playerShip_type], 0.5, 32, 32, 1, 1, true))
-	playerShip:add(PositionPhysics(world,500,600,math.rad(180),"dynamic"))
-	playerShip:add(PlayerController())
-	playerShip:add(Health(100))
-	playerShip:add(Faction("Terran"))
-	engine:addEntity(playerShip)
+	--Background
+	backgroundImage = love.graphics.newImage("assets/images/space_breaker_asset/Background/stars_texture.png")
+	backgroundQuad = love.graphics.newQuad(0, 0, backgroundImage:getWidth()*2,backgroundImage:getHeight()*2,backgroundImage:getWidth(),backgroundImage:getWidth())
+	backgroundImage:setWrap("repeat", "repeat")
 
-	opponentShip_type = "micro_bandit"
-	opponentShip = Entity()
-	opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))
-	opponentShip:add(PositionPhysics(world,2000,2000,0,"dynamic"))
-	opponentShip:add(AIController())
-	opponentShip:add(Health(100))
-	opponentShip:add(Faction("Splorg"))
-	engine:addEntity(opponentShip)
+	width = love.graphics.getWidth()
+	height = love.graphics.getHeight()
 
-	
-	opponentShip_type = "micro_bandit"
-	opponentShip = Entity()
-	opponentShip:add(GridMaster(ship_data[opponentShip_type].starter_grid, ship_data[opponentShip_type], 0.5, 32, 32, 2, 2))
-	opponentShip:add(PositionPhysics(world,-4000,-3000,0,"dynamic"))
-	opponentShip:add(AIController())
-	opponentShip:add(Health(100))
-	opponentShip:add(Faction("Splorg"))
-	engine:addEntity(opponentShip)
 end
 
 function MainState:update(dt)
@@ -211,13 +188,10 @@ function MainState:update(dt)
 end
 
 function MainState:draw()
-  width = love.graphics.getWidth()
-	height = love.graphics.getHeight()
-
+  
 	playerShipLoc = playerShip:get("PositionPhysics")
 	playerShipSprite = playerShip:get("Sprite")
 
-	love.graphics.draw(backgroundImage, backgroundQuad, 0, 0)
 	love.graphics.scale(global_zoom_level)
 
 	if global_build_mode then
@@ -232,12 +206,26 @@ function MainState:draw()
 
 	elseif lock_view_to_ship then
 
-			local x_loc = playerShipLoc.body:getX()*-1+width*(1/global_zoom_level)/2
-			local y_loc = playerShipLoc.body:getY()*-1+height*(1/global_zoom_level)/2
-	
-			love.graphics.translate(x_loc,y_loc)
-	end
 
+		local x_loc = playerShipLoc.body:getX() * -1 + width * (1 / global_zoom_level) / 2
+		local y_loc = playerShipLoc.body:getY() * -1 + height * (1 / global_zoom_level) / 2
+
+		local x_loc_bg = playerShipLoc.body:getX() + width * (1 / global_zoom_level) / 2
+		local y_loc_bg = playerShipLoc.body:getY() + height * (1 / global_zoom_level) / 2
+
+		-- love.graphics.push()
+		-- love.graphics.translate(x_loc, y_loc)
+		-- love.graphics.draw(backgroundImage, backgroundQuad, x_loc, y_loc)
+		-- love.graphics.pop()
+
+		love.graphics.translate(x_loc, y_loc)
+	
+	else
+
+		-- love.graphics.draw(backgroundImage, backgroundQuad,0,0)
+		
+	end
+	
 	engine:draw()
 end
 
