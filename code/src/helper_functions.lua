@@ -52,4 +52,14 @@ function helper_functions.createTileset(image_path, tile_width, tile_height)
 	return tileset
 end
 
+function helper_functions.has_value(tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
+
 return helper_functions

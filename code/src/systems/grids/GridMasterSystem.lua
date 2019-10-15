@@ -1,6 +1,6 @@
 local TileSetGrid, GridPhysics, GridItem, GridInventory, GridTransfer, GridProcessor, GridBaseGraphic, GridHeat = Component.load({"TileSetGrid", "GridPhysics", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridBaseGraphic", "GridHeat"})
 local PlayerController = Component.load({"PlayerController"})
-local Factory, Weapon, Thruster, Health = Component.load({"Factory", "Weapon", "Thruster", "Health"})
+local Factory, Weapon, Thruster, Health, DockingLatch = Component.load({"Factory", "Weapon", "Thruster", "Health", "DockingLatch"})
 local FieryDeath = Component.load({"FieryDeath"})
 
 local GridMasterSystem = class("GridMasterSystem", System)
@@ -46,6 +46,10 @@ function GridMasterSystem:fireEvent(event)
 
       elseif datasets[type].category == "armor" then
         new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, direction, grid_master.grid_scale))
+      
+      elseif datasets[type].category == "technology" then
+        new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, direction, grid_master.grid_scale))
+        new_grid_item:add(DockingLatch())
       end
 
       if global_target_list[faction.faction] == nil then

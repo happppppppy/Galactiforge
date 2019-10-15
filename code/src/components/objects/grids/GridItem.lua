@@ -35,5 +35,6 @@ function GridItem:initialize(type, x, y, category, direction, grid_scale)
 
   self.fixture = nil
 
-
+  self.buildable = datasets[type].buildable or true
+  
 end

@@ -6,6 +6,17 @@
     "animated": false,
     "animate_continuous": true,
     "render_delay": 0.1,
-    "health": 100
+    "health": 100,
+    "buildable": false
+  },
+  "docking_latch":{
+    "image_ref": 121,
+    "image_ref_initial_frame": 11,
+    "image_ref_final_frame": 17,
+    "animated": false,
+    "animate_continuous": false,
+    "render_delay": 0.1,
+    "health": 100,
+    "buildable": true
   }
 }

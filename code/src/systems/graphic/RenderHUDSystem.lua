@@ -1,10 +1,8 @@
 local RenderHUDSystem = class("RenderHUDSystem", System)
 
 function RenderHUDSystem:draw()
-  for index, value in pairs(self.targets) do
+  for index, value in pairs(self.targets.pool1) do
     local physics = value:get("PositionPhysics")
-    local health = value:get("Health")
-    local grid = value:get("Grid")
     local grid_master = value:get("GridMaster")
 
     local x_vel, y_vel = physics.body:getLinearVelocity( )
@@ -29,10 +27,46 @@ function RenderHUDSystem:draw()
   
     love.graphics.pop()
   end
+
+  for index, value in pairs(self.targets.pool2) do
+    local playership = engine:getEntitiesWithComponent("PositionPhysics")
+    local playership_physics = 0
+    for i,v in pairs(playership) do
+      if v:get("PlayerController") ~= nil then
+        playership_physics = v:get("PositionPhysics")
+        break
+      end
+    end
+
+    local aiship_physics = value:get("PositionPhysics")
+    local range_limit = 2000
+    transparency_limit = 0.6
+    local t_pos_grid_physics = math.atan2(aiship_physics.body:getY() - playership_physics.body:getY(), aiship_physics.body:getX() - playership_physics.body:getX())
+    
+    local range = math.sqrt((aiship_physics.body:getY() - playership_physics.body:getY())^2 + (aiship_physics.body:getX() - playership_physics.body:getX())^2)
+    local distance = 0
+    if range > love.graphics.getHeight()/2 - 100 then
+      distance = love.graphics.getHeight()/2 - 100
+    else
+      distance = range
+    end
+    
+    local x = distance * math.cos(t_pos_grid_physics) + playership_physics.body:getX()
+    local y = distance * math.sin(t_pos_grid_physics) + playership_physics.body:getY()
+    
+    local r,g,b,a = love.graphics.getColor()
+    local transparency = 0
+    if range < range_limit then transparency = 1 / (range/300) end
+    if transparency > transparency_limit then transparency = transparency_limit end
+    love.graphics.setColor(1,0,0,transparency)
+    love.graphics.circle('fill',x,y,10)
+    -- love.graphics.line(playership_physics.body:getX(), playership_physics.body:getY(), x, y)--aiship_physics.body:getX(), aiship_physics.body:getY())
+    love.graphics.setColor(r,g,b,a)
+  end
 end
 
 function RenderHUDSystem:requires()
-	return {"GridMaster", "Health", "PositionPhysics", "PlayerController"}
+	return {pool1 = {"GridMaster", "Health", "PositionPhysics", "PlayerController"}, pool2 = {"GridMaster", "PositionPhysics", "AIController"}}
 end
 
 return RenderHUDSystem

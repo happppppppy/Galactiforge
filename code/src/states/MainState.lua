@@ -50,7 +50,8 @@ require("code/src/components/objects/grids/GridHeat")
 require("code/src/components/objects/grids/Factory")
 require("code/src/components/objects/grids/Weapon")
 require("code/src/components/objects/grids/Thruster")
-local Factory, Weapon, Thruster, GridItem, GridInventory, GridTransfer, GridProcessor, GridBaseGraphic, GridHeat = Component.load({"Factory", "Weapon", "Thruster", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridBaseGraphic", "GridHeat"})
+require("code/src/components/objects/grids/DockingLatch")
+local DockingLatch, Factory, Weapon, Thruster, GridItem, GridInventory, GridTransfer, GridProcessor, GridBaseGraphic, GridHeat = Component.load({"DockingLatch", "Factory", "Weapon", "Thruster", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridBaseGraphic", "GridHeat"})
 
 --Grid systems
 WeaponSystem = require("code/src/systems/grids/WeaponSystem")
@@ -110,10 +111,13 @@ function MainState:init()
 		end
 	end
 
+	local whitelist ={"factory", "armor", "thruster", "weapon", "transfer", "technology"}
 	global_component_name_list = {}
 	for i,v in pairs(datasets) do
-		if v.category == "armor" or v.category == "factory" or v.category == "technology" or v.category == "thruster" or v.category == "weapon" then 
-			global_component_name_list[#global_component_name_list + 1] = i
+		if helper_functions.has_value(whitelist, v.category) then 
+			if v.buildable ~= false then
+				global_component_name_list[#global_component_name_list + 1] = i
+			end
 		end
 	end
 
