@@ -132,7 +132,6 @@ function MainState:init()
 	global_component_index = 1
 	global_component_directions = {0,90,180,270}
 	global_component_direction_index = 1
-	global_target_list = {}
 	global_ai_active = true
 	global_build_mode = false
 

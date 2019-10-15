@@ -22,6 +22,17 @@
     "use_instantaneously":true,
     "render_delay": 0.01,
     "fire_rate": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"thruster"},
+      "GridInventory":{},
+      "Weapon":{},
+      "GridHeat":{},
+      "GridBaseGraphic":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   }
 }

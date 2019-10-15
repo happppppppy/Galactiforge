@@ -28,7 +28,16 @@
     "render_delay": 0.25,
     "use_instantaneously": true,
     "health": 30,
-    "exhaust_scale": 1
+    "exhaust_scale": 1,
+    "components": {
+      "GridItem":{"category":"thruster"},
+      "GridInventory":{},
+      "Thruster":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "mini_thruster":{
     "transfer_grid":[
@@ -60,6 +69,15 @@
     "render_delay": 0.1,
     "use_instantaneously": true,
     "health": 30,
-    "exhaust_scale": 0.5
+    "exhaust_scale": 0.5,
+    "components": {
+      "GridItem":{"category":"thruster"},
+      "GridInventory":{},
+      "Thruster":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   }
 }

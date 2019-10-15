@@ -14,7 +14,17 @@
     "animated": true,
     "animate_continuous": true,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "fractionator":{
     "transfer_grid":[
@@ -31,7 +41,17 @@
     "animated": true,
     "animate_continuous": true,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "centrifuge":{
     "transfer_grid":[
@@ -48,7 +68,17 @@
     "animated": true,
     "animate_continuous": true,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "separator":{
     "transfer_grid":[
@@ -65,7 +95,17 @@
     "animated": true,
     "animate_continuous": true,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "crusher":{
     "transfer_grid":[
@@ -82,7 +122,17 @@
     "animated": true,
     "animate_continuous": true,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "metal_injection_molding":{
     "transfer_grid":[
@@ -99,7 +149,17 @@
     "animated": true,
     "animate_continuous": true,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "assembly_centre":{
     "transfer_grid":[
@@ -116,7 +176,17 @@
     "animated": true,
     "animate_continuous": true,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "ore_container":{
     "transfer_grid":[
@@ -133,7 +203,17 @@
     "animated": true,
     "animate_continuous": true,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "shell_container":{
     "transfer_grid":[
@@ -150,7 +230,17 @@
     "animated": false,
     "animate_continuous": false,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "coolant_container":{
     "transfer_grid":[
@@ -167,7 +257,17 @@
     "animated": false,
     "animate_continuous": false,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   },
   "fuel_container":{
     "transfer_grid":[
@@ -184,6 +284,16 @@
     "animated": false,
     "animate_continuous": false,
     "render_delay": 0.1,
-    "health": 30
+    "health": 30,
+    "components": {
+      "GridItem":{"category":"factory"},
+      "GridInventory":{},
+      "GridTransfer":{},
+      "GridProcessor":{},
+      "FieryDeath":{},
+      "GridPhysics":{},
+      "TileSetGrid":{},
+      "Health":{"health":30}
+    }
   }
 }
