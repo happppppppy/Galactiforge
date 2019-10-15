@@ -12,7 +12,15 @@ function BulletSystem:update(dt)
 
     if bullet.impact then
       explosion = Entity()
-      explosion:add(TileSetGrid(tileset, nil, nil, 92, 92, 97, true, false, 0.1, true))
+      local explosion_tile = {}
+      explosion_tile.image_ref = 92
+      explosion_tile.image_ref_initial_frame = 92
+      explosion_tile.image_ref_final_frame = 97
+      explosion_tile.animated = true
+      explosion_tile.animate_continuous = false
+      explosion_tile.render_delay = 0.1
+      explosion_tile.onelife = true
+      explosion:add(TileSetGrid(tileset, explosion_tile))
       explosion:add(PositionPhysics(physics.world, physics.body:getX(), physics.body:getY(), physics.body:getAngle(), "static"))
       engine:addEntity(explosion)
       engine:removeEntity(value)

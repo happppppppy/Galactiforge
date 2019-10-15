@@ -14,24 +14,24 @@
     "projectile_velocity": 200,
     "aimed": true,
     "activation": "space",
-    "image_ref": 81,
-    "image_ref_initial_frame": 81,
-    "image_ref_final_frame": 87,
-    "animated": true,
-    "animate_continuous": false,
     "use_instantaneously":true,
-    "render_delay": 0.01,
     "fire_rate": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"thruster"},
       "GridInventory":{},
       "Weapon":{},
-      "GridHeat":{},
+      "GridHeat":{"heat_rate": 10, "natural_cool_rate": 20, "max_heat": 100},
       "GridBaseGraphic":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref":81, 
+        "image_ref_initial_frame":81, 
+        "image_ref_final_frame":87, 
+        "animated":true, 
+        "animate_continuous":false, 
+        "render_delay":0.01},
       "Health":{"health":30}
     }
   }

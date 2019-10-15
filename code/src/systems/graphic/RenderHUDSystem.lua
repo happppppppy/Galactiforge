@@ -15,7 +15,7 @@ function RenderHUDSystem:draw()
     local x_loc = 20
     local y_loc = love.graphics.getHeight() - 20
 
-    love.graphics.draw(tileset_small.image, tileset_small.tiles[datasets[global_component_name_list[global_component_index]].image_ref], x_loc + tileset.tile_width/2, y_loc-160 + tileset.tile_height/2, math.rad(global_component_directions[global_component_direction_index]), 1, 1, tileset.tile_width/2, tileset.tile_height/2) 
+    love.graphics.draw(tileset_small.image, tileset_small.tiles[datasets[global_component_name_list[global_component_index]].components.TileSetGrid.image_ref], x_loc + tileset.tile_width/2, y_loc-160 + tileset.tile_height/2, math.rad(global_component_directions[global_component_direction_index]), 1, 1, tileset.tile_width/2, tileset.tile_height/2) 
     love.graphics.print("Selected: "..global_component_name_list[global_component_index], x_loc, y_loc-120, 0, 1, 1)
     love.graphics.print(string.format("Ship Velocity: %.2f ", ship_velocity), x_loc, y_loc-100, 0, 1, 1)
     love.graphics.print(string.format("X Coordinate: %.2f ", physics.body:getX()), x_loc, y_loc-80, 0, 1, 1)

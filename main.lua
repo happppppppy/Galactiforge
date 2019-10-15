@@ -13,7 +13,9 @@ MenuState = require("code/src/states/MenuState")
 
 function love.load()
 	Gamestate.registerEvents()
-	Gamestate.switch(SplashState)
+	-- Gamestate.switch(SplashState)
+	
+	Gamestate.switch(MainState)
 end
 
 function love.update(dt)

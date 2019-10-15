@@ -1,76 +1,46 @@
 {
   "armor_half":{
-    "image_ref": 111,
-    "image_ref_initial_frame": 11,
-    "image_ref_final_frame": 17,
-    "animated": false,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "components": {
-      "GridItem":{"category":"thruster"},
+      "GridItem":{"category":"armor"},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{"image_ref": 111},
       "Health":{"health": 100}
     }
   },
   "armor_corner":{
-    "image_ref": 112,
-    "image_ref_initial_frame": 11,
-    "image_ref_final_frame": 17,
-    "animated": false,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "components": {
-      "GridItem":{"category":"thruster"},
+      "GridItem":{"category":"armor"},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{"image_ref": 112},
       "Health":{"health": 75}
     }
   },
   "armor_corner_half":{
-    "image_ref": 113,
-    "image_ref_initial_frame": 11,
-    "image_ref_final_frame": 17,
-    "animated": false,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "components": {
-      "GridItem":{"category":"thruster"},
+      "GridItem":{"category":"armor"},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{"image_ref": 113},
       "Health":{"health": 50}
     }
   },
   "armor_full":{
-    "image_ref": 114,
-    "image_ref_initial_frame": 11,
-    "image_ref_final_frame": 17,
-    "animated": false,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "components": {
-      "GridItem":{"category":"thruster"},
+      "GridItem":{"category":"armor"},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{"image_ref": 114},
       "Health":{"health": 200}
     }
   },
   "floor":{
-    "image_ref": 115,
-    "image_ref_initial_frame": 11,
-    "image_ref_final_frame": 17,
-    "animated": false,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "components": {
-      "GridItem":{"category":"thruster"},
+      "GridItem":{"category":"armor"},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{"image_ref": 115},
       "Health":{"health": 2}
     }
   }

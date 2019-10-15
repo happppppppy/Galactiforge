@@ -1,7 +1,10 @@
 local GridHeat = Component.create("GridHeat")
-function GridHeat:initialize()
-  self.heat_rate = 10
-  self.natural_cool_rate = 20
+function GridHeat:initialize(heat_rate, natural_cool_rate, max_heat)
+  --Config values
+  self.heat_rate = heat_rate
+  self.natural_cool_rate = natural_cool_rate
+  self.max_heat  = max_heat
+  
+  --Dynamic values
   self.heat = 1
-  self.max_heat  = 100
 end

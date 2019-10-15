@@ -30,7 +30,14 @@ function WeaponSystem:fireCannon(event)
     local x_vel, y_vel = physics.body:getLinearVelocity()
   
     bullet = Entity()
-    bullet:add(TileSetGrid(tileset_small, nil, nil, 101, 101, 103, true, true, 0.1, false))
+    local bullet_tile = {}
+    bullet_tile.image_ref = 101
+    bullet_tile.image_ref_initial_frame = 101
+    bullet_tile.image_ref_final_frame = 103
+    bullet_tile.animated = true
+    bullet_tile.animate_continuous = true
+    bullet_tile.render_delay = 0.1
+    bullet:add(TileSetGrid(tileset_small, bullet_tile))
     bullet:add(PositionPhysics(world, grid_item.x_pos_grid_physics, grid_item.y_pos_grid_physics, grid_item.t_pos_grid_physics, "dynamic"))
     bullet:add(DynamicPhysics(0, 0, 5000, 5000, 0, 0, 800, x_vel, y_vel))
     bullet:add(CollisionPhysics("Circle",  1, nil, 1, grid_master.physics.category, grid_master.physics.mask))

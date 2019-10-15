@@ -24,7 +24,7 @@ local function addgrid(arg)
     elseif component_name == "GridProcessor" then
       new_grid_item:add(GridProcessor(type))
     elseif component_name == "GridHeat" then
-      new_grid_item:add(GridHeat())
+      new_grid_item:add(GridHeat(component_values.heat_rate, component_values.natural_cool_rate, component_values.max_heat))
     elseif component_name == "GridBaseGraphic" then
       new_grid_item:add(GridBaseGraphic())
     elseif component_name == "Thruster" then
@@ -42,7 +42,7 @@ local function addgrid(arg)
     elseif component_name == "GridPhysics" then
       new_grid_item:add(GridPhysics())
     elseif component_name == "TileSetGrid" then
-      new_grid_item:add(TileSetGrid(tileset_small, type, datasets))
+      new_grid_item:add(TileSetGrid(tileset_small, component_values))
     elseif component_name == "Health" then
       new_grid_item:add(Health(component_values.health))
     end
@@ -85,7 +85,9 @@ function GridMasterSystem:onAddEntity(entity)
   local new_grid_item = Entity(entity)
   new_grid_item:add(FieryDeath())
   new_grid_item:add(GridPhysics())
-  new_grid_item:add(TileSetGrid(tileset_small, "ship_core", datasets))
+  local ship_core_tile = {}
+  ship_core_tile.image_ref = 121
+  new_grid_item:add(TileSetGrid(tileset_small, ship_core_tile))
   new_grid_item:add(Health(datasets["ship_core"].health))
   new_grid_item:add(GridItem("ship_core", 0, 0, "technology", 0, grid_master.grid_scale))
   engine:addEntity(new_grid_item)

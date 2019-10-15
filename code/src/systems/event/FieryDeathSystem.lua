@@ -47,7 +47,15 @@ function FieryDeathSystem:update(dt)
       if stats.elapsed_time > stats.animation_delay and stats.count < stats.max_count then
         stats.count = stats.count + 1
         explosion = Entity()
-        explosion:add(TileSetGrid(tileset_small, nil, nil, 91, 91, 97, true, false, 0.1, true))
+        local explosion_tile = {}
+        explosion_tile.image_ref = 91
+        explosion_tile.image_ref_initial_frame = 91
+        explosion_tile.image_ref_final_frame = 97
+        explosion_tile.animated = true
+        explosion_tile.animate_continuous = false
+        explosion_tile.render_delay = 0.1
+        explosion_tile.onelife = true
+        explosion:add(TileSetGrid(tileset_small, explosion_tile))
         explosion:add(PositionPhysics(physics.world, grid_item.x_pos_grid_physics + math.random (width/2*-1, width/2), grid_item.y_pos_grid_physics + math.random (height/2*-1, height/2), grid_item.t_pos_grid_physics + math.random (), "static"))
         engine:addEntity(explosion)
         stats.elapsed_time = 0

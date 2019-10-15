@@ -4,7 +4,7 @@ function TileSetGridAnimatorSystem:update(dt)
   for index, value in pairs(self.targets) do
     local tg = value:get("TileSetGrid")
     
-    if tg.animated then
+    if tg.image_ref_final_frame ~= nil then
       if tg.animate_continuous then
         tg.animation_complete = false
       end 

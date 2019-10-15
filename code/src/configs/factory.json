@@ -8,12 +8,6 @@
     "resource_max_storage":50,
     "resource_produced":{"water":{"use_rate":1}, "hydrogen":{"use_rate":1}, "oxygen":{"use_rate":1}, "molten_titanium":{"use_rate":1}},
     "resource_consumed":[],
-    "image_ref": 11,
-    "image_ref_initial_frame": 11,
-    "image_ref_final_frame": 17,
-    "animated": true,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -22,7 +16,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 11,
+        "image_ref_initial_frame": 11,
+        "image_ref_final_frame": 17,
+        "animated": true,
+        "animate_continuous": true,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   },
@@ -35,12 +35,6 @@
     "resource_max_storage":50,
     "resource_produced":{"glycerol":{"use_rate":1}, "fuel":{"use_rate":1}},
     "resource_consumed":[],
-    "image_ref": 21,
-    "image_ref_initial_frame": 21,
-    "image_ref_final_frame": 27,
-    "animated": true,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -49,7 +43,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 21,
+        "image_ref_initial_frame": 21,
+        "image_ref_final_frame": 27,
+        "animated": true,
+        "animate_continuous": true,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   },
@@ -62,12 +62,6 @@
     "resource_max_storage":50,
     "resource_produced":{"coolant":{"use_rate":1}},
     "resource_consumed":[],
-    "image_ref": 31,
-    "image_ref_initial_frame": 31,
-    "image_ref_final_frame": 37,
-    "animated": true,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -76,7 +70,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 31,
+        "image_ref_initial_frame": 31,
+        "image_ref_final_frame": 37,
+        "animated": true,
+        "animate_continuous": true,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   },
@@ -89,12 +89,6 @@
     "resource_max_storage":50,
     "resource_produced":{"powder":{"use_rate":1}, "titanium_ore":{"use_rate":1}},
     "resource_consumed":[],
-    "image_ref": 41,
-    "image_ref_initial_frame": 41,
-    "image_ref_final_frame": 47,
-    "animated": true,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -103,7 +97,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 41,
+        "image_ref_initial_frame": 41,
+        "image_ref_final_frame": 47,
+        "animated": true,
+        "animate_continuous": true,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   },
@@ -116,12 +116,6 @@
     "resource_max_storage":50,
     "resource_produced":{"oilstone":{"use_rate":1}, "titanstone":{"use_rate":1}, "plutonium":{"use_rate":1}},
     "resource_consumed":[],
-    "image_ref": 51,
-    "image_ref_initial_frame": 51,
-    "image_ref_final_frame": 57,
-    "animated": true,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -130,7 +124,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 51,
+        "image_ref_initial_frame": 51,
+        "image_ref_final_frame": 57,
+        "animated": true,
+        "animate_continuous": true,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   },
@@ -143,12 +143,6 @@
     "resource_max_storage":50,
     "resource_produced":{"casings":{"use_rate":1}},
     "resource_consumed":[],
-    "image_ref": 61,
-    "image_ref_initial_frame": 61,
-    "image_ref_final_frame": 67,
-    "animated": true,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -157,7 +151,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 61,
+        "image_ref_initial_frame": 61,
+        "image_ref_final_frame": 67,
+        "animated": true,
+        "animate_continuous": true,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   },
@@ -170,12 +170,6 @@
     "resource_max_storage":50,
     "resource_produced":{"shells":{"use_rate":1}},
     "resource_consumed":[],
-    "image_ref": 71,
-    "image_ref_initial_frame": 71,
-    "image_ref_final_frame": 77,
-    "animated": true,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -184,7 +178,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 71,
+        "image_ref_initial_frame": 71,
+        "image_ref_final_frame": 77,
+        "animated": true,
+        "animate_continuous": true,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   },
@@ -197,12 +197,6 @@
     "resource_max_storage":1,
     "resource_produced":{"ore":{"initial_count":1000000}},
     "resource_consumed":[],
-    "image_ref": 143,
-    "image_ref_initial_frame": 143,
-    "image_ref_final_frame": 143,
-    "animated": true,
-    "animate_continuous": true,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -211,7 +205,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 143,
+        "image_ref_initial_frame": 143,
+        "image_ref_final_frame": 143,
+        "animated": true,
+        "animate_continuous": true,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   },
@@ -224,12 +224,6 @@
     "resource_max_storage":1,
     "resource_produced":{"shells":{"initial_count":1000000}},
     "resource_consumed":[],
-    "image_ref": 141,
-    "image_ref_initial_frame": 141,
-    "image_ref_final_frame": 141,
-    "animated": false,
-    "animate_continuous": false,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -238,7 +232,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 141,
+        "image_ref_initial_frame": 141,
+        "image_ref_final_frame": 141,
+        "animated": false,
+        "animate_continuous": false,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   },
@@ -251,12 +251,6 @@
     "resource_max_storage":1,
     "resource_produced":{"coolant":{"initial_count":1000000}},
     "resource_consumed":[],
-    "image_ref": 142,
-    "image_ref_initial_frame": 142,
-    "image_ref_final_frame": 142,
-    "animated": false,
-    "animate_continuous": false,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -265,7 +259,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 142,
+        "image_ref_initial_frame": 142,
+        "image_ref_final_frame": 142,
+        "animated": false,
+        "animate_continuous": false,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   },
@@ -278,12 +278,6 @@
     "resource_max_storage":1,
     "resource_produced":{"fuel":{"initial_count":1000000}},
     "resource_consumed":[],
-    "image_ref": 144,
-    "image_ref_initial_frame": 144,
-    "image_ref_final_frame": 144,
-    "animated": false,
-    "animate_continuous": false,
-    "render_delay": 0.1,
     "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
@@ -292,7 +286,13 @@
       "GridProcessor":{},
       "FieryDeath":{},
       "GridPhysics":{},
-      "TileSetGrid":{},
+      "TileSetGrid":{
+        "image_ref": 144,
+        "image_ref_initial_frame": 144,
+        "image_ref_final_frame": 144,
+        "animated": false,
+        "animate_continuous": false,
+        "render_delay": 0.1},
       "Health":{"health":30}
     }
   }
