@@ -47,11 +47,10 @@ require("code/src/components/objects/grids/GridTransfer")
 require("code/src/components/objects/grids/GridProcessor")
 require("code/src/components/objects/grids/GridBaseGraphic")
 require("code/src/components/objects/grids/GridHeat")
-require("code/src/components/objects/grids/Factory")
 require("code/src/components/objects/grids/Weapon")
 require("code/src/components/objects/grids/Thruster")
 require("code/src/components/objects/grids/DockingLatch")
-local DockingLatch, Factory, Weapon, Thruster, GridItem, GridInventory, GridTransfer, GridProcessor, GridBaseGraphic, GridHeat = Component.load({"DockingLatch", "Factory", "Weapon", "Thruster", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridBaseGraphic", "GridHeat"})
+local DockingLatch, Weapon, Thruster, GridItem, GridInventory, GridTransfer, GridProcessor, GridBaseGraphic, GridHeat = Component.load({"DockingLatch", "Weapon", "Thruster", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridBaseGraphic", "GridHeat"})
 
 --Grid systems
 WeaponSystem = require("code/src/systems/grids/WeaponSystem")

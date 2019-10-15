@@ -34,3 +34,65 @@ Gameplay:
 
 Galactiforge story
 - ???
+
+IMPROVEMENT
+Grid component structure defined in configs.
+
+"COMPONENTS": {
+
+  "ResourceStorage": {
+    "definition": "Provides storage of resources within the grid",
+    "requires": nil,
+    "accepted_resources": ["list"] or "all,
+    "quantity": number or 1
+  },
+
+  "ResourceProcessor": {
+    "definition": "Converts resources from one type to another"
+    "requires": ["ResourceStorage"],
+    "processed_resources" : {
+      "option1": {
+        "inputs" : [
+          "resource_name1": {"consume_count": number or 1},
+          "resource_name2": {"consume_count": number or 1}...
+        ],
+        "outputs" :[
+          "resource_name1": {"produce_count": number or 1},
+          "resource_name2": {"produce_count": number or 1}...
+        ]
+          "production_rate": number or 1
+      },
+      "option2..."
+    }
+  },
+
+  "ResourceConsumer": {
+    "definition": "Uses up the given resource",
+    "requires": ["ResourceStorage"],
+    "required_resources":[
+      "resource_name1": {"consume_count": number or 1},
+      "resource_name2": {"consume_count": number or 1}...
+    ]
+  },
+
+  "ResourceTransfer": {
+    "definition": "Transfers resources",
+    "requires": ["ResourceStorage"],
+    "transfer_rate": number or nil --nil will process at the game update speed
+  }
+
+  "GridStaticArt": {
+
+  },
+  "GridAnimatedArt": {
+
+  },
+  "GridPhysics": {
+
+  },
+  "Health": {
+
+  }
+}
+
+

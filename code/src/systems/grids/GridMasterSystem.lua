@@ -1,6 +1,6 @@
 local TileSetGrid, GridPhysics, GridItem, GridInventory, GridTransfer, GridProcessor, GridBaseGraphic, GridHeat = Component.load({"TileSetGrid", "GridPhysics", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridBaseGraphic", "GridHeat"})
 local PlayerController = Component.load({"PlayerController"})
-local Factory, Weapon, Thruster, Health, DockingLatch = Component.load({"Factory", "Weapon", "Thruster", "Health", "DockingLatch"})
+local Weapon, Thruster, Health, DockingLatch = Component.load({"Weapon", "Thruster", "Health", "DockingLatch"})
 local FieryDeath = Component.load({"FieryDeath"})
 
 local GridMasterSystem = class("GridMasterSystem", System)
@@ -20,7 +20,6 @@ function GridMasterSystem:fireEvent(event)
       new_grid_item:add(Health(datasets[type].health))
 
       if datasets[type].category == "factory" then 
-        new_grid_item:add(Factory())
         new_grid_item:add(GridItem(type, event.x_loc, event.y_loc, datasets[type].category, 0, grid_master.grid_scale))
         new_grid_item:add(GridInventory(type))
         new_grid_item:add(GridTransfer(type))
@@ -86,7 +85,6 @@ function GridMasterSystem:onAddEntity(entity)
   new_grid_item:add(GridPhysics())
   new_grid_item:add(TileSetGrid(tileset_small, "ship_core", datasets))
   new_grid_item:add(Health(datasets["ship_core"].health))
-  new_grid_item:add(Factory())
   new_grid_item:add(GridItem("ship_core", 0, 0, "technology", 0, grid_master.grid_scale))
   engine:addEntity(new_grid_item)
   grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - 0][grid_master.grid_specs.allowed_grid.grid_origin.x - 0] = 1
@@ -103,7 +101,6 @@ function GridMasterSystem:onAddEntity(entity)
       new_grid_item:add(Health(datasets[grid_item.type].health))
 
       if grid_item.category == "factory" then 
-        new_grid_item:add(Factory())
         new_grid_item:add(GridItem(grid_item.type, grid_item.x, grid_item.y, grid_item.category, 0, grid_master.grid_scale))
         new_grid_item:add(GridInventory(grid_item.type))
         new_grid_item:add(GridTransfer(grid_item.type))

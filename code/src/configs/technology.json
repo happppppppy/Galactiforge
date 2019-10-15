@@ -18,5 +18,15 @@
     "render_delay": 0.1,
     "health": 100,
     "buildable": true
+  },
+  "radar":{
+    "image_ref": 151,
+    "image_ref_initial_frame": 151,
+    "image_ref_final_frame": 154,
+    "animated": true,
+    "animate_continuous": true,
+    "render_delay": 0.1,
+    "health": 100,
+    "buildable": true
   }
 }

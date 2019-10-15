@@ -44,13 +44,6 @@ function GridMaster:initialize(grid, grid_specs, grid_scale, grid_width, grid_he
         self.grid_specs.allowed_grid.grid_map[row][col] = 1
         self.grid_status[row][col] = 0 
         self.grid_items[row][col] = 0
-        -- self.grid[i]  = {}
-        -- self.grid[i].category = "factory"
-        -- self.grid[i].type = "ore_hopper"
-        -- self.grid[i].x = row-self.grid_specs.allowed_grid.grid_origin.x
-        -- self.grid[i].y = col-self.grid_specs.allowed_grid.grid_origin.x
-        -- self.grid[i].direction = 0
-        -- i = i +1
       end
 
     end

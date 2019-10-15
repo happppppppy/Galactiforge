@@ -40,9 +40,8 @@ function RenderHUDSystem:draw()
 
     local aiship_physics = value:get("PositionPhysics")
     local range_limit = 2000
-    transparency_limit = 0.6
+    local transparency_limit = 0.6
     local t_pos_grid_physics = math.atan2(aiship_physics.body:getY() - playership_physics.body:getY(), aiship_physics.body:getX() - playership_physics.body:getX())
-    
     local range = math.sqrt((aiship_physics.body:getY() - playership_physics.body:getY())^2 + (aiship_physics.body:getX() - playership_physics.body:getX())^2)
     local distance = 0
     if range > love.graphics.getHeight()/2 - 100 then
@@ -60,7 +59,6 @@ function RenderHUDSystem:draw()
     if transparency > transparency_limit then transparency = transparency_limit end
     love.graphics.setColor(1,0,0,transparency)
     love.graphics.circle('fill',x,y,10)
-    -- love.graphics.line(playership_physics.body:getX(), playership_physics.body:getY(), x, y)--aiship_physics.body:getX(), aiship_physics.body:getY())
     love.graphics.setColor(r,g,b,a)
   end
 end
