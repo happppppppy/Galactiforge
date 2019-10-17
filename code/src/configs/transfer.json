@@ -1,16 +1,40 @@
 {
   "conveyor":{
-    "transfer_grid":[
+    "components":{
+    "GridItem":{"category":"transfer"},
+    "GridInventory":{"whitelist":{
+      "ore":{"type":"stored", "count": 0},
+      "ice":{"type":"stored", "count": 0},
+      "plutonium":{"type":"stored", "count": 0},
+      "titanstone":{"type":"stored", "count": 0},
+      "titanium_ore":{"type":"stored", "count": 0},
+      "molten_titanium":{"type":"stored", "count": 0},
+      "casings":{"type":"stored", "count": 0},
+      "oilstone":{"type":"stored", "count": 0},
+      "powder":{"type":"stored", "count": 0},
+      "shells":{"type":"stored", "count": 0},
+      "fuel_oil":{"type":"stored", "count": 0},
+      "fuel":{"type":"stored", "count": 0},
+      "water":{"type":"stored", "count": 0},
+      "hydrogen":{"type":"stored", "count": 0},
+      "oxygen":{"type":"stored", "count": 0},
+      "glycerol":{"type":"stored", "count": 0},
+      "coolant":{"type":"stored", "count": 0}
+      }, "max_storage": 10, "process_rate":0.01},
+    "GridTransfer":{"transfer_grid":[
       [0,1,0],
       [0,0,0],
-      [0,2,0]],
-    "transfer_delay": 0.01,
-    "image_ref": 131,
-    "image_ref_initial_frame": 131,
-    "image_ref_final_frame": 136,
-    "animated": true,
-    "animate_continuous": true,
-    "render_delay": 0.1,
-    "health": 15
+      [0,0,0]], "transfer_rate": 0.01},
+    "FieryDeath":{},
+    "GridPhysics":{},
+    "TileSetGrid":{
+      "image_ref": 131,
+      "image_ref_initial_frame": 131,
+      "image_ref_final_frame": 136,
+      "animated": true,
+      "animate_continuous": true,
+      "render_delay": 0.1},
+    "Health":{"health":15}
+    }
   }
 }

@@ -16,24 +16,24 @@ local function addgrid(arg)
   local new_grid_item = Entity(entity)
   for component_name, component_values in pairs(datasets[type].components) do
     if component_name == "GridItem" then
-      new_grid_item:add(GridItem(type, x, y, component_values.category, direction, grid_master.grid_scale))
+      new_grid_item:add(GridItem(type, x, y, direction, grid_master.grid_scale))
     elseif component_name == "GridInventory" then
-      new_grid_item:add(GridInventory(type))
+      new_grid_item:add(GridInventory(component_values))
     elseif component_name == "GridTransfer" then
-      new_grid_item:add(GridTransfer(type))
+      new_grid_item:add(GridTransfer(component_values))
     elseif component_name == "GridProcessor" then
-      new_grid_item:add(GridProcessor(type))
+      new_grid_item:add(GridProcessor(component_values))
     elseif component_name == "GridHeat" then
-      new_grid_item:add(GridHeat(component_values.heat_rate, component_values.natural_cool_rate, component_values.max_heat))
+      new_grid_item:add(GridHeat(component_values))
     elseif component_name == "GridBaseGraphic" then
       new_grid_item:add(GridBaseGraphic())
     elseif component_name == "Thruster" then
-      new_grid_item:add(Thruster(type, x, y, direction))
+      new_grid_item:add(Thruster(component_values, direction))
       if grid_master.player then
         new_grid_item:add(PlayerController())
       end
     elseif component_name == "Weapon" then
-      new_grid_item:add(Weapon(type, x, y))
+      new_grid_item:add(Weapon(component_values))
       if grid_master.player then
         new_grid_item:add(PlayerController())
       end
@@ -42,9 +42,9 @@ local function addgrid(arg)
     elseif component_name == "GridPhysics" then
       new_grid_item:add(GridPhysics())
     elseif component_name == "TileSetGrid" then
-      new_grid_item:add(TileSetGrid(tileset_small, component_values))
+      new_grid_item:add(TileSetGrid(component_values, tileset_small))
     elseif component_name == "Health" then
-      new_grid_item:add(Health(component_values.health))
+      new_grid_item:add(Health(component_values))
     end
   end
 
@@ -81,18 +81,6 @@ end
 
 function GridMasterSystem:onAddEntity(entity)
   local grid_master = entity:get("GridMaster")
-  --Add the ship core
-  local new_grid_item = Entity(entity)
-  new_grid_item:add(FieryDeath())
-  new_grid_item:add(GridPhysics())
-  local ship_core_tile = {}
-  ship_core_tile.image_ref = 121
-  new_grid_item:add(TileSetGrid(tileset_small, ship_core_tile))
-  new_grid_item:add(Health(datasets["ship_core"].health))
-  new_grid_item:add(GridItem("ship_core", 0, 0, "technology", 0, grid_master.grid_scale))
-  engine:addEntity(new_grid_item)
-  grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - 0][grid_master.grid_specs.allowed_grid.grid_origin.x - 0] = 1
-
   for i,grid_item in pairs(grid_master.grid) do
     if grid_master.grid_specs.allowed_grid.grid_map[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] == 1 then
       addgrid{type=grid_item.type, entity=entity, x=grid_item.x,y=grid_item.y, grid_master=grid_master, direction=grid_item.direction}

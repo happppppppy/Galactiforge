@@ -21,7 +21,6 @@ function RenderHUDSystem:draw()
     love.graphics.print(string.format("X Coordinate: %.2f ", physics.body:getX()), x_loc, y_loc-80, 0, 1, 1)
     love.graphics.print(string.format("Y Coordinate: %.2f ", physics.body:getY()), x_loc, y_loc-60, 0, 1, 1)
     love.graphics.print(string.format("Ship Mass: %.2f ", physics.body:getMass()), x_loc, y_loc-20, 0, 1, 1)
-    -- love.graphics.print(string.format("Ship Health: %d ", grid_master.health), x_loc, y_loc, 0, 1, 1)
     love.graphics.print(string.format("FPS: %d ", love.timer.getFPS()), x_loc, y_loc-180, 0, 1, 1)
     love.graphics.print(string.format("DT: %d ", love.timer.getAverageDelta()), x_loc, y_loc-200, 0, 1, 1)
   
@@ -64,7 +63,7 @@ function RenderHUDSystem:draw()
 end
 
 function RenderHUDSystem:requires()
-	return {pool1 = {"GridMaster", "Health", "PositionPhysics", "PlayerController"}, pool2 = {"GridMaster", "PositionPhysics", "AIController"}}
+	return {pool1 = {"GridMaster", "PositionPhysics", "PlayerController"}, pool2 = {"GridMaster", "PositionPhysics", "AIController"}}
 end
 
 return RenderHUDSystem

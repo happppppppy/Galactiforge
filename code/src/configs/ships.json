@@ -17,6 +17,7 @@
     "linear_damping": 0.2,
     "angular_damping": 0.2,
     "starter_grid": [
+      {"category":"technology", "type":"ship_core", "x":0, "y":0},
       {"category":"thruster", "type":"large_thruster", "x":0, "y":-3, "direction" : 180},
       {"category":"factory", "type":"fuel_container", "x":0, "y":-2},		
       {"category":"factory", "type":"fuel_container","x":0,"y":1}, 

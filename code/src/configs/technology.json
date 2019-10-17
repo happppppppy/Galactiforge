@@ -1,32 +1,35 @@
 {
   "ship_core":{
-    "image_ref": 121,
-    "image_ref_initial_frame": 11,
-    "image_ref_final_frame": 17,
-    "animated": false,
-    "animate_continuous": true,
-    "render_delay": 0.1,
-    "health": 100,
-    "buildable": false
+    "components":{
+      "GridItem":{"category":"technology"},
+      "TileSetGrid":{"image_ref":121},
+      "Health":{"health": 100},
+      "FieryDeath":{},
+      "GridPhysics":{}
+    }
   },
   "docking_latch":{
-    "image_ref": 121,
-    "image_ref_initial_frame": 11,
-    "image_ref_final_frame": 17,
-    "animated": false,
-    "animate_continuous": false,
-    "render_delay": 0.1,
-    "health": 100,
-    "buildable": true
+    "components":{
+      "GridItem":{"category":"technology"},
+      "TileSetGrid":{"image_ref":121},
+      "Health":{"health": 100},
+      "FieryDeath":{},
+      "GridPhysics":{}
+    }
   },
   "radar":{
-    "image_ref": 151,
-    "image_ref_initial_frame": 151,
-    "image_ref_final_frame": 154,
-    "animated": true,
-    "animate_continuous": true,
-    "render_delay": 0.1,
-    "health": 100,
-    "buildable": true
+    "components":{
+      "GridItem":{"category":"technology"},
+      "TileSetGrid":{
+        "image_ref":151, 
+        "image_ref_initial_frame":151, 
+        "image_ref_final_frame":154, 
+        "animated":true, 
+        "animate_continuous":true, 
+        "render_delay":0.1},
+      "Health":{"health": 100},
+      "FieryDeath":{},
+      "GridPhysics":{}
+    }
   }
 }

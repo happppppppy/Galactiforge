@@ -1,6 +1,6 @@
 local TileSetGrid = Component.create("TileSetGrid")
 
-function TileSetGrid:initialize(tileset, component_values)
+function TileSetGrid:initialize(component_values, tileset)
 
   self.image_ref = component_values.image_ref or nil
   self.image_ref_initial_frame = component_values.image_ref_initial_frame or nil

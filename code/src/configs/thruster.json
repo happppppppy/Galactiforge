@@ -1,32 +1,17 @@
 {
   "large_thruster":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.1,
-    "resource_max_storage":500,
-    "resource_produced":[],
-    "resource_consumed":{"fuel":{"use_rate":1}},
-    "activation": "up",
-    "direction":0,
-    "base_thrust": 10000,
-    "burn_rate":0.1,
-    "particle": {
-      "imagePath" : "assets/images/space_breaker_asset/Weapons/Small/Cannon/turret_01_explosion_single.png",
-      "rmin":0,
-      "rmax":0.5,
-      "lifemin":0.1,
-      "lifemax":0.5,
-      "emitspeed": 100
-    },
-    "use_instantaneously": true,
-    "health": 30,
-    "exhaust_scale": 1,
     "components": {
       "GridItem":{"category":"thruster"},
-      "GridInventory":{},
-      "Thruster":{},
+      "GridInventory":{"whitelist":{"fuel":{"type":"stored", "count": 100}}, "max_storage": 500, "process_rate":0.01},
+      "Thruster":{"fuel":{"use_rate":0.2, "optional":false},"base_thrust": 4000,"burn_rate":0.2,"exhaust_scale": 1,
+        "particle": {
+          "imagePath" : "assets/images/space_breaker_asset/Weapons/Small/Cannon/turret_01_explosion_single.png",
+          "rmin":0,
+          "rmax":0.5,
+          "lifemin":0.1,
+          "lifemax":0.5,
+          "emitspeed": 100
+        }},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{"image_ref":1},
@@ -34,34 +19,18 @@
     }
   },
   "mini_thruster":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]
-    ],
-    "process_delay": 0.1,
-    "resource_max_storage":500,
-    "resource_produced":[],
-    "resource_consumed":{"fuel":{"use_rate":1}},
-    "activation": "left",
-    "direction":90,
-    "base_thrust": 4000,
-    "burn_rate":0.2,
-    "particle": {
-      "imagePath" : "assets/images/space_breaker_asset/Weapons/Small/Cannon/turret_01_explosion_single.png",
-      "rmin":0,
-      "rmax":0.5,
-      "lifemin":0.1,
-      "lifemax":0.5,
-      "emitspeed": 100
-    },
-    "use_instantaneously": true,
-    "health": 30,
-    "exhaust_scale": 0.5,
     "components": {
       "GridItem":{"category":"thruster"},
-      "GridInventory":{},
-      "Thruster":{},
+      "GridInventory":{"whitelist":{"fuel":{"type":"stored", "count": 100}}, "max_storage": 500, "process_rate":0.01},
+      "Thruster":{"fuel":{"use_rate":0.2, "optional":false},"base_thrust": 4000,"burn_rate":0.1,"exhaust_scale": 0.5,
+        "particle": {
+          "imagePath" : "assets/images/space_breaker_asset/Weapons/Small/Cannon/turret_01_explosion_single.png",
+          "rmin":0,
+          "rmax":0.5,
+          "lifemin":0.1,
+          "lifemax":0.5,
+          "emitspeed": 100
+        }},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{"image_ref":2},

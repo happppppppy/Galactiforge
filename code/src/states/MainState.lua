@@ -215,17 +215,9 @@ function MainState:draw()
 		local x_loc_bg = playerShipLoc.body:getX() + width * (1 / global_zoom_level) / 2
 		local y_loc_bg = playerShipLoc.body:getY() + height * (1 / global_zoom_level) / 2
 
-		-- love.graphics.push()
-		-- love.graphics.translate(x_loc, y_loc)
-		-- love.graphics.draw(backgroundImage, backgroundQuad, x_loc, y_loc)
-		-- love.graphics.pop()
 
 		love.graphics.translate(x_loc, y_loc)
-	
-	else
 
-		-- love.graphics.draw(backgroundImage, backgroundQuad,0,0)
-		
 	end
 	
 	engine:draw()

@@ -1,7 +1,6 @@
 local GridItem = Component.create("GridItem")
-function GridItem:initialize(type, x, y, category, direction, grid_scale)
+function GridItem:initialize(type, x, y, direction, grid_scale)
 
-  self.category = category or nil
   self.type = type
   self.grid_scale = grid_scale
 

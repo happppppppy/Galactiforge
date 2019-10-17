@@ -1,10 +1,11 @@
 local Weapon = Component.create("Weapon")
-function Weapon:initialize(type, x, y)
+function Weapon:initialize(component_values)
 
-  self.base_damage = datasets[type].base_damage
-  self.aimed = datasets[type].aimed
-  self.activation = datasets[type].activation
-  self.fire_rate = datasets[type].fire_rate
+  self.base_damage = component_values.base_damage
+  self.aimed = component_values.aimed
+  self.activation = component_values.activation
+  self.fire_rate = component_values.fire_rate
+  self.projectile_velocity = component_values.projectile_velocity
   self.fire_time = 0
 
 end

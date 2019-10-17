@@ -25,7 +25,7 @@ function WeaponSystem:fireCannon(event)
       tg.animation_complete = false
     end
 
-    grid_inventory.resources["shells"].count =  grid_inventory.resources["shells"].count - grid_inventory.resources["shells"].use_rate
+    grid_inventory.resources["shells"].count =  grid_inventory.resources["shells"].count - 1--grid_inventory.resources["shells"].use_rate
 
     local x_vel, y_vel = physics.body:getLinearVelocity()
   
@@ -37,9 +37,9 @@ function WeaponSystem:fireCannon(event)
     bullet_tile.animated = true
     bullet_tile.animate_continuous = true
     bullet_tile.render_delay = 0.1
-    bullet:add(TileSetGrid(tileset_small, bullet_tile))
+    bullet:add(TileSetGrid(bullet_tile, tileset_small))
     bullet:add(PositionPhysics(world, grid_item.x_pos_grid_physics, grid_item.y_pos_grid_physics, grid_item.t_pos_grid_physics, "dynamic"))
-    bullet:add(DynamicPhysics(0, 0, 5000, 5000, 0, 0, 800, x_vel, y_vel))
+    bullet:add(DynamicPhysics(0, 0, 5000, 5000, 0, 0, weapon_component.projectile_velocity, x_vel, y_vel))
     bullet:add(CollisionPhysics("Circle",  1, nil, 1, grid_master.physics.category, grid_master.physics.mask))
     bullet:add(Bullet(5, weapon_component.base_damage))
     engine:addEntity(bullet)

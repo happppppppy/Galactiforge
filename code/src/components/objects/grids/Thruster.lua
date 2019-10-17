@@ -1,7 +1,7 @@
 local Thruster = Component.create("Thruster")
-function Thruster:initialize(type, x, y, direction)
+function Thruster:initialize(component_values, direction)
 
-  self.base_thrust = datasets[type].base_thrust
+  self.base_thrust = component_values.base_thrust
 
   --Thruster physics
   self.direction = direction
@@ -17,21 +17,21 @@ function Thruster:initialize(type, x, y, direction)
   end
 
   --Particle system
-  self.image = love.graphics.newImage(datasets[type].particle.imagePath)
+  self.image = love.graphics.newImage(component_values.particle.imagePath)
   self.pSystem = love.graphics.newParticleSystem(self.image, 1000)
-  self.pSystem:setParticleLifetime(datasets[type].particle.lifemin, datasets[type].particle.lifemax)
+  self.pSystem:setParticleLifetime(component_values.particle.lifemin, component_values.particle.lifemax)
   self.pSystem:setEmissionRate(0)
   self.pSystem:setSizeVariation(1)
   self.pSystem:setSizes(
-    0.6 * datasets[type].exhaust_scale, 
-    0.6 * datasets[type].exhaust_scale, 
-    1.0 * datasets[type].exhaust_scale, 
-    1.0 * datasets[type].exhaust_scale)
-  self.pSystem:setRotation(datasets[type].particle.rmin,datasets[type].particle.rmax)
-  self.emitspeed = datasets[type].particle.emitspeed
+    0.6 * component_values.exhaust_scale, 
+    0.6 * component_values.exhaust_scale, 
+    1.0 * component_values.exhaust_scale, 
+    1.0 * component_values.exhaust_scale)
+  self.pSystem:setRotation(component_values.particle.rmin,component_values.particle.rmax)
+  self.emitspeed = component_values.particle.emitspeed
   self.particles_active = false
 
   self.burn_time = 0
-  self.burn_rate = datasets[type].burn_rate
+  self.burn_rate = component_values.burn_rate
 
 end

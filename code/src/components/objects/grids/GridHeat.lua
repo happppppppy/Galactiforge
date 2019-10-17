@@ -1,9 +1,9 @@
 local GridHeat = Component.create("GridHeat")
-function GridHeat:initialize(heat_rate, natural_cool_rate, max_heat)
+function GridHeat:initialize(component_values)
   --Config values
-  self.heat_rate = heat_rate
-  self.natural_cool_rate = natural_cool_rate
-  self.max_heat  = max_heat
+  self.heat_rate = component_values.heat_rate
+  self.natural_cool_rate = component_values.natural_cool_rate
+  self.max_heat  = component_values.max_heat
   
   --Dynamic values
   self.heat = 1

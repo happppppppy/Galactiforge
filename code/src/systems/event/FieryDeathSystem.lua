@@ -55,7 +55,7 @@ function FieryDeathSystem:update(dt)
         explosion_tile.animate_continuous = false
         explosion_tile.render_delay = 0.1
         explosion_tile.onelife = true
-        explosion:add(TileSetGrid(tileset_small, explosion_tile))
+        explosion:add(TileSetGrid(explosion_tile, tileset_small))
         explosion:add(PositionPhysics(physics.world, grid_item.x_pos_grid_physics + math.random (width/2*-1, width/2), grid_item.y_pos_grid_physics + math.random (height/2*-1, height/2), grid_item.t_pos_grid_physics + math.random (), "static"))
         engine:addEntity(explosion)
         stats.elapsed_time = 0

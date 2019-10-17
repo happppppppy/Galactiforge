@@ -1,19 +1,25 @@
 {
   "arc_furnace":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.01,
-    "resource_max_storage":50,
-    "resource_produced":{"water":{"use_rate":1}, "hydrogen":{"use_rate":1}, "oxygen":{"use_rate":1}, "molten_titanium":{"use_rate":1}},
-    "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{
+        "water":{"type":"output", "count": 0},
+        "hydrogen":{"type":"output", "count": 0},
+        "oxygen":{"type":"output", "count": 0},
+        "molten_titanium":{"type":"output", "count": 0},
+        "titanium_ore":{"type":"input", "count": 0},
+        "ice":{"type":"input", "count": 0}
+        }, "max_storage": 500, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
+      "GridProcessor":{"resource_produced":{
+        "water":{"use_rate":1, "count": 0},
+        "hydrogen":{"use_rate":1, "count": 0},
+        "oxygen":{"use_rate":1, "count": 0},
+        "molten_titanium":{"use_rate":1, "count": 0}
+      }, "process_rate":0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -27,20 +33,22 @@
     }
   },
   "fractionator":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.01,
-    "resource_max_storage":50,
-    "resource_produced":{"glycerol":{"use_rate":1}, "fuel":{"use_rate":1}},
-    "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{
+        "glycerol":{"type":"output", "count": 0},
+        "fuel":{"type":"output", "count": 0},
+        "hydrogen":{"type":"input", "count": 0},
+        "fuel_oil":{"type":"input", "count": 0}
+        }, "max_storage": 500, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
+      "GridProcessor":{"resource_produced":{
+        "glycerol":{"use_rate":1, "count": 0},
+        "fuel":{"use_rate":1, "count": 0}
+      }, "process_rate":0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -54,20 +62,20 @@
     }
   },
   "centrifuge":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.015,
-    "resource_max_storage":50,
-    "resource_produced":{"coolant":{"use_rate":1}},
-    "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{
+        "coolant":{"type":"output", "count": 0},
+        "glycerol":{"type":"input", "count": 0},
+        "water":{"type":"input", "count": 0}
+        }, "max_storage": 500, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
+      "GridProcessor":{"resource_produced":{
+        "coolant":{"use_rate":1, "count": 0}
+      }, "process_rate":0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -81,20 +89,22 @@
     }
   },
   "separator":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.025,
-    "resource_max_storage":50,
-    "resource_produced":{"powder":{"use_rate":1}, "titanium_ore":{"use_rate":1}},
-    "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{
+        "powder":{"type":"output", "count": 0},
+        "titanium_ore":{"type":"output", "count": 0},
+        "oilstone":{"type":"input", "count": 0},
+        "titanstone":{"type":"input", "count": 0}
+        }, "max_storage": 500, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
+      "GridProcessor":{"resource_produced":{
+        "powder":{"use_rate":1, "count": 0},
+        "titanium_ore":{"use_rate":1, "count": 0}
+      }, "process_rate":0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -108,20 +118,23 @@
     }
   },
   "crusher":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.02,
-    "resource_max_storage":50,
-    "resource_produced":{"oilstone":{"use_rate":1}, "titanstone":{"use_rate":1}, "plutonium":{"use_rate":1}},
-    "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{
+        "oilstone":{"type":"output", "count": 0},
+        "titanstone":{"type":"output", "count": 0},
+        "plutonium":{"type":"output", "count": 0},
+        "ore":{"type":"input", "count": 0}
+        }, "max_storage": 500, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
+      "GridProcessor":{"resource_produced":{
+        "oilstone":{"use_rate":1, "count": 0},
+        "titanstone":{"use_rate":1, "count": 0},
+        "plutonium":{"use_rate":1, "count": 0}
+      }, "process_rate":0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -143,12 +156,19 @@
     "resource_max_storage":50,
     "resource_produced":{"casings":{"use_rate":1}},
     "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{
+        "casings":{"type":"output", "count": 0},
+        "molten_titanium":{"type":"input", "count": 0}
+        }, "max_storage": 500, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
+      "GridProcessor":{"resource_produced":{
+        "casings":{"use_rate":1, "count": 0}
+      }, "process_rate":0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -162,20 +182,20 @@
     }
   },
   "assembly_centre":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.01,
-    "resource_max_storage":50,
-    "resource_produced":{"shells":{"use_rate":1}},
-    "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{
+        "shells":{"type":"output", "count": 0},
+        "casings":{"type":"input", "count": 0},
+        "powder":{"type":"input", "count": 0}
+        }, "max_storage": 500, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
+      "GridProcessor":{"resource_produced":{
+        "shells":{"use_rate":1, "count": 0}
+      }, "process_rate":0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -189,20 +209,13 @@
     }
   },
   "ore_container":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.01,
-    "resource_max_storage":1,
-    "resource_produced":{"ore":{"initial_count":1000000}},
-    "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{"ore":{"type":"stored", "count": 1000000}}, "max_storage": 1000000, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -216,20 +229,13 @@
     }
   },
   "shell_container":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.01,
-    "resource_max_storage":1,
-    "resource_produced":{"shells":{"initial_count":1000000}},
-    "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{"shells":{"type":"stored", "count": 1000000}}, "max_storage": 1000000, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -243,20 +249,13 @@
     }
   },
   "coolant_container":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.01,
-    "resource_max_storage":1,
-    "resource_produced":{"coolant":{"initial_count":1000000}},
-    "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{"coolant":{"type":"stored", "count": 1000000}}, "max_storage": 1000000, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -270,20 +269,13 @@
     }
   },
   "fuel_container":{
-    "transfer_grid":[
-      [0,1,0],
-      [1,0,1],
-      [0,1,0]],
-    "process_delay": 0.01,
-    "resource_max_storage":1,
-    "resource_produced":{"fuel":{"initial_count":1000000}},
-    "resource_consumed":[],
-    "health": 30,
     "components": {
       "GridItem":{"category":"factory"},
-      "GridInventory":{},
-      "GridTransfer":{},
-      "GridProcessor":{},
+      "GridInventory":{"whitelist":{"fuel":{"type":"stored", "count": 1000000}}, "max_storage": 1000000, "process_rate":0.01},
+      "GridTransfer":{"transfer_grid":[
+        [0,1,0],
+        [1,0,1],
+        [0,1,0]], "transfer_rate": 0.01},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{

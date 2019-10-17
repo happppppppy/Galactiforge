@@ -9,8 +9,8 @@ function GridHeatSystem:update(dt)
     if grid_heat.heat > 0 then
 
         if grid_inventory.resources["coolant"] ~= nil and grid_inventory.resources["coolant"].count > 0 then
-            grid_heat.heat = grid_heat.heat - (grid_inventory.resources["coolant"].use_rate * grid_inventory.resources["coolant"].efficiency) * dt
-            grid_inventory.resources["coolant"].count = grid_inventory.resources["coolant"].count - grid_inventory.resources["coolant"].use_rate * dt
+            grid_heat.heat = grid_heat.heat - (1 * dt)--grid_inventory.resources["coolant"].efficiency) * dt --(grid_inventory.resources["coolant"].use_rate * grid_inventory.resources["coolant"].efficiency) * dt
+            grid_inventory.resources["coolant"].count = grid_inventory.resources["coolant"].count - 1*dt -- grid_inventory.resources["coolant"].use_rate * dt
         end
 
       grid_heat.heat = grid_heat.heat - grid_heat.natural_cool_rate * dt 

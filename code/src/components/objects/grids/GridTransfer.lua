@@ -1,8 +1,9 @@
 local GridTransfer = Component.create("GridTransfer")
-function GridTransfer:initialize(type)
-  self.transfer_delay = datasets[type].process_delay or nil
+function GridTransfer:initialize(component_values)
+  self.transfer_delay = component_values.transfer_rate
+  self.transfer_grid = component_values.transfer_grid
+
   self.timer = 0
   self.adjacent_grids = {}
   self.next_grid = 1
-  self.transfer_grid = datasets[type].transfer_grid or nil
 end
