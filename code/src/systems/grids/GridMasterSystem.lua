@@ -49,20 +49,20 @@ local function addgrid(arg)
   end
 
   grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - y][grid_master.grid_specs.allowed_grid.grid_origin.x - x] = new_grid_item
-  grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - y][grid_master.grid_specs.allowed_grid.grid_origin.x - x] = 1
-  engine:addEntity(new_grid_item)     
-
+  engine:addEntity(new_grid_item)    
 end
 
 function GridMasterSystem:fireEvent(event)
   local grid_master = event.parent:get("GridMaster")
   if event.add_grid then
-    if grid_master.grid_status[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] == 0 then
+    if grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] == 0 then
       local type = global_component_name_list[global_component_index]
       local direction = global_component_directions[global_component_direction_index]
       addgrid{type=type, entity=event.parent, x=event.x_loc, y=event.y_loc, grid_master=grid_master, direction=direction}
     end
+
   else
+
     viable_grids = engine:getEntitiesWithComponent("GridItem")
     for i,v in pairs(viable_grids) do
       grid = v:get("GridItem")
@@ -71,7 +71,7 @@ function GridMasterSystem:fireEvent(event)
         if grid.x == event.x_loc and grid.y == event.y_loc then
           grid.flag_for_removal = true
           grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] = 0
-         end
+        end
       end
     end
   end

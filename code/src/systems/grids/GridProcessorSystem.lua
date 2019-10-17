@@ -17,7 +17,8 @@ function GridProcessorSystem:update(dt)
           end
 
           if inputs_available then
-            if grid_inventory.resources[output_name].count < grid_inventory.resource_max_storage then
+            print(grid_inventory.resources[output_name].count, grid_inventory.max_storage)
+            if grid_inventory.resources[output_name].count < grid_inventory.max_storage then
               grid_inventory.resources[output_name].count = grid_inventory.resources[output_name].count + 1
               for input_name,input_data in pairs(datasets[output_name].requires) do
                 grid_inventory.resources[input_name].count = grid_inventory.resources[input_name].count - 1

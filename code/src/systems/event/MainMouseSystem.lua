@@ -31,24 +31,24 @@ local function dot(m1, m2)
 end
 
 local function PointInTriangle(A,B,C,P)
-  -- // Compute vectors        
+  -- Compute vectors        
   v0 = sub(C,A)
   v1 = sub(B,A)
   v2 = sub(P,A)
 
-  -- // Compute dot products
+  -- Compute dot products
   dot00 = dot(v0, v0)
   dot01 = dot(v0, v1)
   dot02 = dot(v0, v2)
   dot11 = dot(v1, v1)
   dot12 = dot(v1, v2)
 
-  -- // Compute barycentric coordinates
+  -- Compute barycentric coordinates
   invDenom = 1 / (dot00 * dot11 - dot01 * dot01)
   u = (dot11 * dot02 - dot01 * dot12) * invDenom
   v = (dot00 * dot12 - dot01 * dot02) * invDenom
 
-  -- // Check if point is in triangle
+  -- Check if point is in triangle
   return (u >= 0) and (v >= 0) and (u + v < 1)
 end
 
@@ -64,8 +64,8 @@ function MainMouseSystem:fireEvent(event)
       physics = v:get("PositionPhysics")
 
 
-      for row = 1, #grid_master.grid_status do
-        for col = 1, #grid_master.grid_status[row] do
+      for row = 1, #grid_master.grid_items do
+        for col = 1, #grid_master.grid_items[row] do
           local x_loc = grid_master.grid_specs.allowed_grid.grid_origin.x - col 
           local y_loc = grid_master.grid_specs.allowed_grid.grid_origin.y - row
 

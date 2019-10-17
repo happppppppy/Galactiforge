@@ -8,5 +8,5 @@ function GridInventory:initialize(component_values)
   end
 
   self.process_delay = component_values.process_rate
-  self.resource_max_storage = component_values.max_storage
+  self.max_storage = component_values.max_storage
 end
