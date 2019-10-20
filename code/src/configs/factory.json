@@ -119,7 +119,7 @@
         "oilstone":{"use_rate":1, "count": 0},
         "titanstone":{"use_rate":1, "count": 0},
         "plutonium":{"use_rate":1, "count": 0}
-      }, "process_rate":0.01},
+      }, "process_rate":0.1},
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
@@ -128,7 +128,7 @@
         "image_ref_final_frame": 57,
         "animated": true,
         "animate_continuous": true,
-        "render_delay": 0.1},
+        "render_delay": 0.01},
       "Health":{"health":30}
     }
   },

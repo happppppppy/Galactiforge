@@ -21,7 +21,7 @@
       "glycerol":{"type":"stored", "count": 0},
       "coolant":{"type":"stored", "count": 0}
       }, "max_storage": 10, "process_rate":0.01},
-    "GridTransfer":{"transfer_grid":[{"o_x":0,"o_y":1}, {"o_x":-1,"o_y":0}, {"o_x":1,"o_y":0}, {"o_x":0,"o_y":-1}], "transfer_rate": 0.01},
+    "GridTransfer":{"transfer_grid":[{"o_x":0,"o_y":1}], "transfer_rate": 0.01},
     "FieryDeath":{},
     "GridPhysics":{},
     "TileSetGrid":{

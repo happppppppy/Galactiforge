@@ -93,6 +93,7 @@ require("code/src/events/DamageOccured")
 require("code/src/events/GridSelected")
 require("code/src/events/FireEvent")
 require("code/src/events/ThrusterEvent")
+require("code/src/events/GridMenu")
 
 local MainState = {}
 
@@ -148,6 +149,7 @@ function MainState:init()
 	eventmanager:addListener("GridSelected", GridMasterSystem(), GridMasterSystem().fireEvent)
 	eventmanager:addListener("FireEvent", WeaponSystem(), WeaponSystem().fireCannon)
 	eventmanager:addListener("ThrusterEvent", ThrusterSystem(), ThrusterSystem().fireEvent)
+	eventmanager:addListener("GridMenu", GridProcessorSystem(), GridProcessorSystem().fireEvent)
 
 	engine:addSystem(RenderParticleSystem())
 	engine:addSystem(RenderSpriteSystem())

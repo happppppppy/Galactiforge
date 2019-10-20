@@ -60,17 +60,15 @@ function GridMasterSystem:fireEvent(event)
       local direction = global_component_directions[global_component_direction_index]
       addgrid{type=type, entity=event.parent, x=event.x_loc, y=event.y_loc, grid_master=grid_master, direction=direction}
     end
-
   else
-
     viable_grids = engine:getEntitiesWithComponent("GridItem")
     for i,v in pairs(viable_grids) do
       grid = v:get("GridItem")
       parent = v:getParent()
       if parent == event.parent then
         if grid.x == event.x_loc and grid.y == event.y_loc then
-          grid.flag_for_removal = true
           grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] = 0
+          engine:removeEntity(v)
         end
       end
     end

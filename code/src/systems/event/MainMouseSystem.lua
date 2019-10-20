@@ -54,7 +54,7 @@ end
 
 
 function MainMouseSystem:fireEvent(event)
-  if event.button == 2 or event.button == 3 then
+  if event.button == 1 or event.button == 2 or event.button == 3 then
     local x,y = love.graphics.inverseTransformPoint( event.x, event.y )
     local entities = engine:getEntitiesWithComponent("GridMaster")
     local mouse_in_grid = false
@@ -82,7 +82,9 @@ function MainMouseSystem:fireEvent(event)
 
           if PointInTriangle(A,B,C,P) or PointInTriangle(B,C,D,P) then
             mouse_in_grid = true 
-            if event.button == 2 then
+            if event.button == 1 then
+              eventmanager:fireEvent(GridMenu(v, x_loc, y_loc))
+            elseif event.button == 2 then
               eventmanager:fireEvent(GridSelected(v, x_loc, y_loc, true))
             elseif event.button == 3 then
               eventmanager:fireEvent(GridSelected(v, x_loc, y_loc, false))

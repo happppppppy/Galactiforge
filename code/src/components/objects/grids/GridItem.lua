@@ -15,7 +15,7 @@ function GridItem:initialize(type, x, y, direction, grid_scale, component_name)
   self.x_pos_grid_physics = 0
   self.y_pos_grid_physics = 0
 
-  self.direction = direction or 0
+  self.direction = direction
 
   if self.direction == 0 then
     self.activation = "up"
@@ -25,8 +25,6 @@ function GridItem:initialize(type, x, y, direction, grid_scale, component_name)
     self.activation = "down"
   elseif self.direction == 270 then
     self.activation = "right"
-  else
-    self.direction = 0
   end
 
   self.direction_rad = math.rad(self.direction)
