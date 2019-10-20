@@ -1,3 +1,5 @@
+local json = require "code/lib/json"
+
 local MainKeySystem = class("MainKeySystem", System)
 
 function MainKeySystem:fireEvent(event)
@@ -55,6 +57,29 @@ function MainKeySystem:fireEvent(event)
       global_zoom_level = 2
     else
       global_zoom_level = 1
+    end
+  end
+
+  if event.key == "kp*" then
+    if global_build_mode then
+      for _,parent in pairs(global_player_ship) do
+        local master_grid = parent:get("GridMaster")
+        local ship = {new_ship = {}}
+        if master_grid ~= nil then
+          for _,v in pairs(master_grid.grid_items) do
+            for _,b in pairs(v) do
+              if b ~= 0 then
+                local item_table = {type = b.type, x = b.x, y = b.y, direction = b.direction}
+                table.insert(ship.new_ship, item_table)
+              end
+            end
+          end
+          local json_data = json.encode(ship)
+          local file = io.open("ship_save.json", "w")
+          file:write(json_data)
+          file:close()
+        end
+      end
     end
   end
 

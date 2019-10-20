@@ -67,6 +67,7 @@ function FieryDeathSystem:update(dt)
       
       -- If the ship core is destroyed, then the entire ship is destroyed.
       if grid_item.x == 0 and grid_item.y == 0 then
+        -- grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc] = 0
         engine:removeEntity(parent, true)
       end
 

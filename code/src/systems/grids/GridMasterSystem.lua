@@ -14,6 +14,11 @@ local function addgrid(arg)
   local type = arg["type"]
 
   local new_grid_item = Entity(entity)
+  new_grid_item.type = type
+  new_grid_item.x = x
+  new_grid_item.y = y
+  new_grid_item.direction = direction
+
   for component_name, component_values in pairs(datasets[type].components) do
     if component_name == "GridItem" then
       new_grid_item:add(GridItem(type, x, y, direction, grid_master.grid_scale))

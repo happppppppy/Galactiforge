@@ -175,6 +175,8 @@ function MainState:init()
 
 	new_game.create_ships() 
 
+	global_player_ship = engine:getEntitiesWithComponent("PlayerController")
+
 	--Background
 	backgroundImage = love.graphics.newImage("assets/images/space_breaker_asset/Background/stars_texture.png")
 	backgroundQuad = love.graphics.newQuad(0, 0, backgroundImage:getWidth()*2,backgroundImage:getHeight()*2,backgroundImage:getWidth(),backgroundImage:getWidth())

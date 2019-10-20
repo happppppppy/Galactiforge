@@ -40,7 +40,8 @@ local newgame = {}
 
 function newgame.create_ships() 
 	playerShip = Entity()
-	playerShip:add(GridMaster(ship_data["micro_bandit"].starter_grid, ship_data["micro_bandit"], 0.5, 32, 32, 1, 1, true))
+	playerShip:initialize(nil, "PlayerShip")
+	playerShip:add(GridMaster(ship_data["intruder"].starter_grid, ship_data["intruder"], 0.5, 32, 32, 1, 1, true))
 	playerShip:add(PositionPhysics(world,500,600,math.rad(180),"dynamic"))
 	playerShip:add(PlayerController())
 	playerShip:add(Faction("Terran"))

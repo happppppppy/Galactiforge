@@ -33,17 +33,18 @@ end
 function GridProcessorSystem:fireEvent(event)
   local grid_master = event.parent:get("GridMaster")
   local grid = grid_master.grid_items[grid_master.grid_specs.allowed_grid.grid_origin.y - event.y_loc][grid_master.grid_specs.allowed_grid.grid_origin.x - event.x_loc]
-  local grid_processor = grid:get("GridProcessor")
-  if grid_processor ~= nil then
-    print(grid_processor.resource_names[grid_processor.next_resource])
-      grid_processor.resource_produced[grid_processor.resource_names[grid_processor.next_resource]].active = false
-      if grid_processor.next_resource < #grid_processor.resource_names then
-        grid_processor.next_resource = grid_processor.next_resource + 1
-      else
-        grid_processor.next_resource = 1
-      end
-      grid_processor.resource_produced[grid_processor.resource_names[grid_processor.next_resource]].active = true
-    -- end
+  if grid ~= 0 then
+    local grid_processor = grid:get("GridProcessor")
+    if grid_processor ~= nil then
+        grid_processor.resource_produced[grid_processor.resource_names[grid_processor.next_resource]].active = false
+        if grid_processor.next_resource < #grid_processor.resource_names then
+          grid_processor.next_resource = grid_processor.next_resource + 1
+        else
+          grid_processor.next_resource = 1
+        end
+        grid_processor.resource_produced[grid_processor.resource_names[grid_processor.next_resource]].active = true
+      -- end
+    end
   end
 end
 
