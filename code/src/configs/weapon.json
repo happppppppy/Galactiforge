@@ -2,7 +2,7 @@
   "cannon":{
     "components": {
       "GridItem":{"category":"weapon"},
-      "GridInventory":{"whitelist":{"shells":{"type":"stored", "use_rate":1, "count":10}, "coolant":{"type":"stored", "use_rate":1, "count":1}}, "max_storage": 500, "process_rate":0.01},
+      "GridInventory":{"whitelist":{"shells":{"type":"stored", "use_rate":1, "count":10}, "coolant":{"type":"stored", "use_rate":1, "count":1}}, "max_storage": 50, "process_rate":0.01},
       "Weapon":{"base_damage": 1, "aimed": true, "activation": "space", "fire_rate": 0.1, "projectile_velocity":400},
       "GridHeat":{"heat_rate": 10, "natural_cool_rate": 20, "max_heat": 100},
       "GridBaseGraphic":{},

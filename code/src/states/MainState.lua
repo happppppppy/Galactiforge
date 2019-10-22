@@ -185,6 +185,22 @@ function MainState:init()
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
+		bg_img = love.graphics.newImage("assets/images/nebula-fractal-space-png-0.png")
+		bg_img2 = love.graphics.newImage("assets/images/space-transparent-png-4.png")
+		bg_img3 = love.graphics.newImage("assets/images/nebula-transparent-4.png")
+		bg_img_stars = {img = love.graphics.newImage("assets/images/star_PNG76860.png"), positions = {}}
+		local x_pos = bg_img_stars.img:getWidth()
+		
+		for i=1,15,1 do
+			x_pos = (x_pos + bg_img_stars.img:getWidth())*love.math.randomNormal()
+			local y_pos = bg_img_stars.img:getHeight()
+			for b=1,15,1 do
+				y_pos = (y_pos + bg_img_stars.img:getHeight())*love.math.randomNormal()
+				local pos = {x = x_pos, y = y_pos, r=love.math.randomNormal()}
+				table.insert(bg_img_stars.positions, pos)
+			end
+		end
+
 end
 
 function MainState:update(dt)
@@ -199,6 +215,8 @@ function MainState:draw()
 	playerShipSprite = playerShip:get("Sprite")
 
 	love.graphics.scale(global_zoom_level)
+
+	
 
 	if global_build_mode then
 
@@ -223,7 +241,17 @@ function MainState:draw()
 		love.graphics.translate(x_loc, y_loc)
 
 	end
+
+	love.graphics.setColor( 1, 1, 1, 0.5 )
+	love.graphics.draw(bg_img, 0, 0, 0, 10, 10)
+	love.graphics.draw(bg_img2, -8000, -4000, 0, 6, 6)
+	love.graphics.draw(bg_img3, -3000, -10000, 0, 8, 8)
 	
+	for i,v in pairs(bg_img_stars.positions) do
+		love.graphics.draw(bg_img_stars.img,v.x, v.y, v.r, 0.8, 0.8)
+	end
+	love.graphics.setColor( 0.8, 0.8, 0.8, 1 )
+
 	engine:draw()
 end
 

@@ -31,19 +31,16 @@
   "fuel":{
     "requires":{"fuel_oil":{}, "hydrogen":{}}
   },
-  "water":{
+  "hydrogen":{
     "requires":{"ice":{}}
   },
-  "hydrogen":{
-    "requires":{"water":{}}
-  },
   "oxygen":{
-    "requires":{"water":{}}
+    "requires":{"ice":{}}
   },
   "glycerol":{
     "requires":{"fuel_oil":{}, "hydrogen":{}}
   },
   "coolant":{
-    "requires":{"water":{}, "glycerol":{}}
+    "requires":{"glycerol":{}}
   }
 }

@@ -12,6 +12,7 @@ local function addgrid(arg)
   local direction = arg["direction"] or 0
   local grid_master = arg["grid_master"] or nil
   local type = arg["type"]
+  local grid_item = arg["grid_item"] or nil
 
   local new_grid_item = Entity(entity)
   new_grid_item.type = type
@@ -27,7 +28,7 @@ local function addgrid(arg)
     elseif component_name == "GridTransfer" then
       new_grid_item:add(GridTransfer(component_values))
     elseif component_name == "GridProcessor" then
-      new_grid_item:add(GridProcessor(component_values))
+      new_grid_item:add(GridProcessor(component_values, grid_item.active_resource))
     elseif component_name == "GridHeat" then
       new_grid_item:add(GridHeat(component_values))
     elseif component_name == "GridBaseGraphic" then
@@ -84,9 +85,9 @@ end
 
 function GridMasterSystem:onAddEntity(entity)
   local grid_master = entity:get("GridMaster")
-  for i,grid_item in pairs(grid_master.grid) do
+  for _,grid_item in pairs(grid_master.grid) do
     if grid_master.grid_specs.allowed_grid.grid_map[grid_master.grid_specs.allowed_grid.grid_origin.y - grid_item.y][grid_master.grid_specs.allowed_grid.grid_origin.x - grid_item.x] == 1 then
-      addgrid{type=grid_item.type, entity=entity, x=grid_item.x,y=grid_item.y, grid_master=grid_master, direction=grid_item.direction}
+      addgrid{type=grid_item.type, entity=entity, x=grid_item.x,y=grid_item.y, grid_master=grid_master, direction=grid_item.direction, grid_item=grid_item}
     end
   end
 end

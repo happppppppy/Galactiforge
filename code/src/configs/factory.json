@@ -3,7 +3,6 @@
     "components": {
       "GridItem":{"category":"factory"},
       "GridInventory":{"whitelist":{
-        "water":{"type":"output", "count": 0},
         "hydrogen":{"type":"output", "count": 0},
         "oxygen":{"type":"output", "count": 0},
         "molten_titanium":{"type":"output", "count": 0},
@@ -12,7 +11,6 @@
         }, "max_storage": 500, "process_rate":0.01},
       "GridTransfer":{"transfer_grid":[{"o_x":0,"o_y":1}, {"o_x":-1,"o_y":0}, {"o_x":1,"o_y":0}, {"o_x":0,"o_y":-1}], "transfer_rate": 0.01},
       "GridProcessor":{"resource_produced":{
-        "water":{"use_rate":1, "count": 0},
         "hydrogen":{"use_rate":1, "count": 0},
         "oxygen":{"use_rate":1, "count": 0},
         "molten_titanium":{"use_rate":1, "count": 0}
@@ -60,8 +58,7 @@
       "GridItem":{"category":"factory"},
       "GridInventory":{"whitelist":{
         "coolant":{"type":"output", "count": 0},
-        "glycerol":{"type":"input", "count": 0},
-        "water":{"type":"input", "count": 0}
+        "glycerol":{"type":"input", "count": 0}
         }, "max_storage": 500, "process_rate":0.01},
       "GridTransfer":{"transfer_grid":[{"o_x":0,"o_y":1}, {"o_x":-1,"o_y":0}, {"o_x":1,"o_y":0}, {"o_x":0,"o_y":-1}], "transfer_rate": 0.01},
       "GridProcessor":{"resource_produced":{
@@ -85,11 +82,13 @@
       "GridInventory":{"whitelist":{
         "powder":{"type":"output", "count": 0},
         "titanium_ore":{"type":"output", "count": 0},
+        "fuel_oil":{"type":"output", "count": 0},
         "oilstone":{"type":"input", "count": 0},
         "titanstone":{"type":"input", "count": 0}
         }, "max_storage": 500, "process_rate":0.01},
       "GridTransfer":{"transfer_grid":[{"o_x":0,"o_y":1}, {"o_x":-1,"o_y":0}, {"o_x":1,"o_y":0}, {"o_x":0,"o_y":-1}], "transfer_rate": 0.01},
       "GridProcessor":{"resource_produced":{
+        "fuel_oil":{"use_rate":1, "count": 0},
         "powder":{"use_rate":1, "count": 0},
         "titanium_ore":{"use_rate":1, "count": 0}
       }, "process_rate":0.01},
@@ -170,9 +169,9 @@
       "FieryDeath":{},
       "GridPhysics":{},
       "TileSetGrid":{
-        "image_ref": 81,
-        "image_ref_initial_frame": 81,
-        "image_ref_final_frame": 87,
+        "image_ref": 71,
+        "image_ref_initial_frame": 71,
+        "image_ref_final_frame": 77,
         "animated": true,
         "animate_continuous": true,
         "render_delay": 0.1},

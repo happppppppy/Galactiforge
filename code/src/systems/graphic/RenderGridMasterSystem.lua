@@ -15,7 +15,7 @@ local function UpdateRenders(tg, grid_item, grid_inventory, grid_base, physics)
     local y_offset = 0
     for i,v in pairs(grid_inventory.resources) do
       if v.count > 0 then
-        love.graphics.print(string.format("%s %02.0f", i,v.count), grid_item.x_render, grid_item.y_render, grid_item.t_render, grid_item.grid_scale, grid_item.grid_scale,tileset.tile_width/2, tileset.tile_height/2-y_offset)
+        love.graphics.print(string.format("%s %02.0f", i,v.count), grid_item.x_render, grid_item.y_render, grid_item.t_render, grid_item.grid_scale/2, grid_item.grid_scale/2,tileset.tile_width/2, tileset.tile_height/2-y_offset)
         y_offset = y_offset + 10
       end
     end

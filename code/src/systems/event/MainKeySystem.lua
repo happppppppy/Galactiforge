@@ -69,7 +69,17 @@ function MainKeySystem:fireEvent(event)
           for _,v in pairs(master_grid.grid_items) do
             for _,b in pairs(v) do
               if b ~= 0 then
-                local item_table = {type = b.type, x = b.x, y = b.y, direction = b.direction}
+                b.active_resource = nil
+                local proc = b:get("GridProcessor")
+                if proc ~= nil then
+                  for r_n,r in pairs(proc.resource_produced) do
+                    if r.active then 
+                      b.active_resource = r_n
+                      break 
+                    end
+                  end
+                end
+                local item_table = {type = b.type, x = b.x, y = b.y, direction = b.direction, active_resource = b.active_resource}
                 table.insert(ship.new_ship, item_table)
               end
             end
