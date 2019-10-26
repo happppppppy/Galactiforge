@@ -1,5 +1,4 @@
 local BulletSystem = class("BulletSystem", System)
-local TileSetGrid, PositionPhysics = Component.load({"TileSetGrid", "PositionPhysics"})
 
 function BulletSystem:update(dt)
   for index, value in pairs(self.targets) do
@@ -20,8 +19,8 @@ function BulletSystem:update(dt)
       explosion_tile.animate_continuous = false
       explosion_tile.render_delay = 0.1
       explosion_tile.onelife = true
-      explosion:add(TileSetGrid(explosion_tile, tileset))
-      explosion:add(PositionPhysics(physics.world, physics.body:getX(), physics.body:getY(), physics.body:getAngle(), "static"))
+      explosion:add(global_components.TileSetGrid(explosion_tile, tileset))
+      explosion:add(global_components.PositionPhysics(physics.world, physics.body:getX(), physics.body:getY(), physics.body:getAngle(), "static"))
       engine:addEntity(explosion)
       engine:removeEntity(value)
     end

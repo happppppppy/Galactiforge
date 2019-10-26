@@ -1,5 +1,3 @@
-local TileSetGrid, PositionPhysics = Component.load({"TileSetGrid", "PositionPhysics"})
-
 local FieryDeathSystem = class("FieryDeathSystem", System)
 
 local function firey_death(physics, stats, health, width, height, dt, value)
@@ -8,8 +6,8 @@ local function firey_death(physics, stats, health, width, height, dt, value)
     if stats.elapsed_time > stats.animation_delay and stats.count < stats.max_count then
       stats.count = stats.count + 1
       explosion = Entity()
-      explosion:add(TileSetGrid(tileset_small, nil, nil, 91, 91, 97, true, false, 0.1, true))
-      explosion:add(PositionPhysics(physics.world, physics.body:getX() + math.random (width/2*-1, width/2), physics.body:getY() + math.random (height/2*-1, height/2), physics.body:getAngle() + math.random (), "static"))
+      explosion:add(global_components.TileSetGrid(tileset_small, nil, nil, 91, 91, 97, true, false, 0.1, true))
+      explosion:add(global_components.PositionPhysics(physics.world, physics.body:getX() + math.random (width/2*-1, width/2), physics.body:getY() + math.random (height/2*-1, height/2), physics.body:getAngle() + math.random (), "static"))
       engine:addEntity(explosion)
       stats.elapsed_time = 0
     end
@@ -55,8 +53,8 @@ function FieryDeathSystem:update(dt)
         explosion_tile.animate_continuous = false
         explosion_tile.render_delay = 0.1
         explosion_tile.onelife = true
-        explosion:add(TileSetGrid(explosion_tile, tileset_small))
-        explosion:add(PositionPhysics(physics.world, grid_item.x_pos_grid_physics + math.random (width/2*-1, width/2), grid_item.y_pos_grid_physics + math.random (height/2*-1, height/2), grid_item.t_pos_grid_physics + math.random (), "static"))
+        explosion:add(global_components.TileSetGrid(explosion_tile, tileset_small))
+        explosion:add(global_components.PositionPhysics(physics.world, grid_item.x_pos_grid_physics + math.random (width/2*-1, width/2), grid_item.y_pos_grid_physics + math.random (height/2*-1, height/2), grid_item.t_pos_grid_physics + math.random (), "static"))
         engine:addEntity(explosion)
         stats.elapsed_time = 0
       end

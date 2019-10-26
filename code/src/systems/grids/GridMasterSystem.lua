@@ -1,8 +1,3 @@
-local TileSetGrid, GridPhysics, GridItem, GridInventory, GridTransfer, GridProcessor, GridBaseGraphic, GridHeat = Component.load({"TileSetGrid", "GridPhysics", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridBaseGraphic", "GridHeat"})
-local PlayerController = Component.load({"PlayerController"})
-local Weapon, Thruster, Health, DockingLatch = Component.load({"Weapon", "Thruster", "Health", "DockingLatch"})
-local FieryDeath = Component.load({"FieryDeath"})
-
 local GridMasterSystem = class("GridMasterSystem", System)
 
 local function addgrid(arg)
@@ -22,35 +17,35 @@ local function addgrid(arg)
 
   for component_name, component_values in pairs(datasets[type].components) do
     if component_name == "GridItem" then
-      new_grid_item:add(GridItem(type, x, y, direction, grid_master.grid_scale))
+      new_grid_item:add(global_components.GridItem(type, x, y, direction, grid_master.grid_scale))
     elseif component_name == "GridInventory" then
-      new_grid_item:add(GridInventory(component_values))
+      new_grid_item:add(global_components.GridInventory(component_values))
     elseif component_name == "GridTransfer" then
-      new_grid_item:add(GridTransfer(component_values))
+      new_grid_item:add(global_components.GridTransfer(component_values))
     elseif component_name == "GridProcessor" then
-      new_grid_item:add(GridProcessor(component_values, grid_item.active_resource))
+      new_grid_item:add(global_components.GridProcessor(component_values, grid_item.active_resource))
     elseif component_name == "GridHeat" then
-      new_grid_item:add(GridHeat(component_values))
+      new_grid_item:add(global_components.GridHeat(component_values))
     elseif component_name == "GridBaseGraphic" then
-      new_grid_item:add(GridBaseGraphic())
+      new_grid_item:add(global_components.GridBaseGraphic())
     elseif component_name == "Thruster" then
-      new_grid_item:add(Thruster(component_values, direction))
+      new_grid_item:add(global_components.Thruster(component_values, direction))
       if grid_master.player then
-        new_grid_item:add(PlayerController())
+        new_grid_item:add(global_components.PlayerController())
       end
     elseif component_name == "Weapon" then
-      new_grid_item:add(Weapon(component_values))
+      new_grid_item:add(global_components.Weapon(component_values))
       if grid_master.player then
-        new_grid_item:add(PlayerController())
+        new_grid_item:add(global_components.PlayerController())
       end
     elseif component_name == "FieryDeath" then
-      new_grid_item:add(FieryDeath())
+      new_grid_item:add(global_components.FieryDeath())
     elseif component_name == "GridPhysics" then
-      new_grid_item:add(GridPhysics())
+      new_grid_item:add(global_components.GridPhysics())
     elseif component_name == "TileSetGrid" then
-      new_grid_item:add(TileSetGrid(component_values, tileset_small))
+      new_grid_item:add(global_components.TileSetGrid(component_values, tileset_small))
     elseif component_name == "Health" then
-      new_grid_item:add(Health(component_values))
+      new_grid_item:add(global_components.Health(component_values))
     end
   end
 

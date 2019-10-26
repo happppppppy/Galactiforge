@@ -1,6 +1,3 @@
-local TileSetGrid, Bullet = Component.load({"TileSetGrid", "Bullet"})
-local PositionPhysics, DynamicPhysics, CollisionPhysics = Component.load({"PositionPhysics", "DynamicPhysics", "CollisionPhysics"})
-
 local WeaponSystem = class("WeaponSystem", System)
 
 function WeaponSystem:fireCannon(event)
@@ -37,11 +34,11 @@ function WeaponSystem:fireCannon(event)
     bullet_tile.animated = true
     bullet_tile.animate_continuous = true
     bullet_tile.render_delay = 0.1
-    bullet:add(TileSetGrid(bullet_tile, tileset_small))
-    bullet:add(PositionPhysics(world, grid_item.x_pos_grid_physics, grid_item.y_pos_grid_physics, grid_item.t_pos_grid_physics, "dynamic"))
-    bullet:add(DynamicPhysics(0, 0, 5000, 5000, 0, 0, weapon_component.projectile_velocity, x_vel, y_vel))
-    bullet:add(CollisionPhysics("Circle",  1, nil, 1, grid_master.physics.category, grid_master.physics.mask))
-    bullet:add(Bullet(5, weapon_component.base_damage))
+    bullet:add(global_components.TileSetGrid(bullet_tile, tileset_small))
+    bullet:add(global_components.PositionPhysics(world, grid_item.x_pos_grid_physics, grid_item.y_pos_grid_physics, grid_item.t_pos_grid_physics, "dynamic"))
+    bullet:add(global_components.DynamicPhysics(0, 0, 5000, 5000, 0, 0, weapon_component.projectile_velocity, x_vel, y_vel))
+    bullet:add(global_components.CollisionPhysics("Circle",  1, nil, 1, grid_master.physics.category, grid_master.physics.mask))
+    bullet:add(global_components.Bullet(5, weapon_component.base_damage))
     engine:addEntity(bullet)
 
     weapon_component.fire_time = 0

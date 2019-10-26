@@ -1,56 +1,38 @@
 -- Importing helper functions
 local helper_functions = require("code/src/helper_functions")
 local new_game = require("code/src/storycode/new_game")
-
 global_zoom_level = 1
 
---Graphic components
-require("code/src/components/graphic/Sprite")
-require("code/src/components/graphic/TileSet")
-require("code/src/components/graphic/FieryDeath")
-require("code/src/components/graphic/Particles")
-require("code/src/components/graphic/TileSetGrid")
-local Sprite, TileSet, FieryDeath, Particles, TileSetGrid = Component.load({"Sprite", "TileSet", "FieryDeath", "Particles", "TileSetGrid"})
+-- This function will return a string filetree of all files
+-- in the folder and files in all subfolders
 
---Physics components
-require("code/src/components/physics/PositionPhysics")
-require("code/src/components/physics/DynamicPhysics")
-require("code/src/components/physics/CollisionPhysics")
-local GridPhysics = require("code/src/components/physics/GridPhysics")
-local PositionPhysics, DynamicPhysics, CollisionPhysics = Component.load({"PositionPhysics", "DynamicPhysics", "CollisionPhysics"})
-
---Event components
-
---Property components
-require("code/src/components/properties/Health")
-require("code/src/components/properties/Faction")
-local Health, Faction = Component.load({"Health", "Faction"})
-
---Object components
-require("code/src/components/objects/GridMaster")
-local GridMaster  = Component.load({"GridMaster"})
-
---Ammunition components
-require("code/src/components/objects/ammunition/Bullet")
-local Bullet = Component.load({"Bullet"})
-
--- Controller components
-require("code/src/components/controllers/PlayerController")
-require("code/src/components/controllers/AIController")
-local PlayerController, AIController  = Component.load({"PlayerController", "AIController"})
+function recursiveEnumerate(folder, fileTree)
+	local lfs = love.filesystem
+	local filesTable = lfs.getDirectoryItems(folder)
+	for i,v in ipairs(filesTable) do
+		local file = folder.."/"..v
+		local fileinfo = lfs.getInfo(file)
+		if fileinfo.type == "file" then
+			table.insert(fileTree, file)
+		elseif fileinfo.type == "directory" then
+			fileTree = recursiveEnumerate(file, fileTree)
+		end
+	end
+	return fileTree
+end
 
 
---Grid components
-require("code/src/components/objects/grids/GridItem")
-require("code/src/components/objects/grids/GridInventory")
-require("code/src/components/objects/grids/GridTransfer")
-require("code/src/components/objects/grids/GridProcessor")
-require("code/src/components/objects/grids/GridBaseGraphic")
-require("code/src/components/objects/grids/GridHeat")
-require("code/src/components/objects/grids/Weapon")
-require("code/src/components/objects/grids/Thruster")
-require("code/src/components/objects/grids/DockingLatch")
-local DockingLatch, Weapon, Thruster, GridItem, GridInventory, GridTransfer, GridProcessor, GridBaseGraphic, GridHeat = Component.load({"DockingLatch", "Weapon", "Thruster", "GridItem", "GridInventory", "GridTransfer", "GridProcessor", "GridBaseGraphic", "GridHeat"})
+-- Load in all of the components
+local filetree = {}
+recursiveEnumerate("code/src/components", filetree)
+global_components = {}
+for i, v in pairs(filetree) do
+	local file = love.filesystem.newFile( v )
+	require(v:match("(.+)%..+"))
+	local name = v:match("^.+/(.+)%..+$")
+	global_components[name] = Component.load({name})
+end
+
 
 --Grid systems
 WeaponSystem = require("code/src/systems/grids/WeaponSystem")

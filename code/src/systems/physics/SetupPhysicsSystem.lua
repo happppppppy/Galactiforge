@@ -5,11 +5,7 @@ function SetupPhysicsSystem:onAddEntity(entity, group)
   local position = entity:get("PositionPhysics")
   local collision = entity:get("CollisionPhysics")
   local sprite = entity:get("Sprite")
-  -- if sprite ~= nil then
-  --   collision.x = sprite.width
-  --   collision.y = sprite.height
-  -- end
-  
+
   if dynamics ~= nil  then
     if collision.shape == "Rectangle" then
       position.shape = love.physics.newRectangleShape(collision.x, collision.y)

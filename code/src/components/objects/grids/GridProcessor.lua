@@ -1,4 +1,5 @@
 local GridProcessor = Component.create("GridProcessor")
+
 function GridProcessor:initialize(component_values, active_resource)
   self.resource_names = {}
   self.resource_produced = {}
