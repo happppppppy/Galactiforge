@@ -1,6 +1,8 @@
 -- Importing helper functions
 local helper_functions = require("code/src/helper_functions")
 local new_game = require("code/src/storycode/new_game")
+local objective_generator = require("code/src/storycode/objective_generator")
+
 global_zoom_level = 1
 
 -- This function will return a string filetree of all files
@@ -44,6 +46,7 @@ GridProcessorSystem = require("code/src/systems/grids/GridProcessorSystem")
 GridMasterSystem = require("code/src/systems/grids/GridMasterSystem")
 GridHeatSystem = require("code/src/systems/grids/GridHeatSystem")
 
+
 --Graphic systems
 RenderHUDSystem = require("code/src/systems/graphic/RenderHUDSystem")
 RenderSpriteSystem = require("code/src/systems/graphic/RenderSpriteSystem")
@@ -67,6 +70,7 @@ FieryDeathSystem = require("code/src/systems/event/FieryDeathSystem")
 --Controller systems
 AIControllerSystem = require("code/src/systems/controllers/AIControllerSystem")
 PlayerControllerSystem = require("code/src/systems/controllers/PlayerControllerSystem")
+GameObjectiveSystem = require("code/src/systems/controllers/GameObjectiveSystem")
 
 --Events
 require("code/src/events/KeyPressed")
@@ -154,8 +158,10 @@ function MainState:init()
 	engine:addSystem(PlayerControllerSystem())
 	engine:addSystem(GridProcessorSystem())
 	engine:addSystem(GridTransferSystem())
+	engine:addSystem(GameObjectiveSystem())
 
 	new_game.create_ships() 
+	objective_generator.onslaught()
 
 	global_player_ship = engine:getEntitiesWithComponent("PlayerController")
 
@@ -247,7 +253,11 @@ function MainState:mousepressed(x, y, button)
 end
 
 function MainState:wheelmoved( dx, dy )
-	global_zoom_level = global_zoom_level + dy * 0.1
+	if global_zoom_level >= 0.1 then
+		global_zoom_level = global_zoom_level + dy * 0.1
+	else 
+		global_zoom_level = 0.1
+	end
 end
 
 function beginContact(a, b, coll)
