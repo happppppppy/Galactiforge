@@ -3,7 +3,7 @@
     "components":{
       "GridItem":{"category":"technology"},
       "TileSetGrid":{"image_ref":121},
-      "Health":{"health": 100},
+      "Health":{"health": 30},
       "FieryDeath":{},
       "GridPhysics":{}
     }
@@ -12,7 +12,7 @@
     "components":{
       "GridItem":{"category":"technology"},
       "TileSetGrid":{"image_ref":121},
-      "Health":{"health": 100},
+      "Health":{"health": 30},
       "FieryDeath":{},
       "GridPhysics":{}
     }
@@ -27,7 +27,7 @@
         "animated":true, 
         "animate_continuous":true, 
         "render_delay":0.1},
-      "Health":{"health": 100},
+      "Health":{"health": 10},
       "FieryDeath":{},
       "GridPhysics":{}
     }
