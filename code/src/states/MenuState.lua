@@ -1,7 +1,6 @@
 local MenuState = {}
 
 function MenuState:init()
-  loveframes = require("code/lib/loveframes")
   loveframes.SetActiveSkin("Blue")
 
   height = love.graphics.getHeight()
@@ -51,21 +50,11 @@ function MenuState:draw()
   loveframes.draw()
 end
 
-function MenuState:mousepressed(x, y, button)
-  loveframes.mousepressed(x, y, button)
-end
-
-function MenuState:mousereleased(x, y, button)
-  loveframes.mousereleased(x, y, button)
-end
-
 function MenuState:keypressed(key, unicode)
   if key == "escape" then Gamestate.switch(MainState) end
-  loveframes.keypressed(key, unicode)
 end
 
 function MenuState:keyreleased(key)
-  loveframes.keyreleased(key)
 end
 
 return MenuState

@@ -3,6 +3,7 @@ local helper_functions = require("code/src/helper_functions")
 local new_game = require("code/src/storycode/new_game")
 local objective_generator = require("code/src/storycode/objective_generator")
 
+
 global_zoom_level = 1
 
 -- This function will return a string filetree of all files
@@ -161,7 +162,7 @@ function MainState:init()
 	engine:addSystem(GameObjectiveSystem())
 
 	new_game.create_ships() 
-	objective_generator.onslaught()
+	-- objective_generator.onslaught()
 
 	global_player_ship = engine:getEntitiesWithComponent("PlayerController")
 
@@ -192,13 +193,15 @@ function MainState:init()
 end
 
 function MainState:update(dt)
-  world:update(dt)
+	loveframes.update(dt)
+	world:update(dt)
   world:setCallbacks(beginContact, endContact, preSolve, postSolve)
-  engine:update(dt)
+	engine:update(dt)
+	
 end
 
 function MainState:draw()
-  
+  loveframes.draw()
 	playerShipLoc = playerShip:get("PositionPhysics")
 	playerShipSprite = playerShip:get("Sprite")
 
@@ -241,15 +244,23 @@ function MainState:draw()
 	love.graphics.setColor( 0.8, 0.8, 0.8, 1 )
 
 	engine:draw()
+	
 end
 
-function MainState:keypressed(key, isrepeat)
+function MainState:keypressed(key, unicode)
   if key == "escape" then Gamestate.switch(MenuState) end
-	eventmanager:fireEvent(KeyPressed(key, isrepeat))
+	eventmanager:fireEvent(KeyPressed(key, unicode))
 end
+
+function MainState:keyreleased(key, unicode)
+end
+
 
 function MainState:mousepressed(x, y, button)
 	eventmanager:fireEvent(MousePressed(x, y, button))
+end
+
+function MainState:mousereleased(x, y, button)
 end
 
 function MainState:wheelmoved( dx, dy )
