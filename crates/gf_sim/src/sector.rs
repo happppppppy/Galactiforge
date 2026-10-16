@@ -36,7 +36,10 @@ impl Sectors {
     }
     /// Local position of a global sector's centre.
     pub fn center_of(&self, k: SectorKey) -> Vec2 {
-        Vec2::new((k.0 - self.origin.0) as f32 * SECTOR_SIZE, (k.1 - self.origin.1) as f32 * SECTOR_SIZE)
+        Vec2::new(
+            (k.0 - self.origin.0) as f32 * SECTOR_SIZE,
+            (k.1 - self.origin.1) as f32 * SECTOR_SIZE,
+        )
     }
 }
 
@@ -51,7 +54,9 @@ pub fn stream(world: &mut World) {
     if !world.sectors.enabled {
         return;
     }
-    let Some(player_pos) = world.player_body().map(|b| b.pos) else { return };
+    let Some(player_pos) = world.player_body().map(|b| b.pos) else {
+        return;
+    };
     let here = world.sectors.sector_of(player_pos);
     let mut active = BTreeSet::new();
     for dy in -ACTIVE_RADIUS..=ACTIVE_RADIUS {
@@ -73,7 +78,9 @@ pub fn stream(world: &mut World) {
         b.pos -= world.sectors.center_of(k);
         world.sectors.dormant.entry(k).or_default().push(b);
     }
-    world.projectiles.retain(|p| active.contains(&world.sectors.sector_of(p.pos)));
+    world
+        .projectiles
+        .retain(|p| active.contains(&world.sectors.sector_of(p.pos)));
     // Wake / generate active sectors.
     for k in active {
         if let Some(bodies) = world.sectors.dormant.remove(&k) {
@@ -97,7 +104,9 @@ pub fn floating_origin(world: &mut World) {
     if !world.sectors.enabled {
         return;
     }
-    let Some(p) = world.player_body().map(|b| b.pos) else { return };
+    let Some(p) = world.player_body().map(|b| b.pos) else {
+        return;
+    };
     if p.x.abs() < SECTOR_SIZE && p.y.abs() < SECTOR_SIZE {
         return;
     }
@@ -127,12 +136,20 @@ pub fn make_asteroid(world: &World, rng: &mut Rng, center: Vec2, radius: i32, de
     let ore = c.block("ore_vein").unwrap();
     let ice = c.block("ice_vein").unwrap();
     let rich = c.block("rich_vein").unwrap();
-    let mut a = Body::new(0, "Asteroid", BodyKind::Asteroid, None, center, rng.range_f32(0.0, 6.28));
+    let mut a = Body::new(
+        0,
+        "Asteroid",
+        BodyKind::Asteroid,
+        None,
+        center,
+        rng.range_f32(0.0, std::f32::consts::TAU),
+    );
     let wobble: Vec<f32> = (0..8).map(|_| rng.range_f32(0.7, 1.15)).collect();
     for y in -radius..=radius {
         for x in -radius..=radius {
             let ang = libm::atan2f(y as f32, x as f32);
-            let idx = (((ang + std::f32::consts::PI) / std::f32::consts::TAU * 8.0) as usize).min(7);
+            let idx =
+                (((ang + std::f32::consts::PI) / std::f32::consts::TAU * 8.0) as usize).min(7);
             let r = radius as f32 * wobble[idx];
             if ((x * x + y * y) as f32) > r * r {
                 continue;
@@ -165,7 +182,11 @@ fn generate(world: &mut World, k: SectorKey) {
     // Asteroid fields.
     let fields = if depth == 0 { 3 } else { rng.range_i32(2, 4) };
     for _ in 0..fields {
-        let fc = center + Vec2::new(rng.range_f32(-spread, spread), rng.range_f32(-spread, spread));
+        let fc = center
+            + Vec2::new(
+                rng.range_f32(-spread, spread),
+                rng.range_f32(-spread, spread),
+            );
         let n = rng.range_i32(3, 6);
         for _ in 0..n {
             let p = fc + Vec2::new(rng.range_f32(-40.0, 40.0), rng.range_f32(-40.0, 40.0));
@@ -181,18 +202,38 @@ fn generate(world: &mut World, k: SectorKey) {
     if depth == 0 {
         // One easy wreck near home to teach salvage.
         let p = center + Vec2::new(rng.range_f32(50.0, 90.0), rng.range_f32(-60.0, 60.0));
-        world.spawn_blueprint("wreck_hauler", p, rng.range_f32(0.0, 6.28), None);
+        world.spawn_blueprint(
+            "wreck_hauler",
+            p,
+            rng.range_f32(0.0, std::f32::consts::TAU),
+            None,
+        );
         return;
     }
     // Derelicts to salvage.
     if rng.chance(0.6) {
-        let p = center + Vec2::new(rng.range_f32(-spread, spread), rng.range_f32(-spread, spread));
-        let bp = if depth >= 2 && rng.chance(0.5) { "raider" } else { "wreck_hauler" };
-        if let Some(id) = world.spawn_blueprint(bp, p, rng.range_f32(0.0, 6.28), None) {
+        let p = center
+            + Vec2::new(
+                rng.range_f32(-spread, spread),
+                rng.range_f32(-spread, spread),
+            );
+        let bp = if depth >= 2 && rng.chance(0.5) {
+            "raider"
+        } else {
+            "wreck_hauler"
+        };
+        if let Some(id) =
+            world.spawn_blueprint(bp, p, rng.range_f32(0.0, std::f32::consts::TAU), None)
+        {
             // Knock out some blocks so it looks battle-damaged.
             let b = world.bodies.get_mut(&id).unwrap();
             for s in b.topo.live.clone() {
-                if rng.chance(0.2) && !matches!(world.content.blocks[b.block(s).unwrap().def as usize].kind, gf_content::Block::Core) {
+                if rng.chance(0.2)
+                    && !matches!(
+                        world.content.blocks[b.block(s).unwrap().def as usize].kind,
+                        gf_content::Block::Core
+                    )
+                {
                     b.remove_block(s);
                 }
             }
@@ -205,9 +246,22 @@ fn generate(world: &mut World, k: SectorKey) {
         if !rng.chance(0.6) {
             continue;
         }
-        let p = center + Vec2::new(rng.range_f32(-spread, spread), rng.range_f32(-spread, spread));
-        let bp = if depth >= 2 && rng.chance(0.6) { "raider" } else { "micro_bandit" };
-        world.spawn_blueprint(bp, p, rng.range_f32(0.0, 6.28), Some(PIRATE_FACTION));
+        let p = center
+            + Vec2::new(
+                rng.range_f32(-spread, spread),
+                rng.range_f32(-spread, spread),
+            );
+        let bp = if depth >= 2 && rng.chance(0.6) {
+            "raider"
+        } else {
+            "micro_bandit"
+        };
+        world.spawn_blueprint(
+            bp,
+            p,
+            rng.range_f32(0.0, std::f32::consts::TAU),
+            Some(PIRATE_FACTION),
+        );
     }
 }
 

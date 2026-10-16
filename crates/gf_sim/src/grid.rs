@@ -70,10 +70,17 @@ impl Grid {
     /// Occupied cells in deterministic (chunk, row-major) order.
     pub fn iter(&self) -> impl Iterator<Item = (Cell, u32)> + '_ {
         self.chunks.iter().flat_map(|(&(cx, cy), ch)| {
-            ch.cells.iter().enumerate().filter(|(_, v)| **v != 0).map(move |(i, v)| {
-                let i = i as i32;
-                (Cell::new(cx * CHUNK + i % CHUNK, cy * CHUNK + i / CHUNK), *v - 1)
-            })
+            ch.cells
+                .iter()
+                .enumerate()
+                .filter(|(_, v)| **v != 0)
+                .map(move |(i, v)| {
+                    let i = i as i32;
+                    (
+                        Cell::new(cx * CHUNK + i % CHUNK, cy * CHUNK + i / CHUNK),
+                        *v - 1,
+                    )
+                })
         })
     }
     pub fn chunk_keys(&self) -> impl Iterator<Item = (i32, i32)> + '_ {

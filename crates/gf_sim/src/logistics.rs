@@ -60,13 +60,15 @@ fn item_space(content: &ContentDb, body: &Body, target: u32, r: ResId, from: Opt
     if content.res_kind(r) != ResourceKind::Item {
         return 0.0;
     }
-    let Some(b) = body.block(target) else { return 0.0 };
+    let Some(b) = body.block(target) else {
+        return 0.0;
+    };
     match &content.blocks[b.def as usize].kind {
         Block::Conveyor { .. } | Block::Splitter { .. } => {
-            if let (Some(f), Block::Conveyor { .. }) = (from, &content.blocks[b.def as usize].kind) {
-                if body.block_at(b.anchor.offset(facing(b.rot))) == Some(f) {
-                    return 0.0;
-                }
+            if let (Some(f), Block::Conveyor { .. }) = (from, &content.blocks[b.def as usize].kind)
+                && body.block_at(b.anchor.offset(facing(b.rot))) == Some(f)
+            {
+                return 0.0;
             }
             CONVEYOR_CAPACITY - b.total_stock()
         }
@@ -77,7 +79,14 @@ fn item_space(content: &ContentDb, body: &Body, target: u32, r: ResId, from: Opt
             *capacity as f32 - b.total_stock()
         }
         Block::Machine { buffer, .. } => match b.recipe {
-            Some(rid) if content.recipes[rid as usize].inputs.iter().any(|(i, _)| *i == r) => *buffer as f32 - b.amount(r),
+            Some(rid)
+                if content.recipes[rid as usize]
+                    .inputs
+                    .iter()
+                    .any(|(i, _)| *i == r) =>
+            {
+                *buffer as f32 - b.amount(r)
+            }
             _ => 0.0,
         },
         Block::Weapon(w) => {
@@ -87,8 +96,12 @@ fn item_space(content: &ContentDb, body: &Body, target: u32, r: ResId, from: Opt
                 0.0
             }
         }
-        Block::Generator { fuel: Some((f, _)), .. } if *f == r => CONSUMER_FUEL_CAP - b.amount(r),
-        Block::Lab { .. } if content.resources[r as usize].research_value > 0.0 => CONSUMER_FUEL_CAP - b.amount(r),
+        Block::Generator {
+            fuel: Some((f, _)), ..
+        } if *f == r => CONSUMER_FUEL_CAP - b.amount(r),
+        Block::Lab { .. } if content.resources[r as usize].research_value > 0.0 => {
+            CONSUMER_FUEL_CAP - b.amount(r)
+        }
         _ => 0.0,
     }
 }
@@ -114,12 +127,18 @@ fn offload_items(content: &ContentDb, b: &BlockInst) -> Vec<ResId> {
                 .collect(),
             None => Vec::new(),
         },
-        Block::Drill { .. } | Block::Salvager { .. } | Block::Storage { .. } => {
-            b.stock.iter().filter(|(_, q)| *q >= 1.0).map(|(r, _)| *r).collect()
-        }
-        Block::Weapon(w) if w.def.kind == gf_content::WeaponKind::MiningLaser => {
-            b.stock.iter().filter(|(_, q)| *q >= 1.0).map(|(r, _)| *r).collect()
-        }
+        Block::Drill { .. } | Block::Salvager { .. } | Block::Storage { .. } => b
+            .stock
+            .iter()
+            .filter(|(_, q)| *q >= 1.0)
+            .map(|(r, _)| *r)
+            .collect(),
+        Block::Weapon(w) if w.def.kind == gf_content::WeaponKind::MiningLaser => b
+            .stock
+            .iter()
+            .filter(|(_, q)| *q >= 1.0)
+            .map(|(r, _)| *r)
+            .collect(),
         _ => Vec::new(),
     }
 }
@@ -140,28 +159,35 @@ pub fn step_items(content: &ContentDb, body: &mut Body, dt: f32) {
         let rot = b.rot;
         // Unload a storage block directly behind (loader behaviour).
         let back = anchor.offset(rotate_offset((0, -1), rot));
-        if let Some(src) = body.block_at(back) {
-            if is_storage(content, body.block(src).unwrap()) && body.block(s).unwrap().total_stock() < CONVEYOR_CAPACITY {
-                let items = offload_items(content, body.block(src).unwrap());
-                if !items.is_empty() {
-                    let rr = body.block(s).unwrap().rr as usize;
-                    let r = items[rr % items.len()];
-                    let got = body.block_mut(src).unwrap().take(r, 1.0);
-                    let me = body.block_mut(s).unwrap();
-                    me.add(r, got);
-                    me.rr = me.rr.wrapping_add(1);
-                }
+        if let Some(src) = body.block_at(back)
+            && is_storage(content, body.block(src).unwrap())
+            && body.block(s).unwrap().total_stock() < CONVEYOR_CAPACITY
+        {
+            let items = offload_items(content, body.block(src).unwrap());
+            if !items.is_empty() {
+                let rr = body.block(s).unwrap().rr as usize;
+                let r = items[rr % items.len()];
+                let got = body.block_mut(src).unwrap().take(r, 1.0);
+                let me = body.block_mut(s).unwrap();
+                me.add(r, got);
+                me.rr = me.rr.wrapping_add(1);
             }
         }
         let me = body.block_mut(s).unwrap();
         me.move_acc = (me.move_acc + speed * slow * dt).min(2.0);
         while body.block(s).unwrap().move_acc >= 1.0 {
             let me = body.block(s).unwrap();
-            let Some(&(r, q)) = me.stock.first() else { break };
+            let Some(&(r, q)) = me.stock.first() else {
+                break;
+            };
             if q < 1.0 {
                 break;
             }
-            let dirs: &[(i32, i32)] = if is_splitter { &[(0, 1), (-1, 0), (1, 0)] } else { &[(0, 1)] };
+            let dirs: &[(i32, i32)] = if is_splitter {
+                &[(0, 1), (-1, 0), (1, 0)]
+            } else {
+                &[(0, 1)]
+            };
             let mut moved = false;
             for k in 0..dirs.len() {
                 let d = dirs[(me.rr as usize + k) % dirs.len()];
@@ -227,12 +253,17 @@ pub fn step_items(content: &ContentDb, body: &mut Body, dt: f32) {
 }
 
 fn can_craft(content: &ContentDb, kind: &Block, b: &BlockInst) -> bool {
-    let Block::Machine { buffer, .. } = kind else { return false };
+    let Block::Machine { buffer, .. } = kind else {
+        return false;
+    };
     let Some(rid) = b.recipe else { return false };
     let rec = &content.recipes[rid as usize];
     b.disabled <= 0.0
         && rec.inputs.iter().all(|(r, q)| b.amount(*r) >= *q - 1e-4)
-        && rec.outputs.iter().all(|(r, q)| b.amount(*r) + q <= *buffer as f32 * 2.0)
+        && rec
+            .outputs
+            .iter()
+            .all(|(r, q)| b.amount(*r) + q <= *buffer as f32 * 2.0)
 }
 
 pub fn step_machines(content: &ContentDb, body: &mut Body, dt: f32) -> Vec<(ResId, f32)> {
@@ -288,7 +319,9 @@ pub fn step_power(content: &ContentDb, body: &mut Body, dt: f32) {
                     0.0
                 }
             }
-            Block::Weapon(w) if w.def.kind == gf_content::WeaponKind::Rocket => w.def.power * b.feed.tier as f32,
+            Block::Weapon(w) if w.def.kind == gf_content::WeaponKind::Rocket => {
+                w.def.power * b.feed.tier as f32
+            }
             _ => b.power_req,
         };
         let b = body.block_mut(s).unwrap();
@@ -345,11 +378,20 @@ pub fn step_power(content: &ContentDb, body: &mut Body, dt: f32) {
         let from_gen = used.min(gen_cap);
         let from_batt = used - from_gen;
         let surplus = (gen_cap - from_gen).min(batt_in);
-        let load = if gen_cap > 0.0 { (from_gen + surplus) / gen_cap } else { 0.0 };
+        let load = if gen_cap > 0.0 {
+            (from_gen + surplus) / gen_cap
+        } else {
+            0.0
+        };
         let n_batt = net
             .conductors
             .iter()
-            .filter(|s| matches!(content.blocks[body.block(**s).unwrap().def as usize].kind, Block::Battery { .. }))
+            .filter(|s| {
+                matches!(
+                    content.blocks[body.block(**s).unwrap().def as usize].kind,
+                    Block::Battery { .. }
+                )
+            })
             .count()
             .max(1) as f32;
         for &s in net.conductors.iter().chain(net.attached.iter()) {
@@ -357,12 +399,16 @@ pub fn step_power(content: &ContentDb, body: &mut Body, dt: f32) {
             let kind = &content.blocks[def as usize].kind;
             let b = body.block_mut(s).unwrap();
             match kind {
-                Block::Generator { fuel: Some((f, rate)), .. } if b.amount(*f) > 0.0 => {
+                Block::Generator {
+                    fuel: Some((f, rate)),
+                    ..
+                } if b.amount(*f) > 0.0 => {
                     b.take(*f, rate * load * dt);
                     b.heat += 1.0 * load * dt;
                 }
                 Block::Battery { capacity, .. } => {
-                    b.energy = (b.energy - from_batt / n_batt * dt + surplus / n_batt * dt).clamp(0.0, *capacity);
+                    b.energy = (b.energy - from_batt / n_batt * dt + surplus / n_batt * dt)
+                        .clamp(0.0, *capacity);
                 }
                 _ => {}
             }
@@ -414,7 +460,9 @@ pub fn step_fluids(content: &ContentDb, body: &mut Body) {
                         }
                     }
                 }
-                Block::Generator { fuel: Some((f, _)), .. } if content.res_kind(*f) == ResourceKind::Fluid => {
+                Block::Generator {
+                    fuel: Some((f, _)), ..
+                } if content.res_kind(*f) == ResourceKind::Fluid => {
                     let space = CONSUMER_FUEL_CAP * 2.0 - b.amount(*f);
                     if space > 0.0 {
                         requests.push((s, *f, space));
@@ -447,7 +495,11 @@ pub fn step_fluids(content: &ContentDb, body: &mut Body) {
         res_list.dedup();
         for r in res_list {
             let supply: f32 = supplies.iter().filter(|e| e.1 == r).map(|e| e.2).sum();
-            let in_tanks: f32 = net.conductors.iter().map(|s| body.block(*s).unwrap().amount(r)).sum();
+            let in_tanks: f32 = net
+                .conductors
+                .iter()
+                .map(|s| body.block(*s).unwrap().amount(r))
+                .sum();
             let req_total: f32 = requests.iter().filter(|e| e.1 == r).map(|e| e.2).sum();
             let pool = supply + in_tanks;
             if pool <= 0.0 {
@@ -517,7 +569,8 @@ mod tests {
     }
 
     fn put(body: &mut Body, db: &ContentDb, id: &str, x: i32, y: i32, rot: u8) -> u32 {
-        body.insert(db, db.block(id).unwrap(), Cell::new(x, y), rot).unwrap()
+        body.insert(db, db.block(id).unwrap(), Cell::new(x, y), rot)
+            .unwrap()
     }
 
     #[test]

@@ -16,9 +16,14 @@ pub fn step_labs(content: &ContentDb, body: &mut Body, progress: &mut Progress, 
     let player = body.faction == Some(PLAYER_FACTION);
     for s in body.slots_where(content, |k| matches!(k, Block::Lab { .. })) {
         let def = body.block(s).unwrap().def;
-        let Block::Lab { power, rate } = content.blocks[def as usize].kind else { continue };
+        let Block::Lab { power, rate } = content.blocks[def as usize].kind else {
+            continue;
+        };
         let b = body.block_mut(s).unwrap();
-        let has_input = b.stock.iter().any(|(r, q)| *q > 0.0 && content.resources[*r as usize].research_value > 0.0);
+        let has_input = b
+            .stock
+            .iter()
+            .any(|(r, q)| *q > 0.0 && content.resources[*r as usize].research_value > 0.0);
         b.power_req = if has_input && player { power } else { 0.0 };
         if !player || !has_input || b.disabled > 0.0 {
             continue;
@@ -54,12 +59,19 @@ pub fn step_tools(world: &mut World, dt: f32) {
     let content = world.content.clone();
     let ids: Vec<BodyId> = world.bodies.keys().copied().collect();
     for id in ids {
-        let Some(body) = world.bodies.get(&id) else { continue };
+        let Some(body) = world.bodies.get(&id) else {
+            continue;
+        };
         if body.kind != BodyKind::Ship {
             continue;
         }
         let player = body.faction == Some(PLAYER_FACTION);
-        let tools = body.slots_where(&content, |k| matches!(k, Block::Drill { .. } | Block::Salvager { .. } | Block::Tractor { .. }));
+        let tools = body.slots_where(&content, |k| {
+            matches!(
+                k,
+                Block::Drill { .. } | Block::Salvager { .. } | Block::Tractor { .. }
+            )
+        });
         for s in tools {
             let body = &world.bodies[&id];
             let Some(b) = body.block(s) else { continue };
@@ -71,8 +83,16 @@ pub fn step_tools(world: &mut World, dt: f32) {
                 Block::Drill { rate, power } => {
                     let target = body_at(world, front, id);
                     let active = target.is_some() && stock < TOOL_BUFFER && !disabled;
-                    world.bodies.get_mut(&id).unwrap().block_mut(s).unwrap().power_req = if active { power } else { 0.0 };
-                    let Some((tb, ts)) = target.filter(|_| active) else { continue };
+                    world
+                        .bodies
+                        .get_mut(&id)
+                        .unwrap()
+                        .block_mut(s)
+                        .unwrap()
+                        .power_req = if active { power } else { 0.0 };
+                    let Some((tb, ts)) = target.filter(|_| active) else {
+                        continue;
+                    };
                     let dmg = rate * power_sat * dt;
                     if dmg <= 0.0 {
                         continue;
@@ -94,10 +114,19 @@ pub fn step_tools(world: &mut World, dt: f32) {
                     crate::combat::damage_block(world, tb, ts, dmg, fac);
                 }
                 Block::Salvager { rate, power } => {
-                    let target = body_at(world, front, id).filter(|(tb, _)| world.bodies[tb].kind == BodyKind::Derelict);
+                    let target = body_at(world, front, id)
+                        .filter(|(tb, _)| world.bodies[tb].kind == BodyKind::Derelict);
                     let active = target.is_some() && stock < SALVAGE_BUFFER && !disabled;
-                    world.bodies.get_mut(&id).unwrap().block_mut(s).unwrap().power_req = if active { power } else { 0.0 };
-                    let Some((tb, ts)) = target.filter(|_| active) else { continue };
+                    world
+                        .bodies
+                        .get_mut(&id)
+                        .unwrap()
+                        .block_mut(s)
+                        .unwrap()
+                        .power_req = if active { power } else { 0.0 };
+                    let Some((tb, ts)) = target.filter(|_| active) else {
+                        continue;
+                    };
                     let tblk = world.bodies[&tb].block(ts).unwrap();
                     let max = tblk.max_hp(&content);
                     let pos = world.bodies[&tb].to_world(tblk.center());
@@ -125,13 +154,20 @@ pub fn step_tools(world: &mut World, dt: f32) {
                         world.progress.blocks_salvaged += 1;
                         if let Some(sample) = info.sample {
                             world.progress.add_sample(sample);
-                            world.events.push(Event::Message(format!("Recovered sample: {}", content.resources[sample as usize].name)));
+                            world.events.push(Event::Message(format!(
+                                "Recovered sample: {}",
+                                content.resources[sample as usize].name
+                            )));
                         }
                     }
                     world.events.push(Event::Salvaged { body: tb, pos });
                     split_if_needed(world, tb);
                 }
-                Block::Tractor { range, force, power } => {
+                Block::Tractor {
+                    range,
+                    force,
+                    power,
+                } => {
                     // Pull the nearest loose body (asteroid / derelict) in range.
                     let me = &world.bodies[&id];
                     let target = world
@@ -143,8 +179,16 @@ pub fn step_tools(world: &mut World, dt: f32) {
                         .min_by(|a, b| a.0.total_cmp(&b.0).then(a.1.cmp(&b.1)));
                     let active = target.is_some() && !disabled && me.control.fire;
                     let (me_vel,) = (me.vel,);
-                    world.bodies.get_mut(&id).unwrap().block_mut(s).unwrap().power_req = if active { power } else { 0.0 };
-                    let Some((_, tid)) = target.filter(|_| active) else { continue };
+                    world
+                        .bodies
+                        .get_mut(&id)
+                        .unwrap()
+                        .block_mut(s)
+                        .unwrap()
+                        .power_req = if active { power } else { 0.0 };
+                    let Some((_, tid)) = target.filter(|_| active) else {
+                        continue;
+                    };
                     let t = &world.bodies[&tid];
                     let dir = (origin - t.pos).normalize_or_zero();
                     let rel = t.vel - me_vel;
@@ -167,7 +211,10 @@ mod tests {
     use std::sync::Arc;
 
     fn world() -> World {
-        World::new(Arc::new(ContentDb::load_dir(gf_content::default_content_dir()).unwrap()), 5)
+        World::new(
+            Arc::new(ContentDb::load_dir(gf_content::default_content_dir()).unwrap()),
+            5,
+        )
     }
 
     fn rock_wall(w: &mut World, at: Vec2, block: &str) -> BodyId {
@@ -175,7 +222,8 @@ mod tests {
         let mut a = Body::new(0, "asteroid", BodyKind::Asteroid, None, at, 0.0);
         for x in -3..=3 {
             for y in 0..3 {
-                a.insert(&c, c.block(block).unwrap(), Cell::new(x, y), 0).unwrap();
+                a.insert(&c, c.block(block).unwrap(), Cell::new(x, y), 0)
+                    .unwrap();
             }
         }
         a.refresh(&c);
@@ -187,7 +235,9 @@ mod tests {
     fn drill_mines_ore_into_ship() {
         let mut w = world();
         let c = w.content.clone();
-        let p = w.spawn_blueprint("forge_runner", Vec2::ZERO, 0.0, Some(PLAYER_FACTION)).unwrap();
+        let p = w
+            .spawn_blueprint("forge_runner", Vec2::ZERO, 0.0, Some(PLAYER_FACTION))
+            .unwrap();
         let drill = w.bodies[&p].slots_where(&c, |k| matches!(k, Block::Drill { .. }))[0];
         let tip = {
             let b = &w.bodies[&p];
@@ -199,16 +249,29 @@ mod tests {
         for _ in 0..300 {
             w.step();
         }
-        assert!(w.progress.mined.get(&ore).copied().unwrap_or(0.0) > 0.5, "mined {:?}", w.progress.mined);
+        assert!(
+            w.progress.mined.get(&ore).copied().unwrap_or(0.0) > 0.5,
+            "mined {:?}",
+            w.progress.mined
+        );
     }
 
     #[test]
     fn salvager_recovers_materials_and_samples() {
         let mut w = world();
         let c = w.content.clone();
-        let mut ship = Body::new(0, "salv", BodyKind::Ship, Some(PLAYER_FACTION), Vec2::ZERO, 0.0);
-        ship.insert(&c, c.block("ship_core").unwrap(), Cell::new(0, 0), 0).unwrap();
-        ship.insert(&c, c.block("salvager").unwrap(), Cell::new(0, 1), 0).unwrap();
+        let mut ship = Body::new(
+            0,
+            "salv",
+            BodyKind::Ship,
+            Some(PLAYER_FACTION),
+            Vec2::ZERO,
+            0.0,
+        );
+        ship.insert(&c, c.block("ship_core").unwrap(), Cell::new(0, 0), 0)
+            .unwrap();
+        ship.insert(&c, c.block("salvager").unwrap(), Cell::new(0, 1), 0)
+            .unwrap();
         ship.refresh(&c);
         let sid = w.add_body(ship);
         let front = {
@@ -216,7 +279,9 @@ mod tests {
             b.to_world(Cell::new(0, 2).center())
         };
         let mut wreck = Body::new(0, "wreck", BodyKind::Derelict, None, front, 0.0);
-        wreck.insert(&c, c.block("rocket_launcher").unwrap(), Cell::new(0, 0), 0).unwrap();
+        wreck
+            .insert(&c, c.block("rocket_launcher").unwrap(), Cell::new(0, 0), 0)
+            .unwrap();
         wreck.refresh(&c);
         wreck.pos = front;
         w.add_body(wreck);

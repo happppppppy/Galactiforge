@@ -11,7 +11,7 @@ use crate::progress::Progress;
 use crate::rng::Rng;
 use crate::sector::Sectors;
 use crate::thrust;
-use gf_content::{Block, BlockId, ContentDb, RecipeId, ResearchId, ResId};
+use gf_content::{Block, BlockId, ContentDb, RecipeId, ResId, ResearchId};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::sync::Arc;
@@ -24,18 +24,57 @@ pub const DT: f32 = 1.0 / TICK_RATE as f32;
 /// into the simulation, so clients may drop them freely.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Event {
-    Shot { body: BodyId, pos: Vec2, dir: Vec2, def: BlockId, tier: u8 },
-    Hit { pos: Vec2, damage: f32 },
-    Laser { from: Vec2, to: Vec2, tier: u8 },
-    BlockDestroyed { body: BodyId, pos: Vec2, def: BlockId },
-    Explosion { pos: Vec2, radius: f32 },
-    Extinguish { pos: Vec2, radius: f32 },
-    TierChanged { body: BodyId, slot: u32, tier: u8 },
-    ShipDestroyed { body: BodyId, by: Option<Faction> },
-    Salvaged { body: BodyId, pos: Vec2 },
-    ResearchComplete { research: ResearchId },
-    MissionComplete { mission: usize },
-    OriginShift { delta: Vec2 },
+    Shot {
+        body: BodyId,
+        pos: Vec2,
+        dir: Vec2,
+        def: BlockId,
+        tier: u8,
+    },
+    Hit {
+        pos: Vec2,
+        damage: f32,
+    },
+    Laser {
+        from: Vec2,
+        to: Vec2,
+        tier: u8,
+    },
+    BlockDestroyed {
+        body: BodyId,
+        pos: Vec2,
+        def: BlockId,
+    },
+    Explosion {
+        pos: Vec2,
+        radius: f32,
+    },
+    Extinguish {
+        pos: Vec2,
+        radius: f32,
+    },
+    TierChanged {
+        body: BodyId,
+        slot: u32,
+        tier: u8,
+    },
+    ShipDestroyed {
+        body: BodyId,
+        by: Option<Faction>,
+    },
+    Salvaged {
+        body: BodyId,
+        pos: Vec2,
+    },
+    ResearchComplete {
+        research: ResearchId,
+    },
+    MissionComplete {
+        mission: usize,
+    },
+    OriginShift {
+        delta: Vec2,
+    },
     Message(String),
 }
 
@@ -44,13 +83,37 @@ pub enum Event {
 /// future multiplayer.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Command {
-    Control { body: BodyId, control: Control },
-    Build { body: BodyId, block: BlockId, cell: Cell, rot: u8 },
-    Deconstruct { body: BodyId, cell: Cell },
-    SetRecipe { body: BodyId, cell: Cell, recipe: RecipeId },
-    CycleRecipe { body: BodyId, cell: Cell },
-    SetWeaponMode { body: BodyId, cell: Cell, mode: WeaponMode },
-    StartResearch { research: ResearchId },
+    Control {
+        body: BodyId,
+        control: Control,
+    },
+    Build {
+        body: BodyId,
+        block: BlockId,
+        cell: Cell,
+        rot: u8,
+    },
+    Deconstruct {
+        body: BodyId,
+        cell: Cell,
+    },
+    SetRecipe {
+        body: BodyId,
+        cell: Cell,
+        recipe: RecipeId,
+    },
+    CycleRecipe {
+        body: BodyId,
+        cell: Cell,
+    },
+    SetWeaponMode {
+        body: BodyId,
+        cell: Cell,
+        mode: WeaponMode,
+    },
+    StartResearch {
+        research: ResearchId,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -127,7 +190,9 @@ impl World {
     /// Give the player a fresh starter ship next to where the old one died.
     /// Research, samples and missions persist; the wreck can be salvaged.
     pub fn respawn_player(&mut self) -> Option<BodyId> {
-        let at = self.player_body().map_or(Vec2::ZERO, |b| b.pos + Vec2::new(25.0, 0.0));
+        let at = self
+            .player_body()
+            .map_or(Vec2::ZERO, |b| b.pos + Vec2::new(25.0, 0.0));
         let id = self.spawn_blueprint("forge_runner", at, 0.0, Some(PLAYER_FACTION))?;
         if let Some(b) = self.bodies.get_mut(&id) {
             b.control.auto_suppress = true;
@@ -157,17 +222,27 @@ impl World {
 
     /// Build a body from a blueprint. Starting stock is distributed into
     /// matching storage and tanks.
-    pub fn spawn_blueprint(&mut self, id: &str, pos: Vec2, angle: f32, faction: Option<Faction>) -> Option<BodyId> {
+    pub fn spawn_blueprint(
+        &mut self,
+        id: &str,
+        pos: Vec2,
+        angle: f32,
+        faction: Option<Faction>,
+    ) -> Option<BodyId> {
         let content = self.content.clone();
         let bp = content.blueprint(id)?;
-        let kind = if faction.is_some() { BodyKind::Ship } else { BodyKind::Derelict };
+        let kind = if faction.is_some() {
+            BodyKind::Ship
+        } else {
+            BodyKind::Derelict
+        };
         let mut body = Body::new(0, bp.name.clone(), kind, faction, pos, angle);
         for bb in &bp.blocks {
             let def = content.block(&bb.block)?;
-            if let Ok(slot) = body.insert(&content, def, Cell::new(bb.x, bb.y), bb.rot) {
-                if let Some(r) = bb.recipe.as_deref().and_then(|r| content.recipe(r)) {
-                    body.block_mut(slot).unwrap().recipe = Some(r);
-                }
+            if let Ok(slot) = body.insert(&content, def, Cell::new(bb.x, bb.y), bb.rot)
+                && let Some(r) = bb.recipe.as_deref().and_then(|r| content.recipe(r))
+            {
+                body.block_mut(slot).unwrap().recipe = Some(r);
             }
         }
         body.refresh(&content);
@@ -200,10 +275,11 @@ impl World {
 
         for cmd in std::mem::take(&mut self.pending) {
             if let Err(e) = self.apply(cmd) {
-                self.events.push(Event::Message(format!("command rejected: {e:?}")));
+                self.events
+                    .push(Event::Message(format!("command rejected: {e:?}")));
             }
         }
-        if self.tick % TICK_RATE as u64 == 0 {
+        if self.tick.is_multiple_of(TICK_RATE as u64) {
             crate::sector::stream(self);
         }
         ai::think(self, dt);
@@ -243,10 +319,21 @@ impl World {
         let content = self.content.clone();
         match cmd {
             Command::Control { body, control } => {
-                self.bodies.get_mut(&body).ok_or(CommandError::NoBody)?.control = control;
+                self.bodies
+                    .get_mut(&body)
+                    .ok_or(CommandError::NoBody)?
+                    .control = control;
             }
-            Command::Build { body, block, cell, rot } => {
-                let info = content.blocks.get(block as usize).ok_or(CommandError::Invalid)?;
+            Command::Build {
+                body,
+                block,
+                cell,
+                rot,
+            } => {
+                let info = content
+                    .blocks
+                    .get(block as usize)
+                    .ok_or(CommandError::Invalid)?;
                 if !info.def.buildable {
                     return Err(CommandError::Invalid);
                 }
@@ -257,12 +344,14 @@ impl World {
                 if b.kind != BodyKind::Ship {
                     return Err(CommandError::Invalid);
                 }
-                let cost: Vec<(ResId, f32)> = info.cost.iter().map(|(r, q)| (*r, *q as f32)).collect();
+                let cost: Vec<(ResId, f32)> =
+                    info.cost.iter().map(|(r, q)| (*r, *q as f32)).collect();
                 if cost.iter().any(|(r, q)| b.stored(&content, *r) + 1e-3 < *q) {
                     return Err(CommandError::Unaffordable);
                 }
                 let b = self.bodies.get_mut(&body).unwrap();
-                b.place(&content, block, cell, rot).map_err(|_| CommandError::Blocked)?;
+                b.place(&content, block, cell, rot)
+                    .map_err(|_| CommandError::Blocked)?;
                 for (r, q) in cost {
                     take_from_storage(&content, b, r, q);
                 }
@@ -271,7 +360,10 @@ impl World {
             Command::Deconstruct { body, cell } => {
                 let b = self.bodies.get_mut(&body).ok_or(CommandError::NoBody)?;
                 let slot = b.block_at(cell).ok_or(CommandError::NothingThere)?;
-                if matches!(content.blocks[b.block(slot).unwrap().def as usize].kind, Block::Core) {
+                if matches!(
+                    content.blocks[b.block(slot).unwrap().def as usize].kind,
+                    Block::Core
+                ) {
                     return Err(CommandError::Invalid);
                 }
                 let inst = b.remove_block(slot).unwrap();
@@ -306,7 +398,10 @@ impl World {
                 let inst = b.block_mut(slot).unwrap();
                 match &content.blocks[inst.def as usize].kind {
                     Block::Machine { recipes, .. } if !recipes.is_empty() => {
-                        let i = recipes.iter().position(|r| Some(*r) == inst.recipe).map_or(0, |i| (i + 1) % recipes.len());
+                        let i = recipes
+                            .iter()
+                            .position(|r| Some(*r) == inst.recipe)
+                            .map_or(0, |i| (i + 1) % recipes.len());
                         inst.recipe = Some(recipes[i]);
                         inst.progress = 0.0;
                     }
@@ -412,8 +507,16 @@ pub fn fill_storage(content: &ContentDb, body: &mut Body, r: ResId, qty: f32) ->
         }
         let b = body.block_mut(s).unwrap();
         let (cap, filter) = match &content.blocks[b.def as usize].kind {
-            Block::Storage { capacity, filter } if content.res_kind(r) == gf_content::ResourceKind::Item => (*capacity as f32, filter),
-            Block::Tank { capacity, filter } if content.res_kind(r) == gf_content::ResourceKind::Fluid => (*capacity, filter),
+            Block::Storage { capacity, filter }
+                if content.res_kind(r) == gf_content::ResourceKind::Item =>
+            {
+                (*capacity as f32, filter)
+            }
+            Block::Tank { capacity, filter }
+                if content.res_kind(r) == gf_content::ResourceKind::Fluid =>
+            {
+                (*capacity, filter)
+            }
             _ => continue,
         };
         if !filter.is_empty() && !filter.contains(&r) {
@@ -433,7 +536,10 @@ pub fn take_from_storage(content: &ContentDb, body: &mut Body, r: ResId, qty: f3
             break;
         }
         let b = body.block_mut(s).unwrap();
-        if matches!(content.blocks[b.def as usize].kind, Block::Storage { .. } | Block::Tank { .. }) {
+        if matches!(
+            content.blocks[b.def as usize].kind,
+            Block::Storage { .. } | Block::Tank { .. }
+        ) {
             left -= b.take(r, left);
         }
     }
@@ -444,7 +550,9 @@ pub fn take_from_storage(content: &ContentDb, body: &mut Body, r: ResId, qty: f3
 /// the core (or the largest piece) keeps the original identity.
 pub fn split_if_needed(world: &mut World, id: BodyId) {
     let content = world.content.clone();
-    let Some(body) = world.bodies.get_mut(&id) else { return };
+    let Some(body) = world.bodies.get_mut(&id) else {
+        return;
+    };
     body.refresh(&content);
     if body.topo.live.is_empty() {
         world.bodies.remove(&id);
@@ -454,7 +562,12 @@ pub fn split_if_needed(world: &mut World, id: BodyId) {
     if comps.len() <= 1 {
         return;
     }
-    let is_core = |s: u32| matches!(content.blocks[body.block(s).unwrap().def as usize].kind, Block::Core);
+    let is_core = |s: u32| {
+        matches!(
+            content.blocks[body.block(s).unwrap().def as usize].kind,
+            Block::Core
+        )
+    };
     let keep = comps
         .iter()
         .enumerate()
@@ -466,8 +579,19 @@ pub fn split_if_needed(world: &mut World, id: BodyId) {
         if i == keep {
             continue;
         }
-        let kind = if body.kind == BodyKind::Asteroid { BodyKind::Asteroid } else { BodyKind::Derelict };
-        let mut nb = Body::new(0, format!("{} debris", body.name), kind, None, body.pos, body.angle);
+        let kind = if body.kind == BodyKind::Asteroid {
+            BodyKind::Asteroid
+        } else {
+            BodyKind::Derelict
+        };
+        let mut nb = Body::new(
+            0,
+            format!("{} debris", body.name),
+            kind,
+            None,
+            body.pos,
+            body.angle,
+        );
         nb.com = body.com;
         for s in comp {
             let inst = body.remove_block(s).unwrap();
@@ -558,7 +682,12 @@ mod tests {
             .find(|c| body.grid.is_empty_at(*c))
             .unwrap();
         let armor = c.block("armor_full").unwrap();
-        w.queue(Command::Build { body: p, block: armor, cell, rot: 0 });
+        w.queue(Command::Build {
+            body: p,
+            block: armor,
+            cell,
+            rot: 0,
+        });
         w.step();
         let mid = w.bodies[&p].stored(&c, plates);
         assert!(mid < before, "build cost paid: {before} -> {mid}");

@@ -47,7 +47,10 @@ impl AiState {
 fn weapon_profile(content: &ContentDb, body: &Body) -> (f32, f32) {
     let mut range: f32 = 0.0;
     let mut speed: f32 = 0.0;
-    for s in body.slots_where(content, |k| matches!(k, Block::Weapon(w) if w.def.kind != WeaponKind::MiningLaser)) {
+    for s in body.slots_where(
+        content,
+        |k| matches!(k, Block::Weapon(w) if w.def.kind != WeaponKind::MiningLaser),
+    ) {
         if let Block::Weapon(w) = &content.blocks[body.block(s).unwrap().def as usize].kind {
             range = range.max(w.def.range);
             speed = speed.max(w.def.projectile_speed);
@@ -64,20 +67,15 @@ fn pick_target_block(content: &ContentDb, target: &Body, from: Vec2) -> Option<u
         Block::Core => 2,
         _ => 3,
     };
-    target
-        .topo
-        .live
-        .iter()
-        .copied()
-        .min_by(|a, b| {
-            let ba = target.block(*a).unwrap();
-            let bb = target.block(*b).unwrap();
-            let ka = rank(&content.blocks[ba.def as usize].kind);
-            let kb = rank(&content.blocks[bb.def as usize].kind);
-            let da = target.to_world(ba.center()).distance(from);
-            let db = target.to_world(bb.center()).distance(from);
-            ka.cmp(&kb).then(da.total_cmp(&db)).then(a.cmp(b))
-        })
+    target.topo.live.iter().copied().min_by(|a, b| {
+        let ba = target.block(*a).unwrap();
+        let bb = target.block(*b).unwrap();
+        let ka = rank(&content.blocks[ba.def as usize].kind);
+        let kb = rank(&content.blocks[bb.def as usize].kind);
+        let da = target.to_world(ba.center()).distance(from);
+        let db = target.to_world(bb.center()).distance(from);
+        ka.cmp(&kb).then(da.total_cmp(&db)).then(a.cmp(b))
+    })
 }
 
 /// Steering helper: turn to face a world direction (ship forward is local +y).
@@ -131,8 +129,14 @@ pub fn think(world: &mut World, dt: f32) {
         }
         let me = &world.bodies[&id];
         let (range, speed) = weapon_profile(&content, me);
-        let mut c = Control { auto_suppress: true, ..Default::default() };
-        let target = st.target.and_then(|t| world.bodies.get(&t)).filter(|t| t.kind == BodyKind::Ship);
+        let mut c = Control {
+            auto_suppress: true,
+            ..Default::default()
+        };
+        let target = st
+            .target
+            .and_then(|t| world.bodies.get(&t))
+            .filter(|t| t.kind == BodyKind::Ship);
         match (st.mode, target) {
             (AiMode::Engage, Some(t)) => {
                 let aim_at = st
@@ -147,10 +151,17 @@ pub fn think(world: &mut World, dt: f32) {
                 c.fire = dist < range * 1.05;
                 c.turn = steer_towards(me, to);
                 let pref = range * 0.7;
-                let fwd = if dist > pref { 1.0 } else if dist < pref * 0.6 { -0.6 } else { 0.0 };
+                let fwd = if dist > pref {
+                    1.0
+                } else if dist < pref * 0.6 {
+                    -0.6
+                } else {
+                    0.0
+                };
                 // Thrust in the local frame toward the preferred range, and damp drift.
                 let local_vel = me.vel.rotate(-me.angle);
-                c.thrust = Vec2::new(-local_vel.x * 0.3, fwd - local_vel.y * 0.05).clamp_length(1.0);
+                c.thrust =
+                    Vec2::new(-local_vel.x * 0.3, fwd - local_vel.y * 0.05).clamp_length(1.0);
             }
             (AiMode::Retreat, Some(t)) => {
                 let away = me.pos - t.pos;

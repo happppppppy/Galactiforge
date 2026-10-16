@@ -75,7 +75,9 @@ impl Feed {
                 self.tier += 1;
                 self.grow_timer = 0.0;
             }
-        } else if self.tier > 1 && self.rate < stages[self.tier as usize - 1].demand * SHRINK_FRACTION {
+        } else if self.tier > 1
+            && self.rate < stages[self.tier as usize - 1].demand * SHRINK_FRACTION
+        {
             self.grow_timer = 0.0;
             self.shrink_timer += dt;
             if self.shrink_timer >= SHRINK_HOLD {
@@ -97,14 +99,20 @@ mod tests {
     fn stages() -> Vec<GrowthStage> {
         [(1, 1.0), (2, 2.0), (3, 4.0)]
             .iter()
-            .map(|&(s, d)| GrowthStage { size: (s, s), demand: d })
+            .map(|&(s, d)| GrowthStage {
+                size: (s, s),
+                demand: d,
+            })
             .collect()
     }
 
     #[test]
     fn grows_with_supply_and_respects_cap() {
         let st = stages();
-        let mut f = Feed { cap: 2, ..Default::default() };
+        let mut f = Feed {
+            cap: 2,
+            ..Default::default()
+        };
         let dt = 1.0 / 30.0;
         for _ in 0..30 * 20 {
             f.delivered = 10.0 * dt;
@@ -122,7 +130,12 @@ mod tests {
     #[test]
     fn decays_when_starved() {
         let st = stages();
-        let mut f = Feed { cap: 3, tier: 3, rate: 4.0, ..Default::default() };
+        let mut f = Feed {
+            cap: 3,
+            tier: 3,
+            rate: 4.0,
+            ..Default::default()
+        };
         let dt = 1.0 / 30.0;
         for _ in 0..30 * 30 {
             f.update(&st, dt, false);
@@ -133,7 +146,10 @@ mod tests {
     #[test]
     fn saturation_counts_as_supplied() {
         let st = stages();
-        let mut f = Feed { cap: 3, ..Default::default() };
+        let mut f = Feed {
+            cap: 3,
+            ..Default::default()
+        };
         let dt = 1.0 / 30.0;
         for _ in 0..30 * 30 {
             f.update(&st, dt, true);

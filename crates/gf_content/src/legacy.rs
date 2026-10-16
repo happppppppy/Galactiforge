@@ -52,13 +52,18 @@ fn convert(id: &str, cells: Vec<LegacyCell>) -> Blueprint {
 
 /// Parse legacy `ships.json` (`{ name: { starter_grid: [...] } }`).
 pub fn import_ships_json(text: &str) -> Result<Vec<Blueprint>, String> {
-    let ships: BTreeMap<String, LegacyShip> = serde_json::from_str(text).map_err(|e| e.to_string())?;
-    Ok(ships.into_iter().map(|(k, v)| convert(&k, v.starter_grid)).collect())
+    let ships: BTreeMap<String, LegacyShip> =
+        serde_json::from_str(text).map_err(|e| e.to_string())?;
+    Ok(ships
+        .into_iter()
+        .map(|(k, v)| convert(&k, v.starter_grid))
+        .collect())
 }
 
 /// Parse legacy `ship_save.json` (`{ name: [ ...cells ] }`).
 pub fn import_ship_save(text: &str) -> Result<Vec<Blueprint>, String> {
-    let ships: BTreeMap<String, Vec<LegacyCell>> = serde_json::from_str(text).map_err(|e| e.to_string())?;
+    let ships: BTreeMap<String, Vec<LegacyCell>> =
+        serde_json::from_str(text).map_err(|e| e.to_string())?;
     Ok(ships.into_iter().map(|(k, v)| convert(&k, v)).collect())
 }
 
@@ -76,16 +81,26 @@ mod tests {
 
     #[test]
     fn imports_legacy_ships() {
-        let text = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../code/src/configs/ships.json")).unwrap();
+        let text = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../code/src/configs/ships.json"
+        ))
+        .unwrap();
         let bps = import_ships_json(&text).unwrap();
         let mb = bps.iter().find(|b| b.id == "micro_bandit").unwrap();
         // Rear large thruster at legacy y=2 faces forward -> new y=-2, rot 0.
-        assert!(mb.blocks.iter().any(|b| b.block == "large_thruster" && b.y == -2 && b.rot == 0));
+        assert!(
+            mb.blocks
+                .iter()
+                .any(|b| b.block == "large_thruster" && b.y == -2 && b.rot == 0)
+        );
     }
 
     #[test]
     fn imports_legacy_save() {
-        let text = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../ship_save.json")).unwrap();
+        let text =
+            std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../ship_save.json"))
+                .unwrap();
         let bps = import_ship_save(&text).unwrap();
         assert!(!bps.is_empty());
         assert!(bps[0].blocks.len() > 10);

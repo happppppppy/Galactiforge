@@ -392,24 +392,62 @@ pub struct Recipe {
 pub enum Block {
     Hull,
     Core,
-    Storage { capacity: u32, filter: Vec<ResId> },
-    Tank { capacity: f32, filter: Vec<ResId> },
-    Conveyor { speed: f32 },
-    Splitter { speed: f32 },
+    Storage {
+        capacity: u32,
+        filter: Vec<ResId>,
+    },
+    Tank {
+        capacity: f32,
+        filter: Vec<ResId>,
+    },
+    Conveyor {
+        speed: f32,
+    },
+    Splitter {
+        speed: f32,
+    },
     Pipe,
     Cable,
-    Machine { recipes: Vec<RecipeId>, buffer: u32 },
-    Generator { output: f32, fuel: Option<(ResId, f32)> },
-    Solar { output: f32 },
-    Battery { capacity: f32, rate: f32 },
+    Machine {
+        recipes: Vec<RecipeId>,
+        buffer: u32,
+    },
+    Generator {
+        output: f32,
+        fuel: Option<(ResId, f32)>,
+    },
+    Solar {
+        output: f32,
+    },
+    Battery {
+        capacity: f32,
+        rate: f32,
+    },
     Weapon(Weapon),
     Thruster(Thruster),
-    Drill { rate: f32, power: f32 },
-    Salvager { rate: f32, power: f32 },
-    Tractor { range: f32, force: f32, power: f32 },
-    Lab { power: f32, rate: f32 },
-    Radar { range: f32 },
-    Mineral { yields: Vec<(ResId, f32)> },
+    Drill {
+        rate: f32,
+        power: f32,
+    },
+    Salvager {
+        rate: f32,
+        power: f32,
+    },
+    Tractor {
+        range: f32,
+        force: f32,
+        power: f32,
+    },
+    Lab {
+        power: f32,
+        rate: f32,
+    },
+    Radar {
+        range: f32,
+    },
+    Mineral {
+        yields: Vec<(ResId, f32)>,
+    },
 }
 
 #[derive(Debug, Clone)]
@@ -444,7 +482,9 @@ impl BlockInfo {
     /// The full footprint reserved by this block (largest growth stage).
     pub fn reserved_size(&self) -> (u8, u8) {
         match self.growth() {
-            Some(g) => g.iter().fold((1, 1), |a, s| (a.0.max(s.size.0), a.1.max(s.size.1))),
+            Some(g) => g
+                .iter()
+                .fold((1, 1), |a, s| (a.0.max(s.size.0), a.1.max(s.size.1))),
             None => (1, 1),
         }
     }
@@ -584,8 +624,16 @@ impl ContentDb {
             }
             recipes.push(Recipe {
                 id: r.id.clone(),
-                inputs: r.inputs.iter().map(|(n, q)| (lookup_res(n, &ctx, &mut errors), *q)).collect(),
-                outputs: r.outputs.iter().map(|(n, q)| (lookup_res(n, &ctx, &mut errors), *q)).collect(),
+                inputs: r
+                    .inputs
+                    .iter()
+                    .map(|(n, q)| (lookup_res(n, &ctx, &mut errors), *q))
+                    .collect(),
+                outputs: r
+                    .outputs
+                    .iter()
+                    .map(|(n, q)| (lookup_res(n, &ctx, &mut errors), *q))
+                    .collect(),
                 time: r.time,
                 power: r.power,
             });
@@ -618,7 +666,10 @@ impl ContentDb {
                 BlockKind::Splitter { speed } => Block::Splitter { speed: *speed },
                 BlockKind::Pipe => Block::Pipe,
                 BlockKind::Cable => Block::Cable,
-                BlockKind::Machine { recipes: rs, buffer } => {
+                BlockKind::Machine {
+                    recipes: rs,
+                    buffer,
+                } => {
                     let mut ids = Vec::new();
                     for r in rs {
                         match recipe_ids.get(r) {
@@ -629,11 +680,16 @@ impl ContentDb {
                     if ids.is_empty() {
                         errors.push(format!("{ctx}: machine has no recipes"));
                     }
-                    Block::Machine { recipes: ids, buffer: *buffer }
+                    Block::Machine {
+                        recipes: ids,
+                        buffer: *buffer,
+                    }
                 }
                 BlockKind::Generator { output, fuel } => Block::Generator {
                     output: *output,
-                    fuel: fuel.as_ref().map(|(n, r)| (lookup_res(n, &ctx, &mut errors), *r)),
+                    fuel: fuel
+                        .as_ref()
+                        .map(|(n, r)| (lookup_res(n, &ctx, &mut errors), *r)),
                 },
                 BlockKind::Solar { output } => Block::Solar { output: *output },
                 BlockKind::Battery { capacity, rate } => Block::Battery {
@@ -646,10 +702,10 @@ impl ContentDb {
                         errors.push(format!("{ctx}: weapon has no ammo"));
                     }
                     for a in &w.ammo {
-                        if let Some(id) = res_ids.get(a) {
-                            if cf.resources[*id as usize].ammo.is_none() {
-                                errors.push(format!("{ctx}: ammo `{a}` has no ammo definition"));
-                            }
+                        if let Some(id) = res_ids.get(a)
+                            && cf.resources[*id as usize].ammo.is_none()
+                        {
+                            errors.push(format!("{ctx}: ammo `{a}` has no ammo definition"));
                         }
                     }
                     Block::Weapon(Weapon {
@@ -660,7 +716,10 @@ impl ContentDb {
                 BlockKind::Thruster(t) => {
                     check_growth(&t.growth, &ctx, &mut errors);
                     let fuel = lookup_res(&t.fuel, &ctx, &mut errors);
-                    let oxidizer = t.oxidizer.as_ref().map(|o| lookup_res(o, &ctx, &mut errors));
+                    let oxidizer = t
+                        .oxidizer
+                        .as_ref()
+                        .map(|o| lookup_res(o, &ctx, &mut errors));
                     Block::Thruster(Thruster {
                         def: t.clone(),
                         fuel,
@@ -675,7 +734,11 @@ impl ContentDb {
                     rate: *rate,
                     power: *power,
                 },
-                BlockKind::Tractor { range, force, power } => Block::Tractor {
+                BlockKind::Tractor {
+                    range,
+                    force,
+                    power,
+                } => Block::Tractor {
                     range: *range,
                     force: *force,
                     power: *power,
@@ -686,7 +749,10 @@ impl ContentDb {
                 },
                 BlockKind::Radar { range } => Block::Radar { range: *range },
                 BlockKind::Mineral { yields } => Block::Mineral {
-                    yields: yields.iter().map(|(n, q)| (lookup_res(n, &ctx, &mut errors), *q)).collect(),
+                    yields: yields
+                        .iter()
+                        .map(|(n, q)| (lookup_res(n, &ctx, &mut errors), *q))
+                        .collect(),
                 },
             };
             if b.hp <= 0.0 {
@@ -695,7 +761,11 @@ impl ContentDb {
             if b.mass <= 0.0 {
                 errors.push(format!("{ctx}: mass must be > 0"));
             }
-            let cost = b.cost.iter().map(|(n, q)| (lookup_res(n, &ctx, &mut errors), *q)).collect();
+            let cost = b
+                .cost
+                .iter()
+                .map(|(n, q)| (lookup_res(n, &ctx, &mut errors), *q))
+                .collect();
             let sample = b.sample.as_ref().map(|s| lookup_res(s, &ctx, &mut errors));
             blocks.push(BlockInfo {
                 def: b.clone(),
@@ -728,7 +798,12 @@ impl ContentDb {
                     })
                     .collect(),
             );
-            research_samples.push(r.samples.iter().map(|s| lookup_res(s, &ctx, &mut errors)).collect());
+            research_samples.push(
+                r.samples
+                    .iter()
+                    .map(|s| lookup_res(s, &ctx, &mut errors))
+                    .collect(),
+            );
             research_unlocks.push(
                 r.unlocks
                     .iter()
@@ -769,10 +844,10 @@ impl ContentDb {
                         }
                     }
                 }
-                if let Some(r) = &bb.recipe {
-                    if !recipe_ids.contains_key(r) {
-                        errors.push(format!("{ctx}: unknown recipe `{r}`"));
-                    }
+                if let Some(r) = &bb.recipe
+                    && !recipe_ids.contains_key(r)
+                {
+                    errors.push(format!("{ctx}: unknown recipe `{r}`"));
                 }
             }
             for (s, _) in &bp.stock {
@@ -813,10 +888,10 @@ fn check_growth(g: &[GrowthStage], ctx: &str, errors: &mut Vec<String>) {
             errors.push(format!("{ctx}: growth demand must be non-decreasing"));
         }
     }
-    if let Some(s) = g.first() {
-        if s.size != (1, 1) {
-            errors.push(format!("{ctx}: first growth stage must be 1x1"));
-        }
+    if let Some(s) = g.first()
+        && s.size != (1, 1)
+    {
+        errors.push(format!("{ctx}: first growth stage must be 1x1"));
     }
 }
 

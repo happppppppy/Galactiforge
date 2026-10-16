@@ -7,7 +7,13 @@ use crate::world::{World, fill_storage};
 /// A large rectangular warship of roughly `(2*half+1)^2` blocks: a core in
 /// the middle, fuel tanks on pipe rows feeding a rear thruster bank, cannons
 /// on a lattice each beside a shell container, and an armour rim.
-pub fn battleship(world: &World, half: i32, faction: Option<Faction>, pos: Vec2, angle: f32) -> Body {
+pub fn battleship(
+    world: &World,
+    half: i32,
+    faction: Option<Faction>,
+    pos: Vec2,
+    angle: f32,
+) -> Body {
     let c = world.content.clone();
     let id = |n: &str| c.block(n).unwrap();
     let mut b = Body::new(0, "Battleship", BodyKind::Ship, faction, pos, angle);

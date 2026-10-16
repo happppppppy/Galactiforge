@@ -11,7 +11,9 @@ pub struct Rng {
 
 impl Rng {
     pub fn new(seed: u64) -> Self {
-        Self { state: seed ^ 0x9E37_79B9_7F4A_7C15 }
+        Self {
+            state: seed ^ 0x9E37_79B9_7F4A_7C15,
+        }
     }
     /// Derive an independent stream from a seed and a key (e.g. sector coords).
     pub fn derive(seed: u64, a: i64, b: i64) -> Self {

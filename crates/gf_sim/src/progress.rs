@@ -38,7 +38,14 @@ impl Progress {
             active: None,
             points: 0.0,
             samples: BTreeMap::new(),
-            missions: content.missions.iter().map(|_| MissionState { progress: 0.0, done: false }).collect(),
+            missions: content
+                .missions
+                .iter()
+                .map(|_| MissionState {
+                    progress: 0.0,
+                    done: false,
+                })
+                .collect(),
             ships_destroyed: 0,
             blocks_salvaged: 0,
             mined: BTreeMap::new(),
@@ -50,8 +57,12 @@ impl Progress {
     pub fn can_research(&self, content: &ContentDb, r: ResearchId) -> bool {
         (r as usize) < content.research.len()
             && !self.completed.contains(&r)
-            && content.research_requires[r as usize].iter().all(|p| self.completed.contains(p))
-            && content.research_samples[r as usize].iter().all(|s| self.samples.get(s).copied().unwrap_or(0) > 0)
+            && content.research_requires[r as usize]
+                .iter()
+                .all(|p| self.completed.contains(p))
+            && content.research_samples[r as usize]
+                .iter()
+                .all(|s| self.samples.get(s).copied().unwrap_or(0) > 0)
     }
 
     pub fn start_research(&mut self, content: &ContentDb, r: ResearchId) -> bool {
@@ -77,7 +88,9 @@ impl Progress {
 
 pub fn step(world: &mut World, dt: f32) {
     let content = world.content.clone();
-    let alive = world.player_body().is_some_and(|b| b.kind == BodyKind::Ship && b.faction == Some(PLAYER_FACTION));
+    let alive = world
+        .player_body()
+        .is_some_and(|b| b.kind == BodyKind::Ship && b.faction == Some(PLAYER_FACTION));
     let p = &mut world.progress;
     if alive {
         p.survived += dt;
@@ -102,7 +115,10 @@ pub fn step(world: &mut World, dt: f32) {
             Objective::DestroyShips { count } => (p.ships_destroyed as f32, *count as f32),
             Objective::SalvageBlocks { count } => (p.blocks_salvaged as f32, *count as f32),
             Objective::MineResource { resource, amount } => {
-                let v = content.res(resource).and_then(|r| p.mined.get(&r).copied()).unwrap_or(0.0);
+                let v = content
+                    .res(resource)
+                    .and_then(|r| p.mined.get(&r).copied())
+                    .unwrap_or(0.0);
                 (v, *amount)
             }
             Objective::Survive { seconds } => (p.survived, *seconds),
@@ -137,12 +153,18 @@ mod tests {
         let mut w = World::new(c.clone(), 1);
         let rocketry = c.research_id("rocketry").unwrap();
         let adv = c.research_id("advanced_fabrication").unwrap();
-        assert!(!w.progress.can_research(&c, rocketry), "needs prerequisite + sample");
+        assert!(
+            !w.progress.can_research(&c, rocketry),
+            "needs prerequisite + sample"
+        );
         assert!(w.progress.start_research(&c, adv));
         w.progress.add_points(10_000.0);
         w.step();
         assert!(w.progress.completed.contains(&adv));
-        assert!(!w.progress.can_research(&c, rocketry), "still needs the guidance sample");
+        assert!(
+            !w.progress.can_research(&c, rocketry),
+            "still needs the guidance sample"
+        );
         w.progress.add_sample(c.res("sample_guidance").unwrap());
         assert!(w.progress.start_research(&c, rocketry));
         w.step();
@@ -156,7 +178,11 @@ mod tests {
         let mut w = World::new(c.clone(), 1);
         w.progress.ships_destroyed = 1;
         w.step();
-        let i = c.missions.iter().position(|m| m.id == "first_blood").unwrap();
+        let i = c
+            .missions
+            .iter()
+            .position(|m| m.id == "first_blood")
+            .unwrap();
         assert!(w.progress.missions[i].done);
         assert!(w.progress.points >= 50.0);
     }

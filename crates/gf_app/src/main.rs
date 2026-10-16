@@ -67,7 +67,8 @@ impl UiState {
 }
 
 fn asset_root() -> String {
-    std::env::var("GF_ASSETS").unwrap_or_else(|_| format!("{}/../../assets", env!("CARGO_MANIFEST_DIR")))
+    std::env::var("GF_ASSETS")
+        .unwrap_or_else(|_| format!("{}/../../assets", env!("CARGO_MANIFEST_DIR")))
 }
 
 fn main() {
@@ -75,25 +76,41 @@ fn main() {
     let content = match ContentDb::load_dir(&content_dir) {
         Ok(c) => Arc::new(c),
         Err(e) => {
-            eprintln!("failed to load content from {}: {e:?}", content_dir.display());
+            eprintln!(
+                "failed to load content from {}: {e:?}",
+                content_dir.display()
+            );
             std::process::exit(1);
         }
     };
-    let seed = std::env::args().nth(1).and_then(|s| s.parse().ok()).unwrap_or(1337);
+    let seed = std::env::args()
+        .nth(1)
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(1337);
     let world = World::new_game(content, seed);
 
     App::new()
         .add_plugins(
             DefaultPlugins
                 .set(ImagePlugin::default_nearest())
-                .set(AssetPlugin { file_path: asset_root(), ..default() })
+                .set(AssetPlugin {
+                    file_path: asset_root(),
+                    ..default()
+                })
                 .set(WindowPlugin {
-                    primary_window: Some(Window { title: "Galactiforge".into(), ..default() }),
+                    primary_window: Some(Window {
+                        title: "Galactiforge".into(),
+                        ..default()
+                    }),
                     ..default()
                 }),
         )
         .insert_resource(ClearColor(Color::srgb(0.02, 0.02, 0.05)))
-        .insert_resource(Sim { world, acc: 0.0, paused: false })
+        .insert_resource(Sim {
+            world,
+            acc: 0.0,
+            paused: false,
+        })
         .init_resource::<FrameEvents>()
         .init_resource::<UiState>()
         .init_resource::<render::Views>()
@@ -119,7 +136,12 @@ fn main() {
 }
 
 /// Fixed-step accumulator: the simulation always advances in 1/30 s ticks.
-fn step_sim(time: Res<Time>, mut sim: ResMut<Sim>, mut events: ResMut<FrameEvents>, mut ui: ResMut<UiState>) {
+fn step_sim(
+    time: Res<Time>,
+    mut sim: ResMut<Sim>,
+    mut events: ResMut<FrameEvents>,
+    mut ui: ResMut<UiState>,
+) {
     events.0.clear();
     if sim.paused {
         return;
@@ -132,12 +154,14 @@ fn step_sim(time: Res<Time>, mut sim: ResMut<Sim>, mut events: ResMut<FrameEvent
         let player = sim.world.player;
         for e in &sim.world.events {
             match e {
-                SimEvent::ResearchComplete { research } => {
-                    ui.say(format!("Research complete: {}", content.research[*research as usize].name))
-                }
-                SimEvent::MissionComplete { mission } => {
-                    ui.say(format!("Mission complete: {}", content.missions[*mission].name))
-                }
+                SimEvent::ResearchComplete { research } => ui.say(format!(
+                    "Research complete: {}",
+                    content.research[*research as usize].name
+                )),
+                SimEvent::MissionComplete { mission } => ui.say(format!(
+                    "Mission complete: {}",
+                    content.missions[*mission].name
+                )),
                 SimEvent::ShipDestroyed { body, .. } if Some(*body) == player => {
                     ui.say("Your core was destroyed! Press F10 to respawn.")
                 }

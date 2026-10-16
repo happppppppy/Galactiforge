@@ -49,17 +49,31 @@ pub struct Projectile {
 
 /// Effects of the recently delivered ammo mix (falls back to current stock).
 pub fn ammo_effects(content: &ContentDb, b: &crate::body::BlockInst) -> Effects {
-    let src = if b.ammo_mix.iter().any(|e| e.1 > 1e-3) { &b.ammo_mix } else { &b.stock };
+    let src = if b.ammo_mix.iter().any(|e| e.1 > 1e-3) {
+        &b.ammo_mix
+    } else {
+        &b.stock
+    };
     let total: f32 = src.iter().map(|e| e.1.max(0.0)).sum();
-    let mut fx = Effects { damage_mult: 1.0, ..Default::default() };
+    let mut fx = Effects {
+        damage_mult: 1.0,
+        ..Default::default()
+    };
     if total <= 1e-6 {
         return fx;
     }
     fx.damage_mult = 0.0;
     for (r, q) in src {
         let share = q.max(0.0) / total;
-        let a = content.resources[*r as usize].ammo.clone().unwrap_or_default();
-        let dm = if content.resources[*r as usize].ammo.is_some() { a.damage_mult } else { 1.0 };
+        let a = content.resources[*r as usize]
+            .ammo
+            .clone()
+            .unwrap_or_default();
+        let dm = if content.resources[*r as usize].ammo.is_some() {
+            a.damage_mult
+        } else {
+            1.0
+        };
         fx.damage_mult += share * dm;
         fx.splash += share * a.splash_radius;
         fx.incendiary += share * a.incendiary;
@@ -85,7 +99,9 @@ pub fn speed_mult(tier: u8) -> f32 {
 
 /// Feed-driven growth / shrink of weapons and thrusters.
 pub fn update_tiers(content: &ContentDb, body: &mut Body, dt: f32, events: &mut Vec<Event>) {
-    let slots = body.slots_where(content, |k| matches!(k, Block::Weapon(_) | Block::Thruster(_)));
+    let slots = body.slots_where(content, |k| {
+        matches!(k, Block::Weapon(_) | Block::Thruster(_))
+    });
     for s in slots {
         let b = body.block(s).unwrap();
         let info = &content.blocks[b.def as usize];
@@ -103,7 +119,11 @@ pub fn update_tiers(content: &ContentDb, body: &mut Body, dt: f32, events: &mut 
         if let Some(t) = b.feed.update(stages, dt, saturated) {
             let size = stages[t as usize - 1].size;
             body.resize_block(s, size);
-            events.push(Event::TierChanged { body: body.id, slot: s, tier: t });
+            events.push(Event::TierChanged {
+                body: body.id,
+                slot: s,
+                tier: t,
+            });
             let _ = old;
         }
     }
@@ -163,7 +183,9 @@ pub fn step_weapons(world: &mut World, dt: f32) {
         let weapons = body.slots_where(&content, |k| matches!(k, Block::Weapon(_)));
         for s in weapons {
             let b = body.block(s).unwrap();
-            let Block::Weapon(w) = &content.blocks[b.def as usize].kind else { continue };
+            let Block::Weapon(w) = &content.blocks[b.def as usize].kind else {
+                continue;
+            };
             let def = &w.def;
             let tier = b.feed.tier;
             let center_l = b.center();
@@ -176,13 +198,18 @@ pub fn step_weapons(world: &mut World, dt: f32) {
             // Choose a target point: suppression first, then the control aim.
             let can_suppress = def.kind == WeaponKind::Cannon && fx.frost >= SUPPRESS_FROST_SHARE;
             let range = def.range * (1.0 + 0.1 * (tier as f32 - 1.0));
-            let suppress_target = if can_suppress && (b.mode == WeaponMode::Suppress || body.control.auto_suppress) {
-                hottest_fire(body, center, range)
+            let suppress_target =
+                if can_suppress && (b.mode == WeaponMode::Suppress || body.control.auto_suppress) {
+                    hottest_fire(body, center, range)
+                } else {
+                    None
+                };
+            let attack = b.mode == WeaponMode::Attack && body.control.fire;
+            let aim_point = suppress_target.or(if attack || def.kind == WeaponKind::MiningLaser {
+                body.control.aim
             } else {
                 None
-            };
-            let attack = b.mode == WeaponMode::Attack && body.control.fire;
-            let aim_point = suppress_target.or(if attack || def.kind == WeaponKind::MiningLaser { body.control.aim } else { None });
+            });
 
             let b = body.block(s).unwrap();
             let mut aim = b.aim;
@@ -213,9 +240,15 @@ pub fn step_weapons(world: &mut World, dt: f32) {
 
             if def.kind == WeaponKind::MiningLaser {
                 let stages = &def.growth;
-                let firing = want_fire && aligned && !disabled && aim_point.is_some() && bm.total_stock() < LASER_BUFFER;
+                let firing = want_fire
+                    && aligned
+                    && !disabled
+                    && aim_point.is_some()
+                    && bm.total_stock() < LASER_BUFFER;
                 if firing {
-                    let next = (tier as usize).min(bm.feed.cap.max(1) as usize - 1).min(stages.len() - 1);
+                    let next = (tier as usize)
+                        .min(bm.feed.cap.max(1) as usize - 1)
+                        .min(stages.len() - 1);
                     bm.power_req = stages[next].demand;
                     bm.feed.delivered += bm.power_req * bm.power_sat * dt;
                     bm.heat += def.heat_per_shot * dt * 10.0;
@@ -264,7 +297,10 @@ pub fn step_weapons(world: &mut World, dt: f32) {
                 speed,
                 life: range / speed.max(1.0),
                 damage: def.damage * fx.damage_mult * damage_mult(tier),
-                fx: Effects { splash: fx.splash * (1.0 + 0.2 * (tier as f32 - 1.0)), ..fx },
+                fx: Effects {
+                    splash: fx.splash * (1.0 + 0.2 * (tier as f32 - 1.0)),
+                    ..fx
+                },
                 homing: def.homing,
                 suppress: suppress_target,
                 def: bm.def,
@@ -283,20 +319,37 @@ pub fn step_weapons(world: &mut World, dt: f32) {
                 world
                     .bodies
                     .values()
-                    .filter(|o| o.id != sh.body && o.kind == BodyKind::Ship && body.is_hostile_to(o))
-                    .min_by(|x, y| x.pos.distance(a).total_cmp(&y.pos.distance(a)).then(x.id.cmp(&y.id)))
+                    .filter(|o| {
+                        o.id != sh.body && o.kind == BodyKind::Ship && body.is_hostile_to(o)
+                    })
+                    .min_by(|x, y| {
+                        x.pos
+                            .distance(a)
+                            .total_cmp(&y.pos.distance(a))
+                            .then(x.id.cmp(&y.id))
+                    })
                     .map(|o| o.id)
             })
         } else {
             None
         };
-        world.events.push(Event::Shot { body: sh.body, pos: sh.from, dir: sh.dir, def: sh.def, tier: sh.tier });
+        world.events.push(Event::Shot {
+            body: sh.body,
+            pos: sh.from,
+            dir: sh.dir,
+            def: sh.def,
+            tier: sh.tier,
+        });
         let _ = sh.slot;
         world.projectiles.push(Projectile {
             pos: sh.from,
             vel: sh.dir * sh.speed + body.vel,
             life: sh.life,
-            damage: if sh.suppress.is_some() { 0.0 } else { sh.damage },
+            damage: if sh.suppress.is_some() {
+                0.0
+            } else {
+                sh.damage
+            },
             owner: sh.body,
             faction,
             fx: sh.fx,
@@ -314,7 +367,11 @@ pub fn step_weapons(world: &mut World, dt: f32) {
         let owner = l.body;
         let hit = raycast(world, l.from, end, |b| b.id == owner);
         let to = hit.as_ref().map_or(end, |h| h.point);
-        world.events.push(Event::Laser { from: l.from, to, tier: l.tier });
+        world.events.push(Event::Laser {
+            from: l.from,
+            to,
+            tier: l.tier,
+        });
         let Some(h) = hit else { continue };
         let dmg = l.dps * crate::world::DT;
         let tb = &world.bodies[&h.body];
@@ -323,7 +380,12 @@ pub fn step_weapons(world: &mut World, dt: f32) {
             let frac = (dmg / tblk.max_hp(&content)).min(tblk.hp.max(0.0) / tblk.max_hp(&content));
             let yields = yields.clone();
             let player = world.bodies[&owner].faction == Some(PLAYER_FACTION);
-            let lb = world.bodies.get_mut(&owner).unwrap().block_mut(l.slot).unwrap();
+            let lb = world
+                .bodies
+                .get_mut(&owner)
+                .unwrap()
+                .block_mut(l.slot)
+                .unwrap();
             for (r, q) in yields {
                 lb.add(r, q * frac);
                 if player {
@@ -355,8 +417,16 @@ fn dda(body: &Body, a: Vec2, b: Vec2) -> Option<(u32, f32)> {
     let dy = by - ay;
     let sx = if dx > 0.0 { 1 } else { -1 };
     let sy = if dy > 0.0 { 1 } else { -1 };
-    let tdx = if dx != 0.0 { 1.0 / dx.abs() } else { f32::INFINITY };
-    let tdy = if dy != 0.0 { 1.0 / dy.abs() } else { f32::INFINITY };
+    let tdx = if dx != 0.0 {
+        1.0 / dx.abs()
+    } else {
+        f32::INFINITY
+    };
+    let tdy = if dy != 0.0 {
+        1.0 / dy.abs()
+    } else {
+        f32::INFINITY
+    };
     let mut tmx = if dx > 0.0 {
         (cx as f32 + 1.0 - ax) / dx
     } else if dx < 0.0 {
@@ -398,7 +468,12 @@ fn dda(body: &Body, a: Vec2, b: Vec2) -> Option<(u32, f32)> {
 
 /// First block hit along a world-space segment, skipping bodies for which
 /// `skip` returns true.
-pub fn raycast(world: &World, from: Vec2, to: Vec2, skip: impl Fn(&Body) -> bool) -> Option<RayHit> {
+pub fn raycast(
+    world: &World,
+    from: Vec2,
+    to: Vec2,
+    skip: impl Fn(&Body) -> bool,
+) -> Option<RayHit> {
     let seg = to - from;
     let len2 = seg.length_sq().max(1e-9);
     let mut best: Option<RayHit> = None;
@@ -410,23 +485,38 @@ pub fn raycast(world: &World, from: Vec2, to: Vec2, skip: impl Fn(&Body) -> bool
         if (from + seg * t).distance(b.pos) > b.radius {
             continue;
         }
-        if let Some((slot, t)) = dda(b, b.to_local(from), b.to_local(to)) {
-            if best.as_ref().is_none_or(|h| t < h.t) {
-                best = Some(RayHit { body: b.id, slot, t, point: from + seg * t });
-            }
+        if let Some((slot, t)) = dda(b, b.to_local(from), b.to_local(to))
+            && best.as_ref().is_none_or(|h| t < h.t)
+        {
+            best = Some(RayHit {
+                body: b.id,
+                slot,
+                t,
+                point: from + seg * t,
+            });
         }
     }
     best
 }
 
 /// Apply raw damage to a block (armor reduces it). Returns damage dealt.
-pub fn damage_block(world: &mut World, body: BodyId, slot: u32, dmg: f32, by: Option<Faction>) -> f32 {
+pub fn damage_block(
+    world: &mut World,
+    body: BodyId,
+    slot: u32,
+    dmg: f32,
+    by: Option<Faction>,
+) -> f32 {
     let content = world.content.clone();
-    let Some(b) = world.bodies.get_mut(&body) else { return 0.0 };
+    let Some(b) = world.bodies.get_mut(&body) else {
+        return 0.0;
+    };
     if by.is_some() {
         b.last_hit_by = by;
     }
-    let Some(inst) = b.block_mut(slot) else { return 0.0 };
+    let Some(inst) = b.block_mut(slot) else {
+        return 0.0;
+    };
     if inst.hp <= 0.0 {
         return 0.0;
     }
@@ -440,7 +530,9 @@ pub fn damage_block(world: &mut World, body: BodyId, slot: u32, dmg: f32, by: Op
 }
 
 pub fn apply_effects(world: &mut World, body: BodyId, slot: u32, fx: &Effects) {
-    let Some(inst) = world.bodies.get_mut(&body).and_then(|b| b.block_mut(slot)) else { return };
+    let Some(inst) = world.bodies.get_mut(&body).and_then(|b| b.block_mut(slot)) else {
+        return;
+    };
     if fx.incendiary > 0.0 {
         inst.fire = (inst.fire + fx.incendiary * 0.6).min(1.0);
     }
@@ -455,7 +547,15 @@ pub fn apply_effects(world: &mut World, body: BodyId, slot: u32, fx: &Effects) {
 }
 
 /// Area damage around a world point. Bodies of `spare` faction are untouched.
-pub fn splash(world: &mut World, center: Vec2, radius: f32, dmg: f32, spare: Option<Faction>, by: Option<Faction>, fx: &Effects) {
+pub fn splash(
+    world: &mut World,
+    center: Vec2,
+    radius: f32,
+    dmg: f32,
+    spare: Option<Faction>,
+    by: Option<Faction>,
+    fx: &Effects,
+) {
     let mut hits: Vec<(BodyId, u32, f32)> = Vec::new();
     for b in world.bodies.values() {
         if spare.is_some() && b.faction == spare {
@@ -465,8 +565,14 @@ pub fn splash(world: &mut World, center: Vec2, radius: f32, dmg: f32, spare: Opt
             continue;
         }
         let l = b.to_local(center);
-        let (x0, x1) = (libm::floorf(l.x - radius) as i32, libm::ceilf(l.x + radius) as i32);
-        let (y0, y1) = (libm::floorf(l.y - radius) as i32, libm::ceilf(l.y + radius) as i32);
+        let (x0, x1) = (
+            libm::floorf(l.x - radius) as i32,
+            libm::ceilf(l.x + radius) as i32,
+        );
+        let (y0, y1) = (
+            libm::floorf(l.y - radius) as i32,
+            libm::ceilf(l.y + radius) as i32,
+        );
         let mut local: Vec<(u32, f32)> = Vec::new();
         for y in y0..=y1 {
             for x in x0..=x1 {
@@ -494,7 +600,9 @@ pub fn splash(world: &mut World, center: Vec2, radius: f32, dmg: f32, spare: Opt
 
 /// Put out fires around a point on one body.
 pub fn extinguish(world: &mut World, body: BodyId, at: Vec2, radius: f32) {
-    let Some(b) = world.bodies.get_mut(&body) else { return };
+    let Some(b) = world.bodies.get_mut(&body) else {
+        return;
+    };
     for s in b.topo.live.clone() {
         let p = b.to_world(b.block(s).unwrap().center());
         if p.distance(at) <= radius {
@@ -523,26 +631,42 @@ pub fn step_projectiles(world: &mut World, dt: f32) {
             keep.push(p);
             continue;
         }
-        if p.homing > 0.0 {
-            if let Some(t) = p.target.and_then(|t| world.bodies.get(&t)) {
-                let desired = (t.pos - p.pos).angle();
-                let cur = p.vel.angle();
-                let err = wrap_angle(desired - cur);
-                let turn = err.clamp(-p.homing * dt, p.homing * dt);
-                p.vel = p.vel.rotate(turn);
-            }
+        if p.homing > 0.0
+            && let Some(t) = p.target.and_then(|t| world.bodies.get(&t))
+        {
+            let desired = (t.pos - p.pos).angle();
+            let cur = p.vel.angle();
+            let err = wrap_angle(desired - cur);
+            let turn = err.clamp(-p.homing * dt, p.homing * dt);
+            p.vel = p.vel.rotate(turn);
         }
         let end = p.pos + p.vel * dt;
         let (owner, faction) = (p.owner, p.faction);
-        let hit = raycast(world, p.pos, end, |b| b.id == owner || (faction.is_some() && b.faction == faction));
+        let hit = raycast(world, p.pos, end, |b| {
+            b.id == owner || (faction.is_some() && b.faction == faction)
+        });
         match hit {
             Some(h) => {
-                world.events.push(Event::Hit { pos: h.point, damage: p.damage });
+                world.events.push(Event::Hit {
+                    pos: h.point,
+                    damage: p.damage,
+                });
                 damage_block(world, h.body, h.slot, p.damage, faction);
                 apply_effects(world, h.body, h.slot, &p.fx);
                 if p.fx.splash > 0.0 {
-                    splash(world, h.point, p.fx.splash, p.damage * 0.6, faction, faction, &p.fx);
-                    world.events.push(Event::Explosion { pos: h.point, radius: p.fx.splash });
+                    splash(
+                        world,
+                        h.point,
+                        p.fx.splash,
+                        p.damage * 0.6,
+                        faction,
+                        faction,
+                        &p.fx,
+                    );
+                    world.events.push(Event::Explosion {
+                        pos: h.point,
+                        radius: p.fx.splash,
+                    });
                 }
                 if p.fx.pierce > 0 {
                     p.fx.pierce -= 1;
@@ -579,7 +703,10 @@ pub fn step_fire(world: &mut World, dt: f32) {
             }
             for s in body.topo.live.clone() {
                 let flam = body.block(s).unwrap().flammability(&content);
-                let is_hot_kind = matches!(content.blocks[body.block(s).unwrap().def as usize].kind, Block::Weapon(_) | Block::Thruster(_));
+                let is_hot_kind = matches!(
+                    content.blocks[body.block(s).unwrap().def as usize].kind,
+                    Block::Weapon(_) | Block::Thruster(_)
+                );
                 let b = body.block_mut(s).unwrap();
                 b.chill = (b.chill - dt).max(0.0);
                 b.disabled = (b.disabled - dt).max(0.0);
@@ -615,10 +742,10 @@ pub fn step_fire(world: &mut World, dt: f32) {
         }
         let body = world.bodies.get_mut(&id).unwrap();
         for n in ignite {
-            if let Some(b) = body.block_mut(n) {
-                if b.chill <= 0.0 {
-                    b.fire = b.fire.max(0.15);
-                }
+            if let Some(b) = body.block_mut(n)
+                && b.chill <= 0.0
+            {
+                b.fire = b.fire.max(0.15);
             }
         }
         for s in killed {
@@ -641,8 +768,12 @@ pub fn process_destruction(world: &mut World) {
         let mut touched: Vec<BodyId> = Vec::new();
         let mut blasts: Vec<(Vec2, f32, f32)> = Vec::new();
         for (bid, slot) in dead {
-            let Some(body) = world.bodies.get_mut(&bid) else { continue };
-            let Some(inst) = body.block(slot) else { continue };
+            let Some(body) = world.bodies.get_mut(&bid) else {
+                continue;
+            };
+            let Some(inst) = body.block(slot) else {
+                continue;
+            };
             if inst.hp > 0.0 {
                 continue;
             }
@@ -658,8 +789,14 @@ pub fn process_destruction(world: &mut World) {
                 let dmg = (15.0 + flam_stock * 0.5).min(120.0);
                 blasts.push((pos, radius, dmg));
             }
-            world.events.push(Event::BlockDestroyed { body: bid, pos, def: inst.def });
-            if matches!(content.blocks[inst.def as usize].kind, Block::Core) && body.kind == BodyKind::Ship {
+            world.events.push(Event::BlockDestroyed {
+                body: bid,
+                pos,
+                def: inst.def,
+            });
+            if matches!(content.blocks[inst.def as usize].kind, Block::Core)
+                && body.kind == BodyKind::Ship
+            {
                 let by = body.last_hit_by;
                 let was = body.faction;
                 body.kind = BodyKind::Derelict;
@@ -681,7 +818,10 @@ pub fn process_destruction(world: &mut World) {
         }
         for (pos, radius, dmg) in blasts {
             world.events.push(Event::Explosion { pos, radius });
-            let fx = Effects { incendiary: 0.5, ..Default::default() };
+            let fx = Effects {
+                incendiary: 0.5,
+                ..Default::default()
+            };
             splash(world, pos, radius, dmg, None, None, &fx);
         }
     }
@@ -695,14 +835,19 @@ mod tests {
     use std::sync::Arc;
 
     fn world() -> World {
-        World::new(Arc::new(ContentDb::load_dir(gf_content::default_content_dir()).unwrap()), 5)
+        World::new(
+            Arc::new(ContentDb::load_dir(gf_content::default_content_dir()).unwrap()),
+            5,
+        )
     }
 
     #[test]
     fn dda_hits_first_cell_along_segment() {
         let mut w = world();
         let c = w.content.clone();
-        let id = w.spawn_blueprint("micro_bandit", Vec2::ZERO, 0.0, None).unwrap();
+        let id = w
+            .spawn_blueprint("micro_bandit", Vec2::ZERO, 0.0, None)
+            .unwrap();
         let b = &w.bodies[&id];
         let from = b.pos + Vec2::new(-30.0, 0.0);
         let hit = raycast(&w, from, b.pos + Vec2::new(30.0, 0.0), |_| false).expect("hit");
@@ -714,16 +859,31 @@ mod tests {
     #[test]
     fn fed_cannon_grows_then_fires_at_enemy() {
         let mut w = world();
-        let p = w.spawn_blueprint("forge_runner", Vec2::ZERO, 0.0, Some(PLAYER_FACTION)).unwrap();
-        let e = w.spawn_blueprint("micro_bandit", Vec2::new(0.0, 30.0), 0.0, Some(1)).unwrap();
+        let p = w
+            .spawn_blueprint("forge_runner", Vec2::ZERO, 0.0, Some(PLAYER_FACTION))
+            .unwrap();
+        let e = w
+            .spawn_blueprint("micro_bandit", Vec2::new(0.0, 30.0), 0.0, Some(1))
+            .unwrap();
         w.bodies.get_mut(&e).unwrap().ai = None;
         let mut max_tier = 1;
         let mut shots = 0;
         for _ in 0..300 {
             let aim = w.bodies.get(&e).map_or(Vec2::new(0.0, 30.0), |b| b.pos);
-            w.queue(Command::Control { body: p, control: Control { fire: true, aim: Some(aim), ..Default::default() } });
+            w.queue(Command::Control {
+                body: p,
+                control: Control {
+                    fire: true,
+                    aim: Some(aim),
+                    ..Default::default()
+                },
+            });
             w.step();
-            shots += w.events.iter().filter(|e| matches!(e, Event::Shot { .. })).count();
+            shots += w
+                .events
+                .iter()
+                .filter(|e| matches!(e, Event::Shot { .. }))
+                .count();
             for b in w.bodies[&p].blocks.iter().flatten() {
                 if matches!(w.content.blocks[b.def as usize].kind, Block::Weapon(_)) {
                     max_tier = max_tier.max(b.feed.tier);
@@ -731,19 +891,27 @@ mod tests {
             }
         }
         assert!(shots > 5, "fired {shots} shots");
-        assert!(max_tier >= 2, "a well-fed cannon grows (max tier {max_tier})");
+        assert!(
+            max_tier >= 2,
+            "a well-fed cannon grows (max tier {max_tier})"
+        );
     }
 
     #[test]
     fn fire_spreads_and_frost_cannon_suppresses() {
         let mut w = world();
         let c = w.content.clone();
-        let p = w.spawn_blueprint("forge_runner", Vec2::ZERO, 0.0, Some(PLAYER_FACTION)).unwrap();
+        let p = w
+            .spawn_blueprint("forge_runner", Vec2::ZERO, 0.0, Some(PLAYER_FACTION))
+            .unwrap();
         // Load cannons with coolant so they qualify for suppression.
         let coolant = c.res("coolant").unwrap();
         let body = w.bodies.get_mut(&p).unwrap();
         body.control.auto_suppress = true;
-        let cannons = body.slots_where(&c, |k| matches!(k, Block::Weapon(wd) if wd.def.kind == WeaponKind::Cannon));
+        let cannons = body.slots_where(
+            &c,
+            |k| matches!(k, Block::Weapon(wd) if wd.def.kind == WeaponKind::Cannon),
+        );
         for &s in &cannons {
             let b = body.block_mut(s).unwrap();
             b.stock.clear();
@@ -764,9 +932,18 @@ mod tests {
                     b.ammo_mix = vec![(coolant, 10.0)];
                 }
             }
-            w.queue(Command::Control { body: p, control: Control { auto_suppress: true, ..Default::default() } });
+            w.queue(Command::Control {
+                body: p,
+                control: Control {
+                    auto_suppress: true,
+                    ..Default::default()
+                },
+            });
             w.step();
-            if w.events.iter().any(|e| matches!(e, Event::Extinguish { .. })) {
+            if w.events
+                .iter()
+                .any(|e| matches!(e, Event::Extinguish { .. }))
+            {
                 extinguished = true;
             }
         }
@@ -778,7 +955,9 @@ mod tests {
     fn destroyed_core_makes_derelict_and_splits() {
         let mut w = world();
         let c = w.content.clone();
-        let e = w.spawn_blueprint("raider", Vec2::ZERO, 0.0, Some(1)).unwrap();
+        let e = w
+            .spawn_blueprint("raider", Vec2::ZERO, 0.0, Some(1))
+            .unwrap();
         let core = w.bodies[&e].slots_where(&c, |k| matches!(k, Block::Core))[0];
         w.bodies.get_mut(&e).unwrap().last_hit_by = Some(PLAYER_FACTION);
         damage_block(&mut w, e, core, 10_000.0, Some(PLAYER_FACTION));

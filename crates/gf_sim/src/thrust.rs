@@ -26,11 +26,17 @@ pub fn mix_and_fire(content: &ContentDb, body: &mut Body, dt: f32) {
     let thrusters = body.slots_where(content, |k| matches!(k, Block::Thruster(_)));
     for s in thrusters {
         let b = body.block(s).unwrap();
-        let Block::Thruster(t) = &content.blocks[b.def as usize].kind else { continue };
+        let Block::Thruster(t) = &content.blocks[b.def as usize].kind else {
+            continue;
+        };
         let dir = facing_vec(b.rot);
         let at = b.center();
         let lever = (at - body.com).cross(dir);
-        let torque_sign = if lever.abs() > 0.3 { lever.signum() } else { 0.0 };
+        let torque_sign = if lever.abs() > 0.3 {
+            lever.signum()
+        } else {
+            0.0
+        };
         let mut throttle = (dir.dot(want) + turn * torque_sign).clamp(0.0, 1.0);
         if b.disabled > 0.0 || b.heat >= t.def.heat_capacity {
             throttle = 0.0;
@@ -39,17 +45,21 @@ pub fn mix_and_fire(content: &ContentDb, body: &mut Body, dt: f32) {
         let demand = t.def.growth[tier as usize - 1].demand;
         let need = demand * throttle * dt;
         let have = b.amount(t.fuel);
-        let frac = if need > 0.0 { (have / need).min(1.0) } else { 0.0 };
+        let frac = if need > 0.0 {
+            (have / need).min(1.0)
+        } else {
+            0.0
+        };
         throttle *= frac;
         let mut bonus = 1.0;
         let bm = body.block_mut(s).unwrap();
         if throttle > 0.0 {
             bm.take(t.fuel, need * frac);
-            if let Some(o) = t.oxidizer {
-                if bm.amount(o) > 0.0 {
-                    bm.take(o, need * 0.5 * frac);
-                    bonus = 1.25;
-                }
+            if let Some(o) = t.oxidizer
+                && bm.amount(o) > 0.0
+            {
+                bm.take(o, need * 0.5 * frac);
+                bonus = 1.25;
             }
             bm.heat += t.def.heat_per_sec * throttle * dt;
         }
@@ -122,7 +132,11 @@ pub fn collide(world: &mut World, _dt: f32) {
 fn resolve_pair(world: &mut World, a: BodyId, b: BodyId) {
     let (small, big) = {
         let (ba, bb) = (&world.bodies[&a], &world.bodies[&b]);
-        if ba.grid.len() <= bb.grid.len() { (a, b) } else { (b, a) }
+        if ba.grid.len() <= bb.grid.len() {
+            (a, b)
+        } else {
+            (b, a)
+        }
     };
     let s = &world.bodies[&small];
     let g = &world.bodies[&big];
@@ -198,12 +212,20 @@ mod tests {
     fn forward_thrust_accelerates_forward_without_spin() {
         let c = Arc::new(ContentDb::load_dir(gf_content::default_content_dir()).unwrap());
         let mut w = World::new(c, 9);
-        let id = w.spawn_blueprint("forge_runner", Vec2::ZERO, 0.0, Some(0)).unwrap();
-        w.bodies.get_mut(&id).unwrap().control = Control { thrust: Vec2::new(0.0, 1.0), ..Default::default() };
+        let id = w
+            .spawn_blueprint("forge_runner", Vec2::ZERO, 0.0, Some(0))
+            .unwrap();
+        w.bodies.get_mut(&id).unwrap().control = Control {
+            thrust: Vec2::new(0.0, 1.0),
+            ..Default::default()
+        };
         let start = w.bodies[&id].pos;
         for _ in 0..90 {
             let ctrl = w.bodies[&id].control.clone();
-            w.queue(crate::world::Command::Control { body: id, control: ctrl });
+            w.queue(crate::world::Command::Control {
+                body: id,
+                control: ctrl,
+            });
             w.step();
         }
         let b = &w.bodies[&id];
@@ -215,25 +237,44 @@ mod tests {
     fn turning_rotates_ship() {
         let c = Arc::new(ContentDb::load_dir(gf_content::default_content_dir()).unwrap());
         let mut w = World::new(c, 9);
-        let id = w.spawn_blueprint("forge_runner", Vec2::ZERO, 0.0, Some(0)).unwrap();
+        let id = w
+            .spawn_blueprint("forge_runner", Vec2::ZERO, 0.0, Some(0))
+            .unwrap();
         for _ in 0..60 {
-            w.queue(crate::world::Command::Control { body: id, control: Control { turn: 1.0, ..Default::default() } });
+            w.queue(crate::world::Command::Control {
+                body: id,
+                control: Control {
+                    turn: 1.0,
+                    ..Default::default()
+                },
+            });
             w.step();
         }
-        assert!(w.bodies[&id].angle > 0.05, "turned CCW: {}", w.bodies[&id].angle);
+        assert!(
+            w.bodies[&id].angle > 0.05,
+            "turned CCW: {}",
+            w.bodies[&id].angle
+        );
     }
 
     #[test]
     fn bodies_do_not_pass_through_each_other() {
         let c = Arc::new(ContentDb::load_dir(gf_content::default_content_dir()).unwrap());
         let mut w = World::new(c, 9);
-        let a = w.spawn_blueprint("micro_bandit", Vec2::new(0.0, 0.0), 0.0, None).unwrap();
-        let b = w.spawn_blueprint("micro_bandit", Vec2::new(12.0, 0.0), 0.0, None).unwrap();
+        let a = w
+            .spawn_blueprint("micro_bandit", Vec2::new(0.0, 0.0), 0.0, None)
+            .unwrap();
+        let b = w
+            .spawn_blueprint("micro_bandit", Vec2::new(12.0, 0.0), 0.0, None)
+            .unwrap();
         w.bodies.get_mut(&a).unwrap().vel = Vec2::new(6.0, 0.0);
         w.bodies.get_mut(&b).unwrap().vel = Vec2::new(-6.0, 0.0);
         for _ in 0..90 {
             w.step();
         }
-        assert!(w.bodies[&a].pos.x < w.bodies[&b].pos.x, "still ordered after impact");
+        assert!(
+            w.bodies[&a].pos.x < w.bodies[&b].pos.x,
+            "still ordered after impact"
+        );
     }
 }

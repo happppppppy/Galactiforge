@@ -32,7 +32,11 @@ impl Vec2 {
     }
     pub fn normalize_or_zero(self) -> Vec2 {
         let l = self.length();
-        if l > 1e-6 { self * (1.0 / l) } else { Vec2::ZERO }
+        if l > 1e-6 {
+            self * (1.0 / l)
+        } else {
+            Vec2::ZERO
+        }
     }
     pub fn rotate(self, angle: f32) -> Vec2 {
         let (s, c) = (libm::sinf(angle), libm::cosf(angle));
@@ -98,7 +102,9 @@ impl SubAssign for Vec2 {
 }
 
 /// Integer grid cell coordinate in a body's local frame.
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize,
+)]
 pub struct Cell {
     pub x: i32,
     pub y: i32,

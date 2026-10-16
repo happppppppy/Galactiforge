@@ -11,11 +11,19 @@ fn main() {
     let mut args = std::env::args().skip(1);
     let half: i32 = args.next().and_then(|a| a.parse().ok()).unwrap_or(27);
     let ticks: u32 = args.next().and_then(|a| a.parse().ok()).unwrap_or(600);
-    let content = Arc::new(gf_content::ContentDb::load_dir(gf_content::default_content_dir()).expect("content"));
+    let content = Arc::new(
+        gf_content::ContentDb::load_dir(gf_content::default_content_dir()).expect("content"),
+    );
     let mut world = World::new(content, 1);
     let a = scenario::battleship(&world, half, Some(PLAYER_FACTION), Vec2::new(0.0, 0.0), 0.0);
     let a = world.add_body(a);
-    let b = scenario::battleship(&world, half, Some(PIRATE_FACTION), Vec2::new(0.0, half as f32 * 2.0 + 30.0), std::f32::consts::PI);
+    let b = scenario::battleship(
+        &world,
+        half,
+        Some(PIRATE_FACTION),
+        Vec2::new(0.0, half as f32 * 2.0 + 30.0),
+        std::f32::consts::PI,
+    );
     let b = world.add_body(b);
     println!(
         "ships: {} + {} blocks",
@@ -28,7 +36,13 @@ fn main() {
         for (me, them) in [(a, b), (b, a)] {
             let aim = world.bodies.get(&them).map(|t| t.pos);
             if world.bodies.contains_key(&me) {
-                let control = Control { thrust: Vec2::new(0.0, 0.3), fire: true, aim, auto_suppress: true, ..Default::default() };
+                let control = Control {
+                    thrust: Vec2::new(0.0, 0.3),
+                    fire: true,
+                    aim,
+                    auto_suppress: true,
+                    ..Default::default()
+                };
                 world.queue(Command::Control { body: me, control });
             }
         }

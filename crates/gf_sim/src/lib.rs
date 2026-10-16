@@ -21,6 +21,8 @@ pub mod sector;
 pub mod thrust;
 pub mod world;
 
-pub use body::{BlockInst, Body, BodyId, BodyKind, Control, Faction, PIRATE_FACTION, PLAYER_FACTION, WeaponMode};
+pub use body::{
+    BlockInst, Body, BodyId, BodyKind, Control, Faction, PIRATE_FACTION, PLAYER_FACTION, WeaponMode,
+};
 pub use math::{Cell, Vec2};
 pub use world::{Command, DT, Event, TICK_RATE, World};

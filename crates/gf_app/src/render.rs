@@ -4,11 +4,11 @@
 //! (`Body::revision`), while colours, animation frames and turret angles are
 //! refreshed every frame.
 
-use crate::{FrameEvents, Sim, UiState, TILE};
+use crate::{FrameEvents, Sim, TILE, UiState};
 use bevy::prelude::*;
 use gf_content::{Block, BlockId, BlockInfo, Category, ContentDb, WeaponKind};
 use gf_sim::body::BlockInst;
-use gf_sim::math::{facing_vec, footprint, Cell};
+use gf_sim::math::{Cell, facing_vec, footprint};
 use gf_sim::{Body, BodyId, BodyKind, Event as SimEvent};
 use std::collections::HashMap;
 use std::f32::consts::FRAC_PI_2;
@@ -79,7 +79,10 @@ pub fn px(p: gf_sim::Vec2) -> Vec2 {
 pub fn atlas_sprite(art: &Art, index: usize, size: Vec2, color: Color) -> Sprite {
     let mut s = Sprite::from_atlas_image(
         art.image.clone(),
-        TextureAtlas { layout: art.layout.clone(), index: index.min(TILE_COUNT - 1) },
+        TextureAtlas {
+            layout: art.layout.clone(),
+            index: index.min(TILE_COUNT - 1),
+        },
     );
     s.custom_size = Some(size);
     s.color = color;
@@ -92,17 +95,31 @@ pub fn setup(
     mut layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
     let image = assets.load(TILESET);
-    let layout = layouts.add(TextureAtlasLayout::from_grid(UVec2::splat(32), 10, 20, None, None));
+    let layout = layouts.add(TextureAtlasLayout::from_grid(
+        UVec2::splat(32),
+        10,
+        20,
+        None,
+        None,
+    ));
     commands.spawn(Camera2d);
     let art = Art { image, layout };
     let mut ghost = atlas_sprite(&art, 0, Vec2::splat(TILE), Color::NONE);
     ghost.color = Color::NONE;
-    commands.spawn((ghost, Transform::from_xyz(0.0, 0.0, 8.0), Visibility::Hidden, Ghost));
+    commands.spawn((
+        ghost,
+        Transform::from_xyz(0.0, 0.0, 8.0),
+        Visibility::Hidden,
+        Ghost,
+    ));
     commands.insert_resource(art);
 }
 
 fn base_tint(info: &BlockInfo) -> Vec3 {
-    info.def.sprite.tint.map_or(Vec3::ONE, |(r, g, b)| Vec3::new(r, g, b))
+    info.def
+        .sprite
+        .tint
+        .map_or(Vec3::ONE, |(r, g, b)| Vec3::new(r, g, b))
 }
 
 fn heat_capacity(info: &BlockInfo) -> f32 {
@@ -139,7 +156,9 @@ fn block_color(content: &ContentDb, body: &Body, b: &BlockInst, overlay: u8, t: 
                     Vec3::new(0.3, 0.5, 1.0).lerp(Vec3::new(1.0, 0.3, 1.0), k)
                 }
                 Block::Pipe | Block::Tank { .. } => Vec3::new(0.3, 0.7, 1.0),
-                Block::Conveyor { .. } | Block::Splitter { .. } | Block::Storage { .. } => Vec3::new(1.0, 0.7, 0.3),
+                Block::Conveyor { .. } | Block::Splitter { .. } | Block::Storage { .. } => {
+                    Vec3::new(1.0, 0.7, 0.3)
+                }
                 _ => c * 0.3,
             }
         }
@@ -150,8 +169,12 @@ fn block_color(content: &ContentDb, body: &Body, b: &BlockInst, overlay: u8, t: 
         _ => {}
     }
     if b.fire > 0.0 {
-        let flicker = 0.75 + 0.25 * (t * 17.0 + b.anchor.x as f32 * 3.1 + b.anchor.y as f32 * 1.7).sin();
-        c = c.lerp(Vec3::new(1.0, 0.45, 0.1), (0.35 + 0.4 * b.fire.min(1.0)) * flicker);
+        let flicker =
+            0.75 + 0.25 * (t * 17.0 + b.anchor.x as f32 * 3.1 + b.anchor.y as f32 * 1.7).sin();
+        c = c.lerp(
+            Vec3::new(1.0, 0.45, 0.1),
+            (0.35 + 0.4 * b.fire.min(1.0)) * flicker,
+        );
     }
     if b.chill > 0.0 {
         c = c.lerp(Vec3::new(0.6, 0.85, 1.0), 0.5 * b.chill.min(1.0));
@@ -169,11 +192,20 @@ fn block_frame(info: &BlockInfo, b: &BlockInst, t: f32) -> usize {
     match &info.kind {
         Block::Weapon(_) => {
             let tier = (b.feed.tier.clamp(1, 5) - 1) as usize;
-            if frames >= 7 { tile + TIER_FRAMES[tier] } else { tile + tier.min(frames - 1) }
+            if frames >= 7 {
+                tile + TIER_FRAMES[tier]
+            } else {
+                tile + tier.min(frames - 1)
+            }
         }
         _ if frames > 1 => {
-            let active = b.throttle > 0.05 || (b.progress > 0.0 && b.power_sat > 0.1) || b.work > 0.0;
-            if active { tile + ((t * s.fps.max(1.0)) as usize) % frames } else { tile }
+            let active =
+                b.throttle > 0.05 || (b.progress > 0.0 && b.power_sat > 0.1) || b.work > 0.0;
+            if active {
+                tile + ((t * s.fps.max(1.0)) as usize) % frames
+            } else {
+                tile
+            }
         }
         _ => tile,
     }
@@ -188,7 +220,13 @@ fn block_geometry(info: &BlockInfo, b: &BlockInst) -> (Vec2, f32) {
     }
 }
 
-fn spawn_slot(commands: &mut Commands, art: &Art, content: &ContentDb, root: Entity, b: &BlockInst) -> SlotView {
+fn spawn_slot(
+    commands: &mut Commands,
+    art: &Art,
+    content: &ContentDb,
+    root: Entity,
+    b: &BlockInst,
+) -> SlotView {
     let info = &content.blocks[b.def as usize];
     let mut under = Vec::new();
     if let Some(base) = info.def.sprite.base {
@@ -205,22 +243,33 @@ fn spawn_slot(commands: &mut Commands, art: &Art, content: &ContentDb, root: Ent
         }
     }
     let (size, rot) = block_geometry(info, b);
-    let z = if matches!(info.def.category, Category::Hull) { 0.05 } else { 0.1 };
+    let z = if matches!(info.def.category, Category::Hull) {
+        0.05
+    } else {
+        0.1
+    };
     let main = commands
         .spawn((
             atlas_sprite(art, info.def.sprite.tile as usize, size, Color::WHITE),
-            Transform::from_translation(px(b.center()).extend(z)).with_rotation(Quat::from_rotation_z(rot)),
+            Transform::from_translation(px(b.center()).extend(z))
+                .with_rotation(Quat::from_rotation_z(rot)),
             ChildOf(root),
         ))
         .id();
-    SlotView { sig: (b.def, b.anchor, b.rot, b.size), main, under }
+    SlotView {
+        sig: (b.def, b.anchor, b.rot, b.size),
+        main,
+        under,
+    }
 }
 
 fn body_transform(b: &Body) -> Transform {
     let origin = b.pos - b.com.rotate(b.angle);
-    Transform::from_translation(px(origin).extend(0.0)).with_rotation(Quat::from_rotation_z(b.angle))
+    Transform::from_translation(px(origin).extend(0.0))
+        .with_rotation(Quat::from_rotation_z(b.angle))
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn sync_bodies(
     mut commands: Commands,
     sim: Res<Sim>,
@@ -243,7 +292,9 @@ pub fn sync_bodies(
     });
     for (id, body) in &world.bodies {
         let view = views.bodies.entry(*id).or_insert_with(|| BodyView {
-            root: commands.spawn((body_transform(body), Visibility::default())).id(),
+            root: commands
+                .spawn((body_transform(body), Visibility::default()))
+                .id(),
             revision: u64::MAX,
             slots: Vec::new(),
         });
@@ -252,7 +303,8 @@ pub fn sync_bodies(
         }
         if view.revision != body.revision {
             view.revision = body.revision;
-            view.slots.resize_with(body.blocks.len().max(view.slots.len()), || None);
+            view.slots
+                .resize_with(body.blocks.len().max(view.slots.len()), || None);
             for (i, slot) in view.slots.iter_mut().enumerate() {
                 let want = body.blocks.get(i).and_then(|b| b.as_ref());
                 let same = match (&*slot, want) {
@@ -276,7 +328,9 @@ pub fn sync_bodies(
             view.slots.truncate(body.blocks.len());
         }
         for (i, slot) in view.slots.iter().enumerate() {
-            let (Some(sv), Some(Some(b))) = (slot, body.blocks.get(i)) else { continue };
+            let (Some(sv), Some(Some(b))) = (slot, body.blocks.get(i)) else {
+                continue;
+            };
             let info = &content.blocks[b.def as usize];
             let color = block_color(&content, body, b, ui.overlay, t);
             if let Ok(mut s) = sprites.get_mut(sv.main) {
@@ -285,10 +339,10 @@ pub fn sync_bodies(
                     a.index = block_frame(info, b, t).min(TILE_COUNT - 1);
                 }
             }
-            if matches!(info.kind, Block::Weapon(_)) {
-                if let Ok(mut tf) = transforms.get_mut(sv.main) {
-                    tf.rotation = Quat::from_rotation_z(b.aim - FRAC_PI_2);
-                }
+            if matches!(info.kind, Block::Weapon(_))
+                && let Ok(mut tf) = transforms.get_mut(sv.main)
+            {
+                tf.rotation = Quat::from_rotation_z(b.aim - FRAC_PI_2);
             }
             for e in &sv.under {
                 if let Ok(mut s) = sprites.get_mut(*e) {
@@ -318,7 +372,9 @@ pub fn sync_projectiles(
         views.projectiles.push(e);
     }
     for (i, e) in views.projectiles.iter().enumerate() {
-        let Ok((mut tf, mut sprite, mut vis)) = q.get_mut(*e) else { continue };
+        let Ok((mut tf, mut sprite, mut vis)) = q.get_mut(*e) else {
+            continue;
+        };
         let Some(p) = world.projectiles.get(i) else {
             *vis = Visibility::Hidden;
             continue;
@@ -353,7 +409,12 @@ fn spawn_fx(commands: &mut Commands, art: &Art, at: Vec2, size: f32, color: Colo
     commands.spawn((
         atlas_sprite(art, EXPLOSION_TILE, Vec2::splat(size), color),
         Transform::from_translation(at.extend(6.0)),
-        Fx { age: 0.0, life, first: EXPLOSION_TILE, frames: EXPLOSION_FRAMES },
+        Fx {
+            age: 0.0,
+            life,
+            first: EXPLOSION_TILE,
+            frames: EXPLOSION_FRAMES,
+        },
     ));
 }
 
@@ -366,10 +427,22 @@ pub fn spawn_effects(
 ) {
     for e in &events.0 {
         match e {
-            SimEvent::Explosion { pos, radius } => {
-                spawn_fx(&mut commands, &art, px(*pos), (radius * 2.0).max(1.0) * TILE, Color::WHITE, 0.45)
-            }
-            SimEvent::BlockDestroyed { pos, .. } => spawn_fx(&mut commands, &art, px(*pos), TILE * 1.2, Color::WHITE, 0.35),
+            SimEvent::Explosion { pos, radius } => spawn_fx(
+                &mut commands,
+                &art,
+                px(*pos),
+                (radius * 2.0).max(1.0) * TILE,
+                Color::WHITE,
+                0.45,
+            ),
+            SimEvent::BlockDestroyed { pos, .. } => spawn_fx(
+                &mut commands,
+                &art,
+                px(*pos),
+                TILE * 1.2,
+                Color::WHITE,
+                0.35,
+            ),
             SimEvent::Hit { pos, damage } => spawn_fx(
                 &mut commands,
                 &art,
@@ -386,10 +459,17 @@ pub fn spawn_effects(
                 Color::srgba(0.5, 0.85, 1.0, 0.8),
                 0.5,
             ),
-            SimEvent::Salvaged { pos, .. } => {
-                spawn_fx(&mut commands, &art, px(*pos), TILE, Color::srgba(0.4, 1.0, 0.5, 0.8), 0.3)
+            SimEvent::Salvaged { pos, .. } => spawn_fx(
+                &mut commands,
+                &art,
+                px(*pos),
+                TILE,
+                Color::srgba(0.4, 1.0, 0.5, 0.8),
+                0.3,
+            ),
+            SimEvent::Laser { from, to, tier } => {
+                views.beams.push((px(*from), px(*to), *tier, 0.08))
             }
-            SimEvent::Laser { from, to, tier } => views.beams.push((px(*from), px(*to), *tier, 0.08)),
             SimEvent::OriginShift { delta } => {
                 let d = px(*delta);
                 for mut tf in &mut fx {
@@ -440,7 +520,13 @@ fn star_hash(i: u32) -> (f32, f32, f32) {
     (next(), next(), next())
 }
 
-pub fn draw_gizmos(mut gizmos: Gizmos, sim: Res<Sim>, ui: Res<UiState>, views: Res<Views>, window: Single<&Window>) {
+pub fn draw_gizmos(
+    mut gizmos: Gizmos,
+    sim: Res<Sim>,
+    ui: Res<UiState>,
+    views: Res<Views>,
+    window: Single<&Window>,
+) {
     let world = &sim.world;
     let content = &world.content;
     // Parallax starfield, wrapped around the camera.
@@ -452,7 +538,11 @@ pub fn draw_gizmos(mut gizmos: Gizmos, sim: Res<Sim>, ui: Res<UiState>, views: R
         let p = Vec2::new(x, y) * span - cam * par;
         let p = Vec2::new(p.x.rem_euclid(span.x), p.y.rem_euclid(span.y)) - span * 0.5 + cam;
         let b = 0.25 + 0.5 * depth;
-        gizmos.circle_2d(p, (0.6 + depth) * ui.zoom.max(1.0), Color::srgb(b, b, b * 1.1));
+        gizmos.circle_2d(
+            p,
+            (0.6 + depth) * ui.zoom.max(1.0),
+            Color::srgb(b, b, b * 1.1),
+        );
     }
     // Mining / laser beams.
     for (from, to, tier, _) in &views.beams {
@@ -468,7 +558,9 @@ pub fn draw_gizmos(mut gizmos: Gizmos, sim: Res<Sim>, ui: Res<UiState>, views: R
             continue;
         }
         for b in body.blocks.iter().flatten() {
-            if b.throttle <= 0.02 || !matches!(content.blocks[b.def as usize].kind, Block::Thruster(_)) {
+            if b.throttle <= 0.02
+                || !matches!(content.blocks[b.def as usize].kind, Block::Thruster(_))
+            {
                 continue;
             }
             let dir = facing_vec(b.rot);
@@ -476,39 +568,55 @@ pub fn draw_gizmos(mut gizmos: Gizmos, sim: Res<Sim>, ui: Res<UiState>, views: R
             let depth = b.size.1 as f32;
             let nozzle = body.to_world(b.center() + back * (depth * 0.5));
             let wdir = body.dir_to_world(back);
-            let len = (0.6 + 0.5 * b.feed.tier as f32) * b.throttle * (1.0 + 0.15 * (b.rr as f32 * 0.7).sin());
+            let len = (0.6 + 0.5 * b.feed.tier as f32)
+                * b.throttle
+                * (1.0 + 0.15 * (b.rr as f32 * 0.7).sin());
             let half = 0.25 * b.size.0 as f32;
             let side = body.dir_to_world(dir.perp()) * half;
             let tip = px(nozzle + wdir * len);
             let hot = Color::srgb(1.0, 0.9, 0.5);
-            let cool = if b.feed.tier >= 3 { Color::srgb(0.5, 0.7, 1.0) } else { Color::srgb(1.0, 0.45, 0.1) };
+            let cool = if b.feed.tier >= 3 {
+                Color::srgb(0.5, 0.7, 1.0)
+            } else {
+                Color::srgb(1.0, 0.45, 0.1)
+            };
             gizmos.line_2d(px(nozzle + side), tip, cool);
             gizmos.line_2d(px(nozzle - side), tip, cool);
             gizmos.line_2d(px(nozzle), px(nozzle + wdir * (len * 0.6)), hot);
         }
     }
     // Hovered block outline.
-    if let Some(c) = ui.cursor {
-        if let Some((body, slot)) = hovered(world, c) {
-            let b = body.block(slot).expect("hovered slot exists");
-            outline_cells(&mut gizmos, body, b.cells(), Color::srgba(1.0, 1.0, 1.0, 0.6));
-        }
+    if let Some(c) = ui.cursor
+        && let Some((body, slot)) = hovered(world, c)
+    {
+        let b = body.block(slot).expect("hovered slot exists");
+        outline_cells(
+            &mut gizmos,
+            body,
+            b.cells(),
+            Color::srgba(1.0, 1.0, 1.0, 0.6),
+        );
     }
     // Build mode: reserved growth footprint of the selected block.
-    if ui.build {
-        if let (Some(c), Some(body)) = (ui.cursor, world.player_body()) {
-            let ids = buildable(content);
-            if let Some(&id) = ids.get(ui.build_idx % ids.len().max(1)) {
-                let cell = body.local_cell_at(c);
-                let size = content.blocks[id as usize].reserved_size();
-                let col = Color::srgba(0.4, 1.0, 0.4, 0.5);
-                outline_cells(&mut gizmos, body, footprint(cell, ui.rot, size), col);
-            }
+    if ui.build
+        && let (Some(c), Some(body)) = (ui.cursor, world.player_body())
+    {
+        let ids = buildable(content);
+        if let Some(&id) = ids.get(ui.build_idx % ids.len().max(1)) {
+            let cell = body.local_cell_at(c);
+            let size = content.blocks[id as usize].reserved_size();
+            let col = Color::srgba(0.4, 1.0, 0.4, 0.5);
+            outline_cells(&mut gizmos, body, footprint(cell, ui.rot, size), col);
         }
     }
 }
 
-fn outline_cells(gizmos: &mut Gizmos, body: &Body, cells: impl Iterator<Item = Cell>, color: Color) {
+fn outline_cells(
+    gizmos: &mut Gizmos,
+    body: &Body,
+    cells: impl Iterator<Item = Cell>,
+    color: Color,
+) {
     for c in cells {
         let corners = [(-0.5, -0.5), (0.5, -0.5), (0.5, 0.5), (-0.5, 0.5)]
             .map(|(x, y)| px(body.to_world(c.center() + gf_sim::Vec2::new(x, y))));
@@ -530,7 +638,13 @@ pub fn hovered(world: &gf_sim::World, p: gf_sim::Vec2) -> Option<(&Body, u32)> {
 
 /// Blocks offered in the build palette, in content order.
 pub fn buildable(content: &ContentDb) -> Vec<BlockId> {
-    content.blocks.iter().enumerate().filter(|(_, b)| b.def.buildable).map(|(i, _)| i as BlockId).collect()
+    content
+        .blocks
+        .iter()
+        .enumerate()
+        .filter(|(_, b)| b.def.buildable)
+        .map(|(i, _)| i as BlockId)
+        .collect()
 }
 
 pub fn build_ghost(
@@ -541,7 +655,9 @@ pub fn build_ghost(
     let (mut tf, mut sprite, mut vis) = ghost.into_inner();
     let world = &sim.world;
     let ids = buildable(&world.content);
-    let (true, Some(c), Some(body), false) = (ui.build, ui.cursor, world.player_body(), ids.is_empty()) else {
+    let (true, Some(c), Some(body), false) =
+        (ui.build, ui.cursor, world.player_body(), ids.is_empty())
+    else {
         *vis = Visibility::Hidden;
         return;
     };
@@ -553,7 +669,11 @@ pub fn build_ghost(
     *vis = Visibility::Inherited;
     tf.translation = px(body.to_world(cell.center())).extend(8.0);
     tf.rotation = Quat::from_rotation_z(body.angle + ui.rot as f32 * FRAC_PI_2);
-    sprite.color = if free && unlocked { Color::srgba(0.6, 1.0, 0.6, 0.6) } else { Color::srgba(1.0, 0.3, 0.3, 0.6) };
+    sprite.color = if free && unlocked {
+        Color::srgba(0.6, 1.0, 0.6, 0.6)
+    } else {
+        Color::srgba(1.0, 0.3, 0.3, 0.6)
+    };
     if let Some(a) = sprite.texture_atlas.as_mut() {
         a.index = (info.def.sprite.tile as usize).min(TILE_COUNT - 1);
     }
@@ -570,9 +690,19 @@ pub fn follow_camera(
     let shift: Vec2 = events
         .0
         .iter()
-        .filter_map(|e| if let SimEvent::OriginShift { delta } = e { Some(px(*delta)) } else { None })
+        .filter_map(|e| {
+            if let SimEvent::OriginShift { delta } = e {
+                Some(px(*delta))
+            } else {
+                None
+            }
+        })
         .sum();
-    let target = sim.world.player_body().map(|b| px(b.pos)).unwrap_or(tf.translation.truncate() - shift);
+    let target = sim
+        .world
+        .player_body()
+        .map(|b| px(b.pos))
+        .unwrap_or(tf.translation.truncate() - shift);
     tf.translation = target.extend(tf.translation.z);
     views.last_cam = target;
     if let Projection::Orthographic(o) = proj.as_mut() {

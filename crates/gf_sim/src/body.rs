@@ -120,7 +120,10 @@ impl BlockInst {
         content.blocks[self.def as usize].def.hp * (1.0 + 0.6 * (self.cell_count() as f32 - 1.0))
     }
     pub fn amount(&self, r: ResId) -> f32 {
-        self.stock.iter().find(|(id, _)| *id == r).map_or(0.0, |(_, q)| *q)
+        self.stock
+            .iter()
+            .find(|(id, _)| *id == r)
+            .map_or(0.0, |(_, q)| *q)
     }
     pub fn total_stock(&self) -> f32 {
         self.stock.iter().map(|(_, q)| *q).sum()
@@ -242,7 +245,14 @@ pub enum PlaceError {
 }
 
 impl Body {
-    pub fn new(id: BodyId, name: impl Into<String>, kind: BodyKind, faction: Option<Faction>, pos: Vec2, angle: f32) -> Self {
+    pub fn new(
+        id: BodyId,
+        name: impl Into<String>,
+        kind: BodyKind,
+        faction: Option<Faction>,
+        pos: Vec2,
+        angle: f32,
+    ) -> Self {
         Self {
             id,
             name: name.into(),
@@ -302,11 +312,20 @@ impl Body {
     }
     pub fn local_cell_at(&self, world: Vec2) -> Cell {
         let l = self.to_local(world);
-        Cell::new(libm::floorf(l.x + 0.5) as i32, libm::floorf(l.y + 0.5) as i32)
+        Cell::new(
+            libm::floorf(l.x + 0.5) as i32,
+            libm::floorf(l.y + 0.5) as i32,
+        )
     }
 
     /// Insert a block without connectivity checks (used for blueprints/worldgen).
-    pub fn insert(&mut self, content: &ContentDb, def: BlockId, anchor: Cell, rot: u8) -> Result<u32, PlaceError> {
+    pub fn insert(
+        &mut self,
+        content: &ContentDb,
+        def: BlockId,
+        anchor: Cell,
+        rot: u8,
+    ) -> Result<u32, PlaceError> {
         if !self.grid.is_empty_at(anchor) {
             return Err(PlaceError::Occupied);
         }
@@ -348,11 +367,21 @@ impl Body {
     }
 
     /// Player placement: the cell must be free and touch the existing structure.
-    pub fn place(&mut self, content: &ContentDb, def: BlockId, anchor: Cell, rot: u8) -> Result<u32, PlaceError> {
+    pub fn place(
+        &mut self,
+        content: &ContentDb,
+        def: BlockId,
+        anchor: Cell,
+        rot: u8,
+    ) -> Result<u32, PlaceError> {
         if !self.grid.is_empty_at(anchor) {
             return Err(PlaceError::Occupied);
         }
-        if !self.grid.is_empty() && !Cell::NEIGHBORS.iter().any(|d| !self.grid.is_empty_at(anchor.offset(*d))) {
+        if !self.grid.is_empty()
+            && !Cell::NEIGHBORS
+                .iter()
+                .any(|d| !self.grid.is_empty_at(anchor.offset(*d)))
+        {
             return Err(PlaceError::NotAdjacent);
         }
         self.insert(content, def, anchor, rot)
@@ -393,7 +422,9 @@ impl Body {
     /// Largest growth stage whose footprint is free (or already ours).
     pub fn growth_cap(&self, content: &ContentDb, slot: u32) -> u8 {
         let Some(b) = self.block(slot) else { return 1 };
-        let Some(stages) = content.blocks[b.def as usize].growth() else { return 1 };
+        let Some(stages) = content.blocks[b.def as usize].growth() else {
+            return 1;
+        };
         let mut cap = 1;
         for (i, s) in stages.iter().enumerate() {
             let free = footprint(b.anchor, b.rot, s.size).all(|c| match self.grid.get(c) {
@@ -466,7 +497,9 @@ impl Body {
     fn rebuild_topology(&mut self, content: &ContentDb) {
         let n = self.blocks.len();
         let mut topo = Topology {
-            live: (0..n as u32).filter(|s| self.blocks[*s as usize].is_some()).collect(),
+            live: (0..n as u32)
+                .filter(|s| self.blocks[*s as usize].is_some())
+                .collect(),
             neighbors: vec![Vec::new(); n],
             power_net_of: vec![None; n],
             ..Default::default()
@@ -476,10 +509,10 @@ impl Body {
             let mut nb = Vec::new();
             for c in b.cells() {
                 for d in Cell::NEIGHBORS {
-                    if let Some(o) = self.grid.get(c.offset(d)) {
-                        if o != s {
-                            nb.push(o);
-                        }
+                    if let Some(o) = self.grid.get(c.offset(d))
+                        && o != s
+                    {
+                        nb.push(o);
                     }
                 }
             }
@@ -492,7 +525,11 @@ impl Body {
         }
         let conducts = |slot: u32, fluid: bool| -> bool {
             let info = &content.blocks[self.blocks[slot as usize].as_ref().unwrap().def as usize];
-            if fluid { info.conducts_fluid() } else { info.conducts_power() }
+            if fluid {
+                info.conducts_fluid()
+            } else {
+                info.conducts_power()
+            }
         };
         for fluid in [true, false] {
             let mut visited = vec![false; n];
@@ -571,7 +608,9 @@ impl Body {
             .live
             .iter()
             .copied()
-            .filter(|s| f(&content.blocks[self.blocks[*s as usize].as_ref().unwrap().def as usize].kind))
+            .filter(|s| {
+                f(&content.blocks[self.blocks[*s as usize].as_ref().unwrap().def as usize].kind)
+            })
             .collect()
     }
 
@@ -587,7 +626,12 @@ impl Body {
         self.blocks
             .iter()
             .flatten()
-            .filter(|b| matches!(content.blocks[b.def as usize].kind, Block::Storage { .. } | Block::Tank { .. }))
+            .filter(|b| {
+                matches!(
+                    content.blocks[b.def as usize].kind,
+                    Block::Storage { .. } | Block::Tank { .. }
+                )
+            })
             .map(|b| b.amount(r))
             .sum()
     }
