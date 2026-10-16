@@ -124,6 +124,23 @@ impl World {
         w
     }
 
+    /// Give the player a fresh starter ship next to where the old one died.
+    /// Research, samples and missions persist; the wreck can be salvaged.
+    pub fn respawn_player(&mut self) -> Option<BodyId> {
+        let at = self.player_body().map_or(Vec2::ZERO, |b| b.pos + Vec2::new(25.0, 0.0));
+        let id = self.spawn_blueprint("forge_runner", at, 0.0, Some(PLAYER_FACTION))?;
+        if let Some(b) = self.bodies.get_mut(&id) {
+            b.control.auto_suppress = true;
+        }
+        self.player = Some(id);
+        Some(id)
+    }
+
+    /// True while the player's ship still has its core.
+    pub fn player_alive(&self) -> bool {
+        self.player_body().is_some_and(|b| b.kind == BodyKind::Ship)
+    }
+
     pub fn alloc_id(&mut self) -> BodyId {
         let id = self.next_id;
         self.next_id += 1;
@@ -352,7 +369,7 @@ impl World {
     }
 
     pub fn save_ron(&self) -> Result<String, ron::Error> {
-        ron::ser::to_string_pretty(self, ron::ser::PrettyConfig::default())
+        ron::to_string(self)
     }
 
     pub fn load_ron(text: &str, content: Arc<ContentDb>) -> Result<Self, ron::error::SpannedError> {

@@ -16,6 +16,7 @@ pub mod math;
 pub mod mining;
 pub mod progress;
 pub mod rng;
+pub mod scenario;
 pub mod sector;
 pub mod thrust;
 pub mod world;

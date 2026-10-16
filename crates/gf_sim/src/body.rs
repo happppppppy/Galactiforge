@@ -226,6 +226,9 @@ pub struct Body {
     pub lost_blocks: bool,
     #[serde(skip)]
     pub topo: Topology,
+    /// Bumped whenever the block layout changes (clients use it to resync).
+    #[serde(skip)]
+    pub revision: u64,
 }
 
 fn yes() -> bool {
@@ -264,6 +267,7 @@ impl Body {
             dirty: true,
             lost_blocks: false,
             topo: Topology::default(),
+            revision: 0,
         }
     }
 
@@ -411,6 +415,7 @@ impl Body {
             return;
         }
         self.dirty = false;
+        self.revision = self.revision.wrapping_add(1);
         self.recompute_mass(content);
         self.rebuild_topology(content);
         let live = self.topo.live.clone();
