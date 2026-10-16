@@ -1,0 +1,11 @@
+[package]
+name = "gf_content"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Galactiforge content schemas, loading and validation"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+ron.workspace = true

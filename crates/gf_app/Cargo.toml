@@ -1,0 +1,10 @@
+[package]
+name = "gf_app"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Galactiforge game client (Bevy)"
+
+[dependencies]
+gf_content.workspace = true
+gf_sim.workspace = true

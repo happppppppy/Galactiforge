@@ -1,0 +1,12 @@
+[package]
+name = "gf_sim"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Deterministic, headless Galactiforge simulation"
+
+[dependencies]
+gf_content.workspace = true
+serde.workspace = true
+ron.workspace = true
+libm.workspace = true
